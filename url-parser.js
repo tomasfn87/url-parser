@@ -1,6 +1,6 @@
 export const parseUrl = (url) => {
     const RegExp = { 
-        UrlParts: /^((?:https?:\/\/)?[^\/]+)((?:\/[^\/?#]*)*)(\?\S*?)?(#\S*)?$/}
+        UrlParts: /^((?:https?:\/\/)?[^\/]+\.[^\/]+)((?:\/[^\/?#]*)*)(\?\S*?)?(#\S*)?$/}
     url = url.replaceAll('\\', '');
     if (RegExp.UrlParts.test(url)) {
         const groups = RegExp.UrlParts.exec(url);
