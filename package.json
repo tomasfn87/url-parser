@@ -1,0 +1,28 @@
+{
+  "name": "url-parser",
+  "version": "0.0.1",
+  "description": "Receives an URL and breaks it into domain, path, parameters and fragment. Parameters and fragment are broken into lists and objects.",
+  "main": "main.js",
+  "type": "module",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomasfn87/url-parser.git"
+  },
+  "keywords": [
+    "url",
+    "parse",
+    "parser"
+  ],
+  "author": "tomasfn87",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tomasfn87/url-parser/issues"
+  },
+  "homepage": "https://github.com/tomasfn87/url-parser#readme"
+}
