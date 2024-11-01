@@ -21,7 +21,7 @@ export const parseUrl = (url) => {
                 const [key, value] = e.split('=');
                 fragment_obj[key] = value;})}
         return {
-            domain: groups[1] || '',
+            domain: groups[1],
             path: groups[2] || '',
             parameters: groups[3] || '',
             parameters_list: parameters_list,
@@ -55,5 +55,5 @@ export const color = {
             bgBrightYellow: '\x1b[103m',  bgBrightBlue: '\x1b[104m',
             bgBrightMagenta: '\x1b[105m', bgBrightCyan: '\x1b[106m',
             bgBrightWhite: '\x1b[107m'};
-        const colorCode = colors[color.toLowerCase()] || colors.reset;
+        const colorCode = colors[color] || colors.reset;
         process.stdout.write(`${colorCode}${text}${colors.reset}`);}}
