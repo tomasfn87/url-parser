@@ -7,18 +7,20 @@ const main = () => {
     if (object === "native") {
         console.log(r);
         return;}
-    const title = "blue";
-    const subtitle = "magenta";
+    const title = "brightYellow";
+    const subtitle = "yellow";
     const content = "white";
     if (r) {
-        color.log(title, "Domain:\n");
-        process.stdout.write("- ");
+        color.log(title, "Domain");
+        process.stdout.write(":\n- ");
         color.log(content, `${r.domain}\n\n`);
         if (r.path) {
-            color.log(title, "Path:\n");
-            process.stdout.write("- ");
+            color.log(title, "Path");
+            process.stdout.write(":\n- ");
             color.log(content, `${r.path}\n\n`);}
-        r.parameters && color.log(title, "Parameters:\n");
+        if (r.parameters) {
+            color.log(title, "Parameters");
+            process.stdout.write(":\n");}
         if (Object.keys(r.parameters_obj).length) {
             let maxLength = 0;
             Object.entries(r.parameters_obj).forEach(e => {
@@ -26,10 +28,12 @@ const main = () => {
             Object.entries(r.parameters_obj).forEach(e => {
                 process.stdout.write("- ");
                 color.log(subtitle, `${e[0].padStart(maxLength)}`)
-                process.stdout.write(":")
+                process.stdout.write(":");
                 color.log(content, ` ${e[1]}\n`);});
             console.log();}
-        r.fragment && color.log(title, "Fragment:\n");
+        if (r.fragment) {
+            color.log(title, "Fragment");
+            process.stdout.write(":\n");}
         if (Object.keys(r.fragment_obj).length) {
             let maxLength = 0;
             Object.entries(r.fragment_obj).forEach(e => {
@@ -39,15 +43,14 @@ const main = () => {
                 color.log(subtitle, `${e[0].padStart(maxLength)}`)
                 if (e[1]) {
                     process.stdout.write(":");
-                    color.log(content, ` ${e[1]}\n`);}
-                else
-                    console.log();});
+                    color.log(content, ` ${e[1]}`);}
+                console.log();});
             console.log();}
         const fullUrl = (r.domain + (r.path || '') + (r.parameters || '')
             + (r.fragment || ''));
         if (input == fullUrl) {
-            color.log(title, "Full URL:\n");
-            process.stdout.write("- ");
+            color.log(title, "Full URL");
+            process.stdout.write(":\n- ");
             color.log(content, `${fullUrl}\n`);}}
     else
         console.log("Invalid URL.");}
