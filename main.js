@@ -40,10 +40,12 @@ const main = () => {
                 if (e[0].length > maxLength) maxLength = e[0].length;});
             Object.entries(r.fragment_obj).forEach(e => {
                 process.stdout.write("- ");
-                color.log(subtitle, `${e[0].padStart(maxLength)}`)
                 if (e[1]) {
+                    color.log(subtitle, `${e[0].padStart(maxLength)}`)
                     process.stdout.write(":");
                     color.log(content, ` ${e[1]}`);}
+                else {
+                    color.log(content, `${e[0].padStart(maxLength)}`)}
                 console.log();});
             console.log();}
         const fullUrl = (r.domain + (r.path || '') + (r.parameters || '')
