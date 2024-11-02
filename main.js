@@ -63,9 +63,9 @@ const loadConfigFile = (file) => {
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
     const configFile = path.join(__dirname, file);
     const defaultConfig = {
-        title: "brightCyan", subtitle: "cyan", content: "white"};
-    if (!fs.existsSync(configFile)) {
-        fs.writeFileSync(configFile, JSON.stringify(defaultConfig, null, 2));}
+        title: "brightCyan", subtitle: "cyan", content: "default"};
+    if (!fs.existsSync(configFile))
+        fs.writeFileSync(configFile, JSON.stringify(defaultConfig, null, 2));
     const config = JSON.parse(fs.readFileSync(configFile, "utf-8"));
     let error = false;
     Object.entries(config).forEach(e => {
@@ -73,8 +73,8 @@ const loadConfigFile = (file) => {
             color.log("dim", "The color ");
             color.log("brightRed", e[1]);
             color.log("dim", " is not a valid option for ");
-            color.log("white", e[0])
-            color.log("dim", ". Default ");
+            color.log("default", e[0])
+            color.log("dim", ". The color ");
             color.log(defaultConfig[e[0]], defaultConfig[e[0]]);
             color.log("dim", " will be used instead.\n");
             config[e[0]] = defaultConfig[e[0]];
@@ -82,7 +82,7 @@ const loadConfigFile = (file) => {
             error = true;}})
     if (error) {
         process.stdout.write("\nSuggested colors: ");
-        const skip = 5;
+        const skip = 6;
         for (let i=0; i<color.list().slice(skip).length - 2; i++) {
             color.log(color.list().slice(skip)[i],
                 color.list().slice(skip)[i]);
