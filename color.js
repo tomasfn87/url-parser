@@ -1,5 +1,6 @@
 export const color = {
     colors: {
+        default: '',
         reset: '\x1b[0m',
         hidden: '\x1b[8m',
         black: '\x1b[30m',
@@ -42,8 +43,12 @@ export const color = {
         bgBrightCyan: '\x1b[106m',
         bgBrightWhite: '\x1b[107m'},
     log: function(color, text) {
-        const colorCode = this.colors[color] || this.colors.reset;
-        process.stdout.write(`${colorCode}${text}${this.colors.reset}`);},
+        if (color == 'default')
+            process.stdout.write(text);
+        else {
+            const colorCode = this.colors[color] || this.colors.reset;
+            process.stdout.write(
+                `${colorCode}${text}${this.colors.reset}`);}},
     list: function() {
         return Object.keys(this.colors);},
     validate: function(color) {
