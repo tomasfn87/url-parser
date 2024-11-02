@@ -1,4 +1,7 @@
 import { color, parseUrl } from './url-parser.js';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+import path from 'path';
 
 const main = () => {
     const input = process.argv[2].replaceAll('\\', '')
@@ -7,9 +10,7 @@ const main = () => {
     if (object === "native") {
         console.log(r);
         return;}
-    const title = "brightYellow";
-    const subtitle = "yellow";
-    const content = "white";
+    const {title, subtitle, content} = loadConfigFile("config.json");
     if (r) {
         color.log(title, "Domain");
         process.stdout.write(":\n- ");
@@ -56,5 +57,15 @@ const main = () => {
             color.log(content, `${fullUrl}\n`);}}
     else
         console.log("Invalid URL.");}
+
+const loadConfigFile = (file) => {
+    const __dirname = path.dirname(fileURLToPath(import.meta.url));
+    const configFile = path.join(__dirname, file);
+    const defaultConfig = {
+        title: "brightCyan", subtitle: "cyan", content: "white"};
+    if (!fs.existsSync(configFile)) {
+        fs.writeFileSync(configFile, JSON.stringify(defaultConfig, null, 2));}
+    return JSON.parse(
+        fs.readFileSync(configFile, "utf-8"));}
 
 main();
