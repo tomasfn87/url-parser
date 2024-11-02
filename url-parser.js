@@ -24,15 +24,16 @@ export const parseUrl = (url) => {
             parts: {
                 domain: groups[1],
                 path: groups[2] || '',
-                parameters: groups[3] || '',
-                parameters_list: parameters_list,
-                parameters_obj: parameters_obj,
-                fragment: groups[4] || '',
-                fragment_list: fragment_list,
-                fragment_obj: fragment_obj
-            },
+                parameters: {
+                    str: groups[3] || '',
+                    list: parameters_list,
+                    obj: parameters_obj},
+                fragment: {
+                    str: groups[4] || '',
+                    list: fragment_list,
+                    obj: fragment_obj}},
             fullUrl: function() {
                 return this.parts.domain + (this.parts.path || '') +
-                    (this.parts.parameters || '') +
-                    (this.parts.fragment || '')}};}
+                    (this.parts.parameters.str || '') +
+                    (this.parts.fragment.str || '')}};}
     return undefined;}
