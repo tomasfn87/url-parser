@@ -21,12 +21,18 @@ export const parseUrl = (url) => {
                 const [key, value] = e.split('=');
                 fragment_obj[key] = value;})}
         return {
-            domain: groups[1],
-            path: groups[2] || '',
-            parameters: groups[3] || '',
-            parameters_list: parameters_list,
-            parameters_obj: parameters_obj,
-            fragment: groups[4] || '',
-            fragment_list: fragment_list,
-            fragment_obj: fragment_obj};}
+            parts: {
+                domain: groups[1],
+                path: groups[2] || '',
+                parameters: groups[3] || '',
+                parameters_list: parameters_list,
+                parameters_obj: parameters_obj,
+                fragment: groups[4] || '',
+                fragment_list: fragment_list,
+                fragment_obj: fragment_obj
+            },
+            fullUrl: function() {
+                return this.parts.domain + (this.parts.path || '') +
+                    (this.parts.parameters || '') +
+                    (this.parts.fragment || '')}};}
     return undefined;}
