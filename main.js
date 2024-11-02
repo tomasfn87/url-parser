@@ -65,7 +65,33 @@ const loadConfigFile = (file) => {
         title: "brightCyan", subtitle: "cyan", content: "white"};
     if (!fs.existsSync(configFile)) {
         fs.writeFileSync(configFile, JSON.stringify(defaultConfig, null, 2));}
-    return JSON.parse(
-        fs.readFileSync(configFile, "utf-8"));}
+    const config = JSON.parse(fs.readFileSync(configFile, "utf-8"));
+    let error = false;
+    Object.entries(config).forEach(e => {
+        if (!color.validate(e[1])) {
+            color.log("dim", "The color ");
+            color.log("brightRed", e[1]);
+            color.log("dim", " is not a valid option for ");
+            color.log("white", e[0])
+            color.log("dim", ". Default ");
+            color.log(defaultConfig[e[0]], defaultConfig[e[0]]);
+            color.log("dim", " will be used instead.\n");
+            config[e[0]] = defaultConfig[e[0]];
+            fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
+            error = true;}})
+    if (error) {
+        process.stdout.write("\nSuggested colors: ");
+        const skip = 5;
+        for (let i=0; i<color.list().slice(skip).length - 2; i++) {
+            color.log(color.list().slice(skip)[i],
+                color.list().slice(skip)[i]);
+            color.log("dim", ", ")}
+        color.log(color.list().slice(skip)[color.list().slice(skip).length-2],
+            color.list().slice(skip)[color.list().slice(skip).length-2]);
+        color.log("dim", " and ");
+        color.log(color.list().slice(skip)[color.list().slice(skip).length-1],
+            color.list().slice(skip)[color.list().slice(skip).length-1]);
+        color.log("dim", ".\n\n");}
+    return config;}
 
 main();
