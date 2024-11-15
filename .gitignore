@@ -3,3 +3,6 @@ js/config.json
 
 # C++
 c++/build/
+
+# VsCode
+*.vscode
