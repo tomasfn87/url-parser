@@ -29,29 +29,39 @@ public:
     ~Url();
     Url(std::string url);
     void set_url(std::string new_url);
-    void print_colored_url();
-    void print_parsed_url();
+    const void print_colored_url();
+    const void print_parsed_url();
 private:
     std::string url;
     ParsedUrl parsed_url;
-    std::regex url_parts = std::regex(
+    const std::regex url_parts = std::regex(
         R"(^((?:\w+:\/\/)?[^\/]+\.[^\/]+)((?:\/[^\/?#]*)*)(\?\S*?)?(#\S*)?$)",
-        std::regex_constants::ECMAScript | std::regex_constants::icase
-    );
+        std::regex_constants::ECMAScript | std::regex_constants::icase);
     void remove_all_chars(std::string& target, char remove);
-    void parse_url();
-    void parse_key_optional_value_list(
+    const void parse_url();
+    const void parse_key_optional_value_list(
         KeyOptionalValueData& target, std::string delimiter);
     void update_url();
-    std::string color_reset = "\x1b[0m";
-    std::string color_dim = "\x1b[2m";
-    std::string color_1 = "\x1b[95m";
-    std::string color_2 = "\x1b[33m";
-    std::string color_3 = "\x1b[36m";
-    std::string color_3_1 = "\x1b[96m";
-    std::string color_4 = "\x1b[34m";
-    std::string color_4_1 = "\x1b[94m";
-    std::string color_str(std::string str, std::string color);
-    void print_key_optional_value_list(
-        std::vector<KeyOptionalValue> list, std::string color);
+    const std::string color_reset = "\x1b[0m";
+    const std::string color_dim = "\x1b[2m";
+    const std::string color_1 = "\x1b[35m";
+    const std::string color_1_1 = "\x1b[95m";
+    const std::string color_2 = "\x1b[33m";
+    const std::string color_2_1 = "\x1b[93m";
+    const std::string color_3 = "\x1b[36m";
+    const std::string color_3_1 = "\x1b[96m";
+    const std::string color_4 = "\x1b[34m";
+    const std::string color_4_1 = "\x1b[94m";
+    const std::string color_str(std::string str, std::string color);
+    const std::vector<char> domain_chars = {':', '/', '.'};
+    const std::vector<char> path_chars = {'/'};
+    const std::vector<char> key_value_delimiters = {'='};
+    const std::vector<char> key_optional_value_chars = {'?', '#', '&'};
+    const bool is_char_in_list(std::vector<char> list, char target);
+    const std::string color_chars(
+        std::vector<char>, std::string target,
+        std::string color_main, std::string color_aux);
+    const void print_key_optional_value_list(
+        std::vector<KeyOptionalValue> list, std::string color_main,
+        std::string color_aux);
 };
