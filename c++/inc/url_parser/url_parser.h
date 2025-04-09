@@ -3,7 +3,6 @@
 #include <string>
 #include <map>
 #include <regex>
-#include <variant>
 #include <vector>
 
 struct KeyOptionalValue {
@@ -11,23 +10,17 @@ struct KeyOptionalValue {
     std::string value;
 };
 
-struct Fragment {
+struct KeyOptionalValueData {
     std::string base_string;
-    std::vector<std::string> fragment_list;
-    std::vector<KeyOptionalValue> fragment_map;
-};
-
-struct Parameter {
-    std::string base_string;
-    std::vector<std::string> parameter_list;
-    std::vector<KeyOptionalValue> parameter_map;
+    std::vector<std::string> list;
+    std::vector<KeyOptionalValue> map;
 };
 
 struct ParsedUrl {
     std::string domain;
     std::string path;
-    Parameter parameter;
-    Fragment fragment;
+    KeyOptionalValueData parameter;
+    KeyOptionalValueData fragment;
 };
 
 class Url {
@@ -45,7 +38,9 @@ private:
         std::regex_constants::ECMAScript | std::regex_constants::icase
     );
     void parse_url();
-    std::string color_str(std::string s, std::string color);
+    void parse_key_value_list(
+        KeyOptionalValueData& target, std::string delimiter);
+    std::string color_str(std::string str, std::string color);
     std::string color_reset = "\x1b[0m";
     std::string color_dim = "\x1b[2m";
     std::string color_1 = "\x1b[95m";
