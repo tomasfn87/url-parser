@@ -27,7 +27,8 @@ int main(int argc, char* argv[]) {
       url_3->print_colored_url();
       url_3->print_parsed_url();
    } else {
-      unique_ptr<Url> url(new Url(input));
+      unique_ptr<Url> url(new Url());
+      url->set_url(input);
       url->print_colored_url();
       url->print_parsed_url();
    }

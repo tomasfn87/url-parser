@@ -26,8 +26,9 @@ struct ParsedUrl {
 class Url {
 public:
     Url();
-    Url(std::string url);
     ~Url();
+    Url(std::string url);
+    void set_url(std::string new_url);
     void print_colored_url();
     void print_parsed_url();
 private:
@@ -37,10 +38,11 @@ private:
         R"(^((?:\w+:\/\/)?[^\/]+\.[^\/]+)((?:\/[^\/?#]*)*)(\?\S*?)?(#\S*)?$)",
         std::regex_constants::ECMAScript | std::regex_constants::icase
     );
+    void remove_all_chars(std::string& target, char remove);
     void parse_url();
-    void parse_key_value_list(
+    void parse_key_optional_value_list(
         KeyOptionalValueData& target, std::string delimiter);
-    std::string color_str(std::string str, std::string color);
+    void update_url();
     std::string color_reset = "\x1b[0m";
     std::string color_dim = "\x1b[2m";
     std::string color_1 = "\x1b[95m";
@@ -49,6 +51,7 @@ private:
     std::string color_3_1 = "\x1b[96m";
     std::string color_4 = "\x1b[34m";
     std::string color_4_1 = "\x1b[94m";
+    std::string color_str(std::string str, std::string color);
     void print_key_optional_value_list(
         std::vector<KeyOptionalValue> list, std::string color);
 };

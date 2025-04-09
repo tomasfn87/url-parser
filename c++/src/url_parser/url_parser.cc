@@ -8,15 +8,12 @@
 
 Url::Url() {}
 
-Url::Url(std::string url) : url(url) {
-    auto it = std::remove(url.begin(), url.end(), '\\');
-    url.erase(it, url.end());
-    parse_url();
-    parse_key_value_list(parsed_url.parameter, R"(=)");
-    parse_key_value_list(parsed_url.fragment, R"(=)");
-}
-
 Url::~Url() {}
+
+void Url::remove_all_chars(std::string& target, char remove) {
+    auto it = std::remove(target.begin(), target.end(), remove);
+    target.erase(it, target.end());
+}
 
 void Url::parse_url() {
     std::smatch parts;
@@ -28,7 +25,7 @@ void Url::parse_url() {
     }
 }
 
-void Url::parse_key_value_list(
+void Url::parse_key_optional_value_list(
     KeyOptionalValueData& target, std::string delimiter) {
     std::smatch matchs;
     std::string::const_iterator search_start = target.base_string.cbegin();
@@ -60,6 +57,22 @@ void Url::parse_key_value_list(
         }
         search_start = matchs.suffix().first;
     }
+}
+
+void Url::update_url() {
+    remove_all_chars(url, '\\');
+    parse_url();
+    parse_key_optional_value_list(parsed_url.parameter, R"(=)");
+    parse_key_optional_value_list(parsed_url.fragment, R"(=)");
+}
+
+Url::Url(std::string url) : url(url) {
+    update_url();
+}
+
+void Url::set_url(std::string new_url) {
+    url = new_url;
+    update_url();
 }
 
 std::string Url::color_str(std::string str, std::string color) {
