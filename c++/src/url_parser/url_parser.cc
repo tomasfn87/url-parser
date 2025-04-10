@@ -15,7 +15,7 @@ void Url::remove_all_chars(std::string& target, char remove) {
     target.erase(it, target.end());
 }
 
-void Url::parse_url() {
+const void Url::parse_url() {
     std::smatch parts;
     if (std::regex_match(url, parts, url_parts)) {
         parsed_url.domain = parts[1].str();
@@ -25,7 +25,7 @@ void Url::parse_url() {
     }
 }
 
-void Url::parse_key_optional_value_list(
+const void Url::parse_key_optional_value_list(
     KeyOptionalValueData& target, std::string delimiter) {
     std::smatch matchs;
     std::string::const_iterator search_start = target.base_string.cbegin();
@@ -69,7 +69,7 @@ void Url::set_url(std::string new_url) {
     update_url();
 }
 
-std::string Url::color_str(std::string str, std::string color) {
+const std::string Url::color_str(std::string str, std::string color) {
     if (color.size() == 0)
         return str;
     std::stringstream ss;
@@ -77,14 +77,14 @@ std::string Url::color_str(std::string str, std::string color) {
     return ss.str();
 }
 
-bool Url::is_char_in_list(std::vector<char> list, char target) {
+const bool Url::is_char_in_list(std::vector<char> list, char target) {
     for (size_t i = 0; i < list.size(); ++i)
         if (list[i] == target)
             return true;
     return false;
 }
 
-std::string Url::color_chars(
+const std::string Url::color_chars(
     std::vector<char> chars, std::string target,
     std::string color_main, std::string color_aux) {
     std::stringstream ss;
@@ -118,7 +118,7 @@ std::string Url::color_chars(
     return ss.str();
 }
 
-void Url::print_colored_url() {
+const void Url::print_colored_url() {
     std::cout 
         << color_chars(
             domain_chars, parsed_url.domain, "", color_1_1)
@@ -132,7 +132,7 @@ void Url::print_colored_url() {
             "", color_4_1) << "\n";
 }
 
-void Url::print_key_optional_value_list(
+const void Url::print_key_optional_value_list(
     std::vector<KeyOptionalValue> list, std::string color_main,
     std::string color_aux) {
     for (size_t i = 0; i < list.size(); ++i) {
@@ -140,7 +140,10 @@ void Url::print_key_optional_value_list(
             std::cout << "  " << color_str("{", color_dim) << "\n    ";
         else
             std::cout << "    ";
-        std::cout << color_str(list[i].key, color_aux);
+        if (list[i].value.size() > 0)
+            std::cout << color_str(list[i].key, color_aux);
+        else
+            std::cout << color_str(list[i].key, color_main);
         if (list[i].value.size() > 0)
             std::cout << color_str(":", color_dim) << " "
                 << color_str(list[i].value, color_main);
@@ -151,7 +154,7 @@ void Url::print_key_optional_value_list(
     }
 }
 
-void Url::print_parsed_url() {
+const void Url::print_parsed_url() {
     std::cout << color_str("*", color_dim) << " "
         << color_str("Domain", color_1) << color_str(":", color_dim)
         << "    " << color_chars(
@@ -160,16 +163,18 @@ void Url::print_parsed_url() {
         << color_str(":", color_dim) << "      "
         << color_chars(
             path_chars, parsed_url.path, color_2_1, "") << "\n";
-    if (parsed_url.parameter.base_string.size() > 0)
+    if (parsed_url.parameter.base_string.size() > 0) {
         std::cout << color_str("*", color_dim) << " "
             << color_str("Parameter", color_3) << color_str(":", color_dim)
             << " " << color_chars(key_optional_value_chars,
                 parsed_url.parameter.base_string, color_3_1, "") << "\n";
-    print_key_optional_value_list(parsed_url.parameter.map, color_3_1, color_3);
-    if (parsed_url.fragment.base_string.size() > 0)
+        print_key_optional_value_list(parsed_url.parameter.map, color_3_1, color_3);
+    }
+    if (parsed_url.fragment.base_string.size() > 0) {
         std::cout << color_str("*", color_dim) << " "
             << color_str("Fragment", color_4) << color_str(":", color_dim)
             << "  " << color_chars(key_optional_value_chars,
                 parsed_url.fragment.base_string, color_4_1, "") << "\n";
-    print_key_optional_value_list(parsed_url.fragment.map, color_4_1, color_4);
+        print_key_optional_value_list(parsed_url.fragment.map, color_4_1, color_4);
+    }
 }
