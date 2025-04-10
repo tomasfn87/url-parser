@@ -88,13 +88,33 @@ std::string Url::color_chars(
     std::vector<char> chars, std::string target,
     std::string color_main, std::string color_aux) {
     std::stringstream ss;
-    for (size_t i = 0; i < target.size(); ++i)
-        if (is_char_in_list(key_value_delimiters, target[i]))
-            ss << color_str(std::string(1, target[i]), color_1_1);
-        else if (is_char_in_list(chars, target[i]))
-            ss << color_str(std::string(1, target[i]), color_main);
-        else
-            ss << color_str(std::string(1, target[i]), color_aux);
+    int mode = 0;
+    for (size_t i = 0; i < target.size(); ++i) {
+        if (is_char_in_list(key_value_delimiters, target[i])) {
+            if (mode != 1) {
+                mode = 1;
+                if (i != 0)
+                    ss << color_reset;
+                ss << color_1_1;
+            }
+        } else if (is_char_in_list(chars, target[i])) {
+            if (mode != 2) {
+                mode = 2;
+                if (i != 0)
+                    ss << color_reset;
+                ss << color_main;
+            }
+        } else {
+            if (mode != 3) {
+                mode = 3;
+                if (i != 0)
+                    ss << color_reset;
+                ss << color_aux;
+            }
+        }
+        ss << std::string(1, target[i]);
+    }
+    ss << color_reset;
     return ss.str();
 }
 
