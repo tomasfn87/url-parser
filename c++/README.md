@@ -2,6 +2,10 @@
 
 <br>
 
+Test it [`here`](https://onlinegdb.com/RxfpyB4e3V)
+
+<br>
+
 ## Requirements
 
 - `make`
