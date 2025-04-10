@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>URL Parser</title>
+        <meta name="description" content="Form to insert and analyze URLs.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <style>
+            body {
+                padding-top: 20px;
+                background-color: #444; /* Cinza mais escuro para o fundo (cor atual da coluna 2) */
+                color: #d4d4d4;
+                font-family: sans-serif;
+            }
+            h1, h2, label {
+                color: #d4d4d4;
+                text-align: center;
+            }
+            #urlForm {
+                margin-bottom: 20px;
+            }
+            #output-container {
+                margin-top: 20px;
+            }
+            .url-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+                color: #d4d4d4;
+                background-color: #1e1e1e; /* Cinza escuro para a tabela */
+                font-family: monospace;
+            }
+            .url-table th, .url-table td {
+                padding: 8px;
+                text-align: left;
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .url-table tr {
+                margin-bottom: 2px;
+                display: block;
+                padding: 10px;
+                border-left: 2px solid #333;
+                border-right: 2px solid #333;
+            }
+            .url-table tr:nth-child(odd) {
+                background-color: #222; /* Cinza mais escuro para linhas ímpares */
+            }
+            .url-table tr:nth-child(even) {
+                background-color: #282828; /* Cinza um pouco mais claro para linhas pares */
+            }
+            .url-table td:first-child {
+                font-weight: bold;
+                background-color: #222; /* Cinza mais escuro para a primeira coluna (ímpar) */
+                padding-bottom: 0;
+                border-top: 2px solid #333;
+            }
+            .url-table tr:nth-child(even) td:first-child {
+                background-color: #282828; /* Cinza um pouco mais claro para a primeira coluna (par) */
+            }
+            .url-table td:nth-child(2) {
+                color: #ccc;
+                padding-top: 0;
+                font-family: monospace;
+                border-bottom: 2px solid #333;
+                background-color: #333; /* Cinza médio-escuro para coluna 2 (cor atual do fundo) */
+            }
+            .url-table tr:nth-child(even) td:nth-child(2) {
+                background-color: #3a3a3a; /* Cinza médio-escuro para coluna 2 (par) */
+            }
+            .url-table tr:first-child td:first-child {
+                border-top: none;
+            }
+            .url-table tr:last-child td:nth-child(2) {
+                border-bottom: none;
+            }
+            .url-table tr:nth-child(3),
+            .url-table tr:nth-child(5) {
+                margin-bottom: 1px;
+            }
+            .form-control {
+                background-color: #1e1e1e; /* Cinza escuro para o input */
+                color: #d4d4d4;
+                border: 1px solid #555;
+                font-family: monospace;
+            }
+            .form-control:focus {
+                background-color: #1e1e1e;
+                color: #baff33; /* Cor verde do foco do input */
+                border-color: #baff33;
+                box-shadow: 0 0 0 0.2rem rgba(186, 255, 51, 0.25);
+            }
+            .form-control::placeholder {
+                color: #999;
+                font-family: monospace;
+            }
+            .btn-primary {
+                display: block;
+                width: 100%;
+                background-color: #007bff;
+                border-color: #007bff;
+                color: #fff;
+            }
+            .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+            }
+            .param-key {
+                font-weight: bold;
+            }
+            .url-link {
+                color: inherit; /* Herda a cor do texto pai */
+                text-decoration: none; /* Remove a decoração de link (sublinhado) */
+            }
+            .url-link:hover {
+                color: #baff33; /* Cor verde ao passar o mouse (igual ao foco do input) */
+                text-decoration: underline; /* Opcional: Adiciona sublinhado ao passar o mouse */
+            }
+
+            @media (min-width: 768px) {
+                h1, h2 {
+                    text-align: left;
+                }
+                .url-table {
+                    display: table;
+                }
+                .url-table tr {
+                    display: table-row;
+                    border: none;
+                    padding: 0;
+                    margin-bottom: 0;
+                }
+                .url-table th, .url-table td {
+                    display: table-cell;
+                    width: auto;
+                    box-sizing: content-box;
+                    border-left: 2px solid #333;
+                    border-right: 2px solid #333;
+                }
+                .url-table thead th {
+                    border-bottom: 2px solid #333;
+                }
+                .url-table tbody td {
+                    border-bottom: 1px solid #333;
+                }
+                .url-table tbody tr:last-child td {
+                    border-bottom: none;
+                }
+                .url-table td:first-child {
+                    width: 150px;
+                    padding-bottom: 8px;
+                    border-left: none;
+                }
+                .url-table td:nth-child(2) {
+                    padding-top: 8px;
+                    border-right: none;
+                }
+                .btn-primary {
+                    display: inline-block;
+                    width: auto;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>URL Parser</h1>
+            <form id="urlForm">
+                <div class="form-group">
+                    <label for="urlInput">Enter URL:</label>
+                    <input type="text" class="form-control" id="urlInput" placeholder="https://example.com/path?param=value#fragment">
+                </div>
+                <button type="button" class="btn btn-primary" id="parseButton">Parse</button>
+            </form>
+
+            <div id="output-container" class="mt-4">
+                <h2>Analysis Result:</h2>
+                <table id="parsedResult" class="url-table">
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script>
+            const parseUrl = (url) => {
+                const RegExp = {
+                    UrlParts: /^((?:https?:\/\/)?[^\/]+\.[^\/]+)((?:\/[^\/?#]*)*)(\?\S*?)?(#\S*)?$/}
+                url = url.replaceAll('\\', '');
+                if (RegExp.UrlParts.test(url)) {
+                    const groups = RegExp.UrlParts.exec(url);
+                    let parameters_list = [];
+                    if (groups[3]) {
+                        parameters_list = groups[3].slice(1).split('&');}
+                    let parameters_obj = {};
+                    if (parameters_list.length) {
+                        parameters_list.forEach(e => {
+                            const [key, value] = e.split('=');
+                            parameters_obj[key] = value;})}
+                    let fragment_list = [];
+                    if (groups[4]) {
+                        fragment_list = groups[4].slice(1).split('&');}
+                    let fragment_obj = {};
+                    if (fragment_list.length) {
+                        fragment_list.forEach(e => {
+                            const [key, value] = e.split('=');
+                            fragment_obj[key] = value;})}
+                    return {
+                        parts: {
+                            domain: groups[1],
+                            path: groups[2] || '',
+                            parameters: {
+                                str: groups[3] || '',
+                                list: parameters_list,
+                                obj: parameters_obj},
+                            fragment: {
+                                str: groups[4] || '',
+                                list: fragment_list,
+                                obj: fragment_obj}},
+                        fullUrl: function() {
+                            return this.parts.domain + (this.parts.path || '') +
+                                (this.parts.parameters.str || '') +
+                                (this.parts.fragment.str || '')}};}
+                return undefined;}
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const parseButton = document.getElementById('parseButton');
+                const urlInput = document.getElementById('urlInput');
+                const parsedResultTableBody = document.querySelector('#parsedResult tbody');
+
+                parseButton.addEventListener('click', function() {
+                    const url = urlInput.value.replaceAll('\\', '');
+                    const r = parseUrl(url);
+                    parsedResultTableBody.innerHTML = '';
+
+                    if (!r) {
+                        const row = parsedResultTableBody.insertRow();
+                        const cell = row.insertCell();
+                        cell.colSpan = 2;
+                        cell.textContent = "Invalid URL.";
+                        return;
+                    }
+
+                    const addTableRow = (label, value) => {
+                        const row = parsedResultTableBody.insertRow();
+                        const labelCell = row.insertCell();
+                        const valueCell = row.insertCell();
+                        labelCell.textContent = label;
+                        valueCell.innerHTML = value || '-';
+                    };
+
+                    const domain = r.parts.domain;
+                    const fullUrl = r.fullUrl();
+
+                    addTableRow("Domain", `<a href="${domain}" class="url-link">${domain}</a>`);
+                    addTableRow("Path", r.parts.path);
+
+                    if (r.parts.parameters.str) {
+                        addTableRow("Parameters", r.parts.parameters.str);
+                        const paramsRows = Object.entries(r.parts.parameters.obj)
+                            .map(([key, value]) => `<div><span class="param-key">${key}</span>${value ? `: ${value}` : ''}</div>`).join('');
+                        addTableRow("Detailed Parameters", paramsRows || '<span class="param-key">-</span>');
+                    } else {
+                        addTableRow("Parameters", '-');
+                        addTableRow("Detailed Parameters", '<span class="param-key">-</span>');
+                    }
+
+                    if (r.parts.fragment.str) {
+                        addTableRow("Fragment", r.parts.fragment.str);
+                        const fragmentRows = Object.entries(r.parts.fragment.obj)
+                            .map(([key, value]) => `<div><span class="param-key">${key}</span>${value ? `=${value}` : ''}</div>`).join('');
+                        addTableRow("Detailed Fragment", fragmentRows || '<span class="param-key">-</span>');
+                    } else {
+                        addTableRow("Fragment", '-');
+                        addTableRow("Detailed Fragment", '<span class="param-key">-</span>');
+                    }
+
+                    addTableRow("Full URL", `<a href="${fullUrl}" class="url-link">${fullUrl}</a>`);
+                });
+            });
+        </script>
+    </body>
+</html>
