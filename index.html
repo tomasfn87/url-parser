@@ -220,7 +220,8 @@
         <script>
             const parseUrl = (url) => {
                 const RegExp = {
-                    UrlParts: /^((?:https?:\/\/)?[^\/]+\.[^\/]+)((?:\/[^\/?#]*)*)(\?\S*?)?(#\S*)?$/}
+                    UrlParts: /^((?:https?:\/\/)?[^\/]+\.[^\/?#]+)((?:\/?[^\/?#]*)*)(\?\S*?)?(#\S*)?$/
+                }
                 url = url.replaceAll('\\', '');
                 if (RegExp.UrlParts.test(url)) {
                     const groups = RegExp.UrlParts.exec(url);
@@ -252,7 +253,8 @@
                             parameters: {
                                 str: groups[3] || '',
                                 list: parameters_list,
-                                obj: parameters_obj},
+                                obj: parameters_obj
+                            },
                             fragment: {
                                 str: groups[4] || '',
                                 list: fragment_list,

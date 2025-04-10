@@ -51,10 +51,9 @@ const main = () => {
                 color.log(content, `${e[0].padStart(maxLength)}`);
             console.log();});
         console.log();}
-    if (input == r.fullUrl()) {
-        color.log(title, "Full URL");
-        process.stdout.write(":\n- ");
-        color.log(content, `${r.fullUrl()}\n`);}}
+    color.log(title, "Full URL");
+    process.stdout.write(":\n- ");
+    color.log(content, `${r.fullUrl()}\n`);}
 
 const loadConfigFile = (file) => {
     const __dirname = path.dirname(fileURLToPath(import.meta.url));

@@ -35,7 +35,7 @@ private:
     std::string url;
     ParsedUrl parsed_url;
     const std::regex url_parts = std::regex(
-        R"(^((?:\w+:\/\/)?[^\/]+\.[^\/]+)((?:\/[^\/?#]*)*)(\?\S*?)?(#\S*)?$)",
+        R"(^((?:\w+:\/\/)?[^\. \/]+(?:\.[^. \/]+)+)((?:\/[^\/?#=&]*)*)?(\?(?:&?[^\/ ?#=&]+(?:=[^\/ ?#=&]*)?)+)?(#(?:&?[^\/ ?#=&]+(?:=[^\/ ?#=&]*)?)+)?$)",
         std::regex_constants::ECMAScript | std::regex_constants::icase);
     void remove_all_chars(std::string& target, char remove);
     const void parse_url();
