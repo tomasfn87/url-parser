@@ -61,10 +61,19 @@
                 color: #d4d4d4;
                 border: 1px solid #555;
                 font-family: monospace;
+                transition: color 0.3s, text-shadow 0.3s, border-color 0.3s;
+            }
+            .form-control.invalid {
+                color: #ff4d4d;
+                text-shadow: 0 0 5px rgba(255, 77, 77, 0.8);
+                border-color: #ff4d4d;
+            }
+            .form-control.valid {
+                color: #baff33;
+                border-color: #baff33;
             }
             .form-control:focus {
                 background-color: #1e1e1e;
-                color: #baff33;
                 border-color: #baff33;
                 box-shadow: 0 0 0 0.2rem rgba(186, 255, 51, 0.25);
             }
@@ -78,10 +87,17 @@
                 background-color: #007bff;
                 border-color: #007bff;
                 color: #fff;
+                transition: background-color 0.3s, border-color 0.3s, color 0.3s;
             }
             .btn-primary:hover {
                 background-color: #0056b3;
                 border-color: #0056b3;
+            }
+            .btn-primary:disabled {
+                background-color: #6c757d;
+                border-color: #6c757d;
+                color: #fff;
+                cursor: not-allowed;
             }
             .param-key {
                 font-weight: bold;
@@ -106,7 +122,10 @@
                 border: none;
             }
             .sub-table tr {
-                background-color: transparent !important;
+                background-color: #2a2a2a;
+            }
+            .sub-table tr:nth-child(even) {
+                background-color: #333;
             }
             .sub-table .param-key-sub {
                 font-weight: bold;
@@ -183,7 +202,7 @@
                     <label for="urlInput">Enter URL:</label>
                     <input type="text" class="form-control" id="urlInput" placeholder="https://example.com/path?param=value#fragment">
                 </div>
-                <button type="button" class="btn btn-primary" id="parseButton">Parse</button>
+                <button type="button" class="btn btn-primary" id="parseButton" disabled>Parse</button>
             </form>
 
             <div id="output-container" class="mt-4">
@@ -212,19 +231,24 @@
                     if (parameters_list.length) {
                         parameters_list.forEach(e => {
                             const [key, value] = e.split('=');
-                            parameters_obj[key] = value;})}
+                            parameters_obj[key] = value;
+                        })
+                    }
                     let fragment_list = [];
                     if (groups[4]) {
-                        fragment_list = groups[4].slice(1).split('&');}
+                        fragment_list = groups[4].slice(1).split('&');
+                    }
                     let fragment_obj = {};
                     if (fragment_list.length) {
                         fragment_list.forEach(e => {
                             const [key, value] = e.split('=');
-                            fragment_obj[key] = value;})}
+                            fragment_obj[key] = value;
+                        })
+                    }
                     return {
                         parts: {
                             domain: groups[1],
-                            path: groups[2] || '',
+                            path: groups[2] || '/',
                             parameters: {
                                 str: groups[3] || '',
                                 list: parameters_list,
@@ -232,17 +256,38 @@
                             fragment: {
                                 str: groups[4] || '',
                                 list: fragment_list,
-                                obj: fragment_obj}},
+                                obj: fragment_obj
+                            }
+                        },
                         fullUrl: function() {
                             return this.parts.domain + (this.parts.path || '') +
                                 (this.parts.parameters.str || '') +
-                                (this.parts.fragment.str || '')}};}
-                return undefined;}
+                                (this.parts.fragment.str || '')
+                        }
+                    };
+                }
+                return undefined;
+            }
 
             document.addEventListener('DOMContentLoaded', function() {
                 const parseButton = document.getElementById('parseButton');
                 const urlInput = document.getElementById('urlInput');
                 const parsedResultTableBody = document.querySelector('#parsedResult tbody');
+
+                const validateUrlInput = () => {
+                    const url = urlInput.value.replaceAll('\\', '');
+                    if (parseUrl(url)) {
+                        urlInput.classList.remove('invalid');
+                        urlInput.classList.add('valid');
+                        parseButton.disabled = false;
+                    } else {
+                        urlInput.classList.remove('valid');
+                        urlInput.classList.add('invalid');
+                        parseButton.disabled = true;
+                    }
+                };
+
+                urlInput.addEventListener('input', validateUrlInput);
 
                 parseButton.addEventListener('click', function() {
                     const url = urlInput.value.replaceAll('\\', '');
@@ -275,7 +320,8 @@
                         addTableRow("Parameters", r.parts.parameters.str);
                         let paramsSubTable = '<table class="sub-table">';
                         for (const key in r.parts.parameters.obj) {
-                            paramsSubTable += `<tr><td><span class="param-key-sub">${key}</span></td><td>${r.parts.parameters.obj[key] || ''}</td></tr>`;
+                            const rowClass = Object.keys(r.parts.parameters.obj).indexOf(key) % 2 === 0 ? '' : 'even';
+                            paramsSubTable += `<tr class="${rowClass}"><td><span class="param-key-sub">${key}</span></td><td>${r.parts.parameters.obj[key] || ''}</td></tr>`;
                         }
                         paramsSubTable += '</table>';
                         addTableRow("Detailed Parameters", paramsSubTable);
@@ -285,7 +331,8 @@
                         addTableRow("Fragment", r.parts.fragment.str);
                         let fragmentSubTable = '<table class="sub-table">';
                         for (const key in r.parts.fragment.obj) {
-                            fragmentSubTable += `<tr><td><span class="param-key-sub">${key}</span></td><td>${r.parts.fragment.obj[key] || ''}</td></tr>`;
+                            const rowClass = Object.keys(r.parts.fragment.obj).indexOf(key) % 2 === 0 ? '' : 'even';
+                            fragmentSubTable += `<tr class="${rowClass}"><td><span class="param-key-sub">${key}</span></td><td>${r.parts.fragment.obj[key] || ''}</td></tr>`;
                         }
                         fragmentSubTable += '</table>';
                         addTableRow("Detailed Fragment", fragmentSubTable);
