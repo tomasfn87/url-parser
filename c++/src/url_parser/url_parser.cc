@@ -19,7 +19,10 @@ const void Url::parse_url() {
     std::smatch parts;
     if (std::regex_match(url, parts, url_parts)) {
         parsed_url.domain = parts[1].str();
-        parsed_url.path = parts[2].str();
+        if (parts[2].str().size() > 0)
+            parsed_url.path = parts[2].str();
+        else
+            parsed_url.path = "/";
         parsed_url.parameter.base_string = parts[3].str();
         parsed_url.fragment.base_string = parts[4].str();
     }
