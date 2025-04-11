@@ -26,10 +26,12 @@
 
         table {
             border-collapse: collapse;
+            /* Required for single-line borders */
         }
 
-        th, td {
-            border: 1px solid #626262;
+        th,
+        td {
+            border: 1px solid #6C6C6C;
         }
 
         #urlForm {
@@ -40,96 +42,40 @@
             margin-top: 20px;
         }
 
-        /* Desktop Styles */
-        @media (min-width: 768px) {
-            .url-table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 10px;
-                color: #d4d4d4;
-                background-color: #1e1e1e;
-                font-family: monospace;
-            }
-
-            .url-table th,
-            .url-table td {
-                padding: 8px;
-                text-align: left;
-                word-break: break-word;
-            }
-
-            .url-table td:first-child {
-                font-weight: bold;
-                padding-right: 15px;
-                min-width: 180px;
-            }
-
-            .url-table td:nth-child(2) {
-                color: #ccc;
-            }
-
-            .sub-table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 5px;
-                color: #d4d4d4;
-                font-family: monospace;
-            }
-
-            .sub-table td {
-                padding: 5px;
-                text-align: left;
-                font-size: 0.9em;
-                border: none;
-                word-break: break-word;
-            }
-
-            .sub-table .param-key-sub {
-                font-weight: bold;
-                color: #eee;
-                margin-right: 5px;
-            }
-
-            .sub-table .param-key-cell {
-                white-space: nowrap;
-            }
+        .url-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            color: #d4d4d4;
+            background-color: #1e1e1e;
+            font-family: monospace;
         }
 
-        /* Mobile Styles */
-        @media (max-width: 767px) {
-            .table-responsive > .url-table td:nth-child(2){
-                word-break: break-word;
-            }
-
-            .table-responsive > .sub-table {
-                display: block;
-            }
-
-           .mobile-key {
-                display: block;
-                font-weight: bold;
-                color: #eee;
-                background-color: #2a2a2a;
-                padding: 5px;
-                margin-bottom: 0;
-                word-break: break-word;
-            }
-
-            .mobile-value {
-                word-break: break-word;
-                padding: 5px;
-                background-color: #333;
-                 margin-bottom: 5px;
-            }
+        .url-table th,
+        .url-table td {
+            padding: 8px;
+            text-align: left;
+            word-break: break-word;
         }
 
-        /* Base Styles (Applied to all screen sizes) */
+        .url-table td:first-child {
+            font-weight: bold;
+            padding-right: 15px;
+            min-width: 180px;
+        }
+
+        .url-table td:nth-child(2) {
+            color: #ccc;
+        }
+
         .form-control {
             background-color: #1e1e1e;
             color: #d4d4d4;
             border: 1px solid #555;
             font-family: monospace;
-            transition: color 0.3s, text-shadow 0.3s, border-color 0.3s;
+            transition: color 0.3s,
+            text-shadow 0.3s,
+            border-color 0.3s;
         }
 
         .form-control.invalid {
@@ -152,15 +98,20 @@
         .form-control::placeholder {
             color: #999;
             font-family: monospace;
+            transition: color 0.3s,
+            text-shadow 0.3s,
+            border-color 0.3s;
         }
 
         .btn-primary {
             display: block;
-            width: 100%;
+            width: 48%;
             background-color: #007bff;
             border-color: #007bff;
             color: #fff;
-            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+            transition: background-color 0.3s,
+            border-color 0.3s,
+            color 0.3s;
         }
 
         .btn-primary:hover {
@@ -189,7 +140,80 @@
             color: #baff33;
             text-decoration: underline;
         }
+
+        .sub-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+            color: #d4d4d4;
+            font-family: monospace;
+        }
+
+        .sub-table td {
+            padding: 5px;
+            text-align: left;
+            font-size: 0.9em;
+            border: none;
+            word-break: break-word;
+        }
+
+        .sub-table .param-key-sub {
+            font-weight: bold;
+            color: #eee;
+            margin-right: 5px;
+        }
+
+        .sub-table .param-key-cell {
+            white-space: nowrap;
+        }
+
+        #button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Styles for mobile view (max-width: 767px) */
+        @media (max-width: 767px) {
+            .sub-table tr {
+                display: block;
+            }
+
+            .sub-table td {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .sub-table .param-key-cell {
+                background-color: #2a2a2a;
+                padding: 5px;
+                white-space: normal;
+            }
+
+            .sub-table .param-value-cell {
+                background-color: #333;
+                padding: 5px;
+            }
+        }
+
+        /* Resetting styles for desktop view (min-width: 768px) */
+        @media (min-width: 768px) {
+            .sub-table tr {
+                display: table-row;
+            }
+
+            .sub-table td {
+                display: table-cell;
+                width: auto;
+            }
+
+            .sub-table .param-key-cell,
+            .sub-table .param-value-cell {
+                background-color: transparent;
+            }
+        }
     </style>
+
 </head>
 
 <body>
@@ -201,9 +225,12 @@
                 <input type="text" class="form-control" id="urlInput"
                     placeholder="https://example.com/path?param=value#fragment">
             </div>
-            <button type="button" class="btn btn-primary" id="parseButton" disabled>Parse</button>
+            <div id="button-container">
+                <button type="button" class="btn btn-primary" id="parseButton" disabled>Parse</button>
+                <p>&nbsp;</p>
+                <button type="button" class="btn btn-primary" id="decodeButton" disabled>Decode</button>
+            </div>
         </form>
-
         <div id="output-container" class="mt-4">
             <h2>Analysis Result:</h2>
             <div class="table-responsive">
@@ -219,64 +246,74 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        const parseUrl = (url) => {
+        const parseUrl = (url, decode = false) => {
             const RegExp = {
-                UrlParts: /^((?:https?:\/\/)?[^\/]+\.[^\/?#]+)((?:\/?[^\/?#]*)*)(\?\S*?)?(#\S*)?$/
-            }
+                UrlParts: /^((?:https?:\/\/)?([^\/]+))((?:\/?[^\/?#]*)*)(\?([^#]*))?(#(.*))?$/
+            };
             url = url.replaceAll('\\', '');
+            if (decode) {
+                try {
+                    url = decodeURI(url);
+                } catch (e) {
+                    console.error("Error decoding URL:", url, e);
+                }
+            }
             if (RegExp.UrlParts.test(url)) {
                 const groups = RegExp.UrlParts.exec(url);
+                const domainWithProtocol = groups[1] || '';
+                const domain = domainWithProtocol;
+                const path = groups[3] || '/';
+                const queryString = groups[4] || '';
+                const hashString = groups[6] || '';
+
                 let parameters_list = [];
-                if (groups[3]) {
-                    parameters_list = groups[3].slice(1).split('&');
-                }
                 let parameters_obj = {};
-                if (parameters_list.length) {
+                if (queryString) {
+                    parameters_list = queryString.slice(1).split('&');
                     parameters_list.forEach(e => {
-                        const [key, value] = e.split('=');
-                        parameters_obj[key] = value;
-                    })
+                        let [key, value] = e.split('=');
+                        parameters_obj[key] = value !== undefined ? value : '';
+                    });
                 }
+
                 let fragment_list = [];
-                if (groups[4]) {
-                    fragment_list = groups[4].slice(1).split('&');
-                }
                 let fragment_obj = {};
-                if (fragment_list.length) {
+                if (hashString) {
+                    fragment_list = hashString.slice(1).split('&');
                     fragment_list.forEach(e => {
                         const [key, value] = e.split('=');
-                        fragment_obj[key] = value;
-                    })
+                        fragment_obj[key] = value !== undefined ? value : '';
+                    });
                 }
+
                 return {
                     parts: {
-                        domain: groups[1],
-                        path: groups[2] || '/',
+                        domain: domain,
+                        path: path,
                         parameters: {
-                            str: groups[3] || '',
+                            str: queryString,
                             list: parameters_list,
                             obj: parameters_obj
                         },
                         fragment: {
-                            str: groups[4] || '',
+                            str: hashString,
                             list: fragment_list,
                             obj: fragment_obj
                         }
                     },
                     fullUrl: function () {
-                        return this.parts.domain + (this.parts.path || '') +
-                            (this.parts.parameters.str || '') +
-                            (this.parts.fragment.str || '')
+                        return domainWithProtocol + path + queryString + hashString;
                     }
                 };
             }
             return undefined;
-        }
+        };
 
         document.addEventListener('DOMContentLoaded', function () {
             const parseButton = document.getElementById('parseButton');
             const urlInput = document.getElementById('urlInput');
             const parsedResultTableBody = document.querySelector('#parsedResult tbody');
+            const decodeButton = document.getElementById('decodeButton');
 
             const validateUrlInput = () => {
                 const url = urlInput.value.replaceAll('\\', '');
@@ -284,18 +321,20 @@
                     urlInput.classList.remove('invalid');
                     urlInput.classList.add('valid');
                     parseButton.disabled = false;
+                    decodeButton.disabled = false;
                 } else {
                     urlInput.classList.remove('valid');
                     urlInput.classList.add('invalid');
                     parseButton.disabled = true;
+                    decodeButton.disabled = true;
                 }
             };
 
             urlInput.addEventListener('input', validateUrlInput);
 
-            parseButton.addEventListener('click', function () {
+            const handleParse = (decode) => {
                 const url = urlInput.value.replaceAll('\\', '');
-                const r = parseUrl(url);
+                const r = parseUrl(url, decode);
                 parsedResultTableBody.innerHTML = '';
 
                 if (!r) {
@@ -308,126 +347,161 @@
 
                 const addTableRow = (label, value, isOdd, isSubtable = false) => {
                     const row = parsedResultTableBody.insertRow();
-
                     const bgColor = isOdd ? (isSubtable ? '#2a2a2a' : '#222') : (isSubtable ? '#333' : '#282828');
                     row.style.backgroundColor = bgColor;
-
                     const labelCell = row.insertCell();
+                    let valueCellContent = value;
+                    if (decode && value) {
+                        try {
+                            valueCellContent = decodeURIComponent(value);
+                        } catch (e) {
+                            console.error("Error decoding value:", value, e);
+                        }
+                    }
                     const valueCell = row.insertCell();
                     labelCell.textContent = label;
-                    valueCell.innerHTML = value || '-';
-
+                    valueCell.innerHTML = valueCellContent || '-';
                     labelCell.style.fontWeight = 'bold';
                     labelCell.style.paddingRight = '15px';
-
                     valueCell.style.color = '#ccc';
-                   valueCell.style.backgroundColor = isOdd ? (isSubtable ? '' : '#333') : (isSubtable ? '' : '#3a3a3a');
+                    valueCell.style.backgroundColor = isOdd ? (isSubtable ? '' : '#333') : (isSubtable ? '' : '#3a3a3a');
                 };
 
-                const domain = r.parts.domain;
-                const fullUrl = r.fullUrl();
+                let domain = r.parts.domain;
+                let fullUrl = r.fullUrl();
+                let path = r.parts.path;
+                if (decode) {
+                    try {
+                        domain = decodeURIComponent(domain);
+                    } catch (e) {
+                        console.error("Error decoding domain:", domain, e);
+                    }
+                    try {
+                        path = decodeURIComponent(path);
+                    } catch (e) {
+                        console.error("Error decoding path:", path, e);
+                    }
+                    try {
+                        fullUrl = decodeURIComponent(fullUrl);
+                    } catch (e) {
+                        console.error("Error decoding fullUrl:", fullUrl, e);
+                    }
+                }
                 let isOdd = true;
 
-                addTableRow("Domain", `<a href="${domain}" class="url-link">${fullUrl}</a>`, isOdd);
+                addTableRow("Domain", `<a href="${domain}" class="url-link">${domain}</a>`, isOdd);
                 isOdd = !isOdd;
-                addTableRow("Path", r.parts.path, isOdd);
+                addTableRow("Path", path, isOdd);
                 isOdd = !isOdd;
 
                 if (r.parts.parameters.list.length > 0) {
                     addTableRow("Parameters", r.parts.parameters.str, isOdd);
                     isOdd = !isOdd;
+                    let paramsSubTable = '<table class="sub-table">';
+                    let index = 0;
+                    let maxKeyWidth = 0;
+                    let keyValues = [];
 
-                    let paramsSubTableHTML = '';
-                    const applyWidthAdjustment = window.innerWidth >= 768;
-
-                    if(applyWidthAdjustment){
-                        let paramsSubTable = '<table class="sub-table">';
-                        let index = 0;
-                        let maxKeyWidth = 0;
-                        let keyValues = [];
-
-                         for (const key in r.parts.parameters.obj) {
-                            const value = r.parts.parameters.obj[key] || '';
-                            const keyHTML = `<span class="param-key-sub">${key}</span>`;
-
-                            const tempDiv = document.createElement('div');
-                            tempDiv.style.position = 'absolute';
-                            tempDiv.style.visibility = 'hidden';
-                            tempDiv.style.whiteSpace = 'nowrap';
-                            tempDiv.innerHTML = keyHTML;
-                            document.body.appendChild(tempDiv);
-                            maxKeyWidth = Math.max(maxKeyWidth, tempDiv.offsetWidth);
-                            document.body.removeChild(tempDiv);
-
-                            let widthStyle = `style="width: ${maxKeyWidth}px"`;
-                              paramsSubTableHTML += `<tr style="background-color: ${index % 2 === 0 ? '#2a2a2a' : '#333'}"><td class="param-key-cell" ${widthStyle}>${keyHTML}</td><td>${value}</td></tr>`;
-                             index++;
+                    for (const key in r.parts.parameters.obj) {
+                        let value = r.parts.parameters.obj[key] || '';
+                        let decodedKey = key;
+                        if (decode) {
+                            try {
+                                decodedKey = decodeURIComponent(key);
+                            } catch (e) {
+                                console.error("Error decoding key:", key, e);
+                            }
+                            try {
+                                value = decodeURIComponent(value);
+                            } catch (e) {
+                                console.error("Error decoding value:", value, e);
+                            }
                         }
-                        paramsSubTable += paramsSubTableHTML;
-                        paramsSubTable += '</table>';
-                        addTableRow("Detailed Parameters", paramsSubTable, isOdd, true);
-                    }
-                     else {
-                        for (const key in r.parts.parameters.obj) {
-                            const value = r.parts.parameters.obj[key] || '';
-                            paramsSubTableHTML += `<div><span class="mobile-key">${key}</span><div style="color:#ccc">${value}</div></div>`;
-                        }
-                         addTableRow("Detailed Parameters", paramsSubTableHTML, isOdd, true);
+
+                        const keyHTML = `<span class="param-key-sub">${decodedKey}</span>`;
+
+                        const tempDiv = document.createElement('div');
+                        tempDiv.style.position = 'absolute';
+                        tempDiv.style.visibility = 'hidden';
+                        tempDiv.style.whiteSpace = 'nowrap';
+                        tempDiv.innerHTML = keyHTML;
+                        document.body.appendChild(tempDiv);
+                        maxKeyWidth = Math.max(maxKeyWidth, tempDiv.offsetWidth);
+                        document.body.removeChild(tempDiv);
+
+                        index++;
+                        paramsSubTable += `<tr style="background-color: ${index % 2 === 0 ? '#2a2a2a' : '#333'}"><td class="param-key-cell" style="width: ${maxKeyWidth}px">${keyHTML}</td><td class="param-value-cell">${value}</td></tr>`;
                     }
 
+                    paramsSubTable += '</table>';
+                    addTableRow("Detailed Parameters", paramsSubTable, isOdd, true);
                     isOdd = !isOdd;
                 }
 
                 if (r.parts.fragment.list.length > 0) {
                     addTableRow("Fragment", r.parts.fragment.str, isOdd);
                     isOdd = !isOdd;
+                    let fragmentSubTable = '<table class="sub-table">';
+                    let index = 0;
+                    let maxKeyWidth = 0;
+                    let keyValues = [];
 
-                    let fragmentSubTableHTML = '';
-                    const applyWidthAdjustment = window.innerWidth >= 768;
-
-                   if(applyWidthAdjustment){
-                        let fragmentSubTable = '<table class="sub-table">';
-                        let index = 0;
-                        let maxKeyWidth = 0;
-                         let keyValues = [];
-
-                         for (const key in r.parts.fragment.obj) {
-                            const value = r.parts.fragment.obj[key] || '';
-                            const keyHTML = `<span class="param-key-sub"><strong>${key}</strong></span>`;
-
-                            const tempDiv = document.createElement('div');
-                            tempDiv.style.position = 'absolute';
-                            tempDiv.style.visibility = 'hidden';
-                            tempDiv.style.whiteSpace = 'nowrap';
-                            tempDiv.innerHTML = keyHTML;
-                            document.body.appendChild(tempDiv);
-                            maxKeyWidth = Math.max(maxKeyWidth, tempDiv.offsetWidth);
-                            document.body.removeChild(tempDiv);
-
-                            let widthStyle = `style="width: ${maxKeyWidth}px"`;
-                              fragmentSubTableHTML += `<tr style="background-color: ${index % 2 === 0 ? '#2a2a2a' : '#333'}"><td class="param-key-cell" ${widthStyle}>${keyHTML}</td><td>${value}</td></tr>`;
-                             index++;
+                    for (const key in r.parts.fragment.obj) {
+                        let decodedKey = key;
+                        if (decode) {
+                            try {
+                                decodedKey = decodeURIComponent(key);
+                            } catch (e) {
+                                console.error("Error decoding key:", key, e);
+                            }
                         }
-                        fragmentSubTable += fragmentSubTableHTML;
-                        fragmentSubTable += '</table>';
-                        addTableRow("Detailed Fragment", fragmentSubTable, isOdd, true);
-                     }
-                     else {
-                         for (const key in r.parts.fragment.obj) {
-                            const value = r.parts.fragment.obj[key] || '';
-                            const keyHTML = `<span class="param-key-sub">${key}</span>`;
-
-                            fragmentSubTableHTML += `<div><span class="mobile-key">${key}</span><div style="color:#ccc">${value}</div></div>`;
+                        let value = r.parts.fragment.obj[key] || '';
+                        if (decode) {
+                            try {
+                                value = decodeURIComponent(value);
+                            } catch (e) {
+                                console.error("Error decoding value:", key, e);
+                            }
                         }
-                        addTableRow("Detailed Fragment", fragmentSubTableHTML, isOdd, true);
-                     }
+                        const keyHTML = `<span class="param-key-sub">${decodedKey}</span>`;
+                        keyValues.push({
+                            keyHTML,
+                            value
+                        });
+
+                        const tempDiv = document.createElement('div');
+                        tempDiv.style.position = 'absolute';
+                        tempDiv.style.visibility = 'hidden';
+                        tempDiv.style.whiteSpace = 'nowrap';
+                        tempDiv.innerHTML = keyHTML;
+                        document.body.appendChild(tempDiv);
+                        maxKeyWidth = Math.max(maxKeyWidth, tempDiv.offsetWidth);
+                        document.body.removeChild(tempDiv);
+
+                    }
+
+                    index = 0;
+                    for (const {
+                        keyHTML,
+                        value
+                    } of keyValues) {
+                        fragmentSubTable += `<tr style="background-color: ${index % 2 === 0 ? '#2a2a2a' : '#333'}"><td class="param-key-cell" style="width: ${maxKeyWidth}px">${keyHTML}</td><td class="param-value-cell">${value}</td></tr>`;
+                        index++;
+                    }
+
+                    fragmentSubTable += '</table>';
+                    addTableRow("Detailed Fragment", fragmentSubTable, isOdd, true);
                     isOdd = !isOdd;
                 }
 
                 addTableRow("Full URL", `<a href="${fullUrl}" class="url-link">${fullUrl}</a>`, isOdd);
-            });
+            };
+
+            parseButton.addEventListener('click', () => handleParse(false));
+            decodeButton.addEventListener('click', () => handleParse(true));
         });
     </script>
+
 </body>
 
 </html>
