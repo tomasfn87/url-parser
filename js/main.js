@@ -1,47 +1,54 @@
-import { parseUrl } from './url-parser.js';
+import Url from './url-parser.js';
 import { color } from './color.js';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 import path from 'path';
 
 const main = () => {
-    const input = process.argv[2].replaceAll('\\', '')
+    const input = process.argv[2]
     const object = (process.argv[3] || '').toLowerCase();
-    const r = parseUrl(input);
+    const r = new Url({ url: input });
     if (object === "native") {
-        console.log(r.parts);
-        return;}
+        console.log(r.parsedUrl.parts);
+        return;
+    }
     if (!r) {
         console.log("Invalid URL.");
-        return;}
+        return;
+    }
     const {title, subtitle, content} = loadConfigFile("config.json");
     color.log(title, "Domain");
     process.stdout.write(":\n- ");
-    color.log(content, `${r.parts.domain}\n\n`);
-    if (r.parts.path) {
+    color.log(content, `${r.parsedUrl.parts.domain}\n\n`);
+    if (r.parsedUrl.parts.path) {
         color.log(title, "Path");
         process.stdout.write(":\n- ");
-        color.log(content, `${r.parts.path}\n\n`);}
+        color.log(content, `${r.parsedUrl.parts.path}\n\n`);
+    }
     let maxLength = 0;
-    if (r.parts.parameters.str) {
+    if (r.parsedUrl.parts.parameters.str) {
         color.log(title, "Parameters");
-        process.stdout.write(":\n");}
-    if (Object.keys(r.parts.parameters.obj).length) {
-        Object.entries(r.parts.parameters.obj).forEach(e => {
-            if (e[0].length > maxLength) maxLength = e[0].length;});
-        Object.entries(r.parts.parameters.obj).forEach(e => {
+        process.stdout.write(":\n");
+    }
+    if (Object.keys(r.parsedUrl.parts.parameters.obj).length) {
+        Object.entries(r.parsedUrl.parts.parameters.obj).forEach(e => {
+            if (e[0].length > maxLength) maxLength = e[0].length;
+        });
+        Object.entries(r.parsedUrl.parts.parameters.obj).forEach(e => {
             process.stdout.write("- ");
             color.log(subtitle, `${e[0].padStart(maxLength)}`)
             process.stdout.write(":");
-            color.log(content, ` ${e[1]}\n`);});
+            color.log(content, ` ${e[1]}\n`);
+        });
         console.log();}
-    if (r.parts.fragment.str) {
+    if (r.parsedUrl.parts.fragment.str) {
         color.log(title, "Fragment");
-        process.stdout.write(":\n");}
-    if (Object.keys(r.parts.fragment.obj).length) {
-        Object.entries(r.parts.fragment.obj).forEach(e => {
+        process.stdout.write(":\n");
+    }
+    if (Object.keys(r.parsedUrl.parts.fragment.obj).length) {
+        Object.entries(r.parsedUrl.parts.fragment.obj).forEach(e => {
             if (e[0].length > maxLength) maxLength = e[0].length;});
-        Object.entries(r.parts.fragment.obj).forEach(e => {
+        Object.entries(r.parsedUrl.parts.fragment.obj).forEach(e => {
             process.stdout.write("- ");
             if (e[1]) {
                 color.log(subtitle, `${e[0].padStart(maxLength)}`)
@@ -49,17 +56,21 @@ const main = () => {
                 color.log(content, ` ${e[1]}`);}
             else
                 color.log(content, `${e[0].padStart(maxLength)}`);
-            console.log();});
-        console.log();}
+            console.log();
+        });
+        console.log();
+    }
     color.log(title, "Full URL");
     process.stdout.write(":\n- ");
-    color.log(content, `${r.fullUrl()}\n`);}
+    color.log(content, `${r.getFullUrl()}\n`);
+}
 
 const loadConfigFile = (file) => {
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
     const configFile = path.join(__dirname, file);
     const defaultConfig = {
-        title: "cyan", subtitle: "brightCyan", content: "default"};
+        title: "cyan", subtitle: "brightCyan", content: "default"
+    };
     if (!fs.existsSync(configFile))
         fs.writeFileSync(configFile, JSON.stringify(defaultConfig, null, 2));
     let config = defaultConfig;
@@ -69,10 +80,13 @@ const loadConfigFile = (file) => {
             !Object.keys(config).includes("subtitle") ||
             !Object.keys(config).includes("content")) {
             config = defaultConfig;
-            fs.writeFileSync(configFile, JSON.stringify(config, null, 2));}}
+            fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
+        }
+    }
     catch {
         config = defaultConfig;
-        fs.writeFileSync(configFile, JSON.stringify(config, null, 2));}
+        fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
+    }
     let error = false;
     Object.entries(config).forEach(e => {
         if (!color.validate(e[1])) {
@@ -85,7 +99,9 @@ const loadConfigFile = (file) => {
             color.log("dim", ". The color ");
             color.log(defaultConfig[e[0]], defaultConfig[e[0]]);
             color.log("dim", " will be used instead.\n");
-            config[e[0]] = defaultConfig[e[0]];}})
+            config[e[0]] = defaultConfig[e[0]];
+        }
+    })
     if (error) {
         fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
         process.stdout.write("\nSuggested colors: ");
@@ -99,7 +115,9 @@ const loadConfigFile = (file) => {
         color.log("dim", " and ");
         color.log(color.list().slice(skip)[color.list().slice(skip).length-1],
             color.list().slice(skip)[color.list().slice(skip).length-1]);
-        color.log("dim", ".\n\n");}
-    return config;}
+        color.log("dim", ".\n\n");
+    }
+    return config;
+}
 
 main();

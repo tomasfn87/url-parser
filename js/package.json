@@ -4,11 +4,8 @@
   "description": "Receives an URL and breaks it into domain, path, parameters and fragment. Parameters and fragment are broken into lists and objects.",
   "main": "main.js",
   "type": "module",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
-    "test": "mocha test/*.test.js"
+    "test": "node url-parser.test.js"
   },
   "repository": {
     "type": "git",
