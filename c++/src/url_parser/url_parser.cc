@@ -15,20 +15,7 @@ void Url::remove_all_chars(std::string& target, char remove) {
     target.erase(it, target.end());
 }
 
-const void Url::parse_url() {
-    std::smatch parts;
-    if (std::regex_match(url, parts, url_parts)) {
-        parsed_url.domain = parts[1].str();
-        if (parts[2].str().size() > 0)
-            parsed_url.path = parts[2].str();
-        else
-            parsed_url.path = "/";
-        parsed_url.parameter.base_string = parts[3].str();
-        parsed_url.fragment.base_string = parts[4].str();
-    }
-}
-
-const void Url::parse_key_optional_value_list(
+void Url::parse_key_optional_value_list(
     KeyOptionalValueData& target, std::string delimiter) {
     std::smatch matchs;
     std::string::const_iterator search_start = target.base_string.cbegin();
@@ -56,11 +43,24 @@ const void Url::parse_key_optional_value_list(
     }
 }
 
+void Url::parse_url() {
+    std::smatch parts;
+    if (std::regex_match(url, parts, url_parts)) {
+        parsed_url.domain = parts[1].str();
+        if (parts[2].str().size() > 0)
+            parsed_url.path = parts[2].str();
+        else
+            parsed_url.path = "/";
+        parsed_url.parameter.base_string = parts[3].str();
+        parsed_url.fragment.base_string = parts[4].str();
+    }
+    parse_key_optional_value_list(parsed_url.parameter, R"(=)");
+    parse_key_optional_value_list(parsed_url.fragment, R"(=)");
+}
+
 void Url::update_url() {
     remove_all_chars(url, '\\');
     parse_url();
-    parse_key_optional_value_list(parsed_url.parameter, R"(=)");
-    parse_key_optional_value_list(parsed_url.fragment, R"(=)");
 }
 
 Url::Url(std::string url) : url(url) {

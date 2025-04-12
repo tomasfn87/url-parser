@@ -38,9 +38,9 @@ private:
         R"(^((?:\w+:\/\/)?[^\. \/]+(?:\.[^. \/]+)+)((?:\/[^\/?#=&]*)*)?(\?(?:&?[^\/ ?#=&]+(?:=[^\/ ?#=&]*)?)+)?(#(?:&?[^\/ ?#=&]+(?:=[^\/ ?#=&]*)?)+)?$)",
         std::regex_constants::ECMAScript | std::regex_constants::icase);
     void remove_all_chars(std::string& target, char remove);
-    const void parse_url();
-    const void parse_key_optional_value_list(
+    void parse_key_optional_value_list(
         KeyOptionalValueData& target, std::string delimiter);
+    void parse_url();
     void update_url();
     const std::string color_reset = "\x1b[0m";
     const std::string color_dim = "\x1b[2m";
