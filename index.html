@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,32 +15,22 @@
             font-family: sans-serif;
             overflow-x: hidden;
         }
-
-        h1,
-        h2,
-        label {
+        h1, h2, label {
             color: #d4d4d4;
             text-align: center;
         }
-
         table {
             border-collapse: collapse;
-            /* Required for single-line borders */
         }
-
-        th,
-        td {
+        th, td {
             border: 1px solid #6C6C6C;
         }
-
         #urlForm {
             margin-bottom: 20px;
         }
-
         #output-container {
             margin-top: 20px;
         }
-
         .url-table {
             width: 100%;
             border-collapse: collapse;
@@ -50,97 +39,75 @@
             background-color: #1e1e1e;
             font-family: monospace;
         }
-
-        .url-table th,
-        .url-table td {
+        .url-table th, .url-table td {
             padding: 8px;
             text-align: left;
             word-break: break-word;
         }
-
         .url-table td:first-child {
             font-weight: bold;
             padding-right: 15px;
             min-width: 180px;
         }
-
         .url-table td:nth-child(2) {
             color: #ccc;
         }
-
         .form-control {
             background-color: #1e1e1e;
             color: #d4d4d4;
             border: 1px solid #555;
             font-family: monospace;
-            transition: color 0.3s,
-            text-shadow 0.3s,
-            border-color 0.3s;
+            transition: color 0.3s, text-shadow 0.3s, border-color 0.3s;
         }
-
         .form-control.invalid {
             color: #ff4d4d;
             text-shadow: 0 0 5px rgba(255, 77, 77, 0.8);
             border-color: #ff4d4d;
         }
-
         .form-control.valid {
             color: #baff33;
             border-color: #baff33;
         }
-
         .form-control:focus {
             background-color: #1e1e1e;
             border-color: #baff33;
             box-shadow: 0 0 0 0.2rem rgba(186, 255, 51, 0.25);
         }
-
         .form-control::placeholder {
             color: #999;
             font-family: monospace;
-            transition: color 0.3s,
-            text-shadow 0.3s,
-            border-color 0.3s;
+            transition: color 0.3s, text-shadow 0.3s, border-color 0.3s;
         }
-
         .btn-primary {
             display: block;
             width: 48%;
             background-color: #007bff;
             border-color: #007bff;
             color: #fff;
-            transition: background-color 0.3s,
-            border-color 0.3s,
-            color 0.3s;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
         }
-
         .btn-primary:hover {
             background-color: #0056b3;
             border-color: #0056b3;
         }
-
         .btn-primary:disabled {
             background-color: #6c757d;
             border-color: #6c757d;
             color: #fff;
             cursor: not-allowed;
         }
-
         .param-key {
             font-weight: bold;
         }
-
         .url-link {
             color: inherit;
             text-decoration: none;
             word-break: break-all;
         }
-
         .url-link:hover {
             color: #baff33;
             text-decoration: underline;
         }
-
         .sub-table {
             width: 100%;
             border-collapse: collapse;
@@ -148,7 +115,6 @@
             color: #d4d4d4;
             font-family: monospace;
         }
-
         .sub-table td {
             padding: 5px;
             text-align: left;
@@ -156,66 +122,51 @@
             border: none;
             word-break: break-word;
         }
-
         .sub-table .param-key-sub {
             font-weight: bold;
             color: #eee;
             margin-right: 5px;
         }
-
         .sub-table .param-key-cell {
             white-space: nowrap;
         }
-
         #button-container {
             display: flex;
             justify-content: space-between;
         }
-
-        /* Styles for mobile view (max-width: 767px) */
         @media (max-width: 767px) {
             .sub-table tr {
                 display: block;
             }
-
             .sub-table td {
                 display: block;
                 width: 100%;
                 box-sizing: border-box;
             }
-
             .sub-table .param-key-cell {
                 background-color: #2a2a2a;
                 padding: 5px;
                 white-space: normal;
             }
-
             .sub-table .param-value-cell {
                 background-color: #333;
                 padding: 5px;
             }
         }
-
-        /* Resetting styles for desktop view (min-width: 768px) */
         @media (min-width: 768px) {
             .sub-table tr {
                 display: table-row;
             }
-
             .sub-table td {
                 display: table-cell;
                 width: auto;
             }
-
-            .sub-table .param-key-cell,
-            .sub-table .param-value-cell {
+            .sub-table .param-key-cell, .sub-table .param-value-cell {
                 background-color: transparent;
             }
         }
     </style>
-
 </head>
-
 <body>
     <div class="container">
         <h1>URL Parser</h1>
@@ -241,14 +192,13 @@
             </div>
         </div>
     </div>
-
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         const parseUrl = (url, decode = false) => {
             const RegExp = {
-                UrlParts: /^((?:\w+:\/\/)?[^\.\/]+(?:\.[^.\/]+)+)((?:\/[^\/?#=&]*)*)?(\?(?:&?[^\/?#=&]+(?:=[^\/?#=&]*)?)+)?(#(?:&?[^\/?#=&]+(?:=[^\/?#=&]*)?)+)?$/
+                UrlParts: /^((?:https?:\/\/)?[^/]+)((?:\/[^?#]*)?)(\?(?:[^#]*))?(#(?:.*))?$/
             };
             url = url.replaceAll('\\', '');
             if (decode) {
@@ -256,57 +206,54 @@
                     url = decodeURIComponent(url);
                 } catch (e) {
                     console.error("Error decoding URL:", url, e);
+                    return undefined;
                 }
             }
-            if (RegExp.UrlParts.test(url)) {
-                const groups = RegExp.UrlParts.exec(url);
-                const domainWithProtocol = groups[1] || '';
-                const domain = domainWithProtocol;
-                const path = groups[2] || '/';
-                const queryString = groups[3] || '';
-                const hashString = groups[4] || '';
-
-                let parameters_list = [];
-                let parameters_obj = {};
-                if (queryString) {
-                    parameters_list = queryString.slice(1).split('&');
-                    parameters_list.forEach(e => {
-                        let [key, value] = e.split('=');
-                        parameters_obj[key] = value !== undefined ? value : '';
-                    });
-                }
-
-                let fragment_list = [];
-                let fragment_obj = {};
-                if (hashString) {
-                    fragment_list = hashString.slice(1).split('&');
-                    fragment_list.forEach(e => {
-                        const [key, value] = e.split('=');
-                        fragment_obj[key] = value !== undefined ? value : '';
-                    });
-                }
-
-                return {
-                    parts: {
-                        domain: domain,
-                        path: path,
-                        parameters: {
-                            str: queryString,
-                            list: parameters_list,
-                            obj: parameters_obj
-                        },
-                        fragment: {
-                            str: hashString,
-                            list: fragment_list,
-                            obj: fragment_obj
-                        }
+            if (!RegExp.UrlParts.test(url)) {
+                return undefined;
+            }
+            const groups = RegExp.UrlParts.exec(url);
+            const domain = groups[1] || '';
+            const path = groups[2] || '/';
+            const queryString = groups[3] || '';
+            const hashString = groups[4] || '';
+            let parameters_list = [];
+            let parameters_obj = {};
+            if (queryString) {
+                parameters_list = queryString.slice(1).split('&');
+                parameters_list.forEach(e => {
+                    let [key, value] = e.split('=');
+                    parameters_obj[key] = value !== undefined ? value : '';
+                });
+            }
+            let fragment_list = [];
+            let fragment_obj = {};
+            if (hashString) {
+                fragment_list = hashString.slice(1).split('&');
+                fragment_list.forEach(e => {
+                    const [key, value] = e.split('=');
+                    fragment_obj[key] = value !== undefined ? value : '';
+                });
+            }
+            return {
+                parts: {
+                    domain: domain,
+                    path: path,
+                    parameters: {
+                        str: queryString,
+                        list: parameters_list,
+                        obj: parameters_obj
                     },
-                    fullUrl: function () {
-                        return domainWithProtocol + path + queryString + hashString;
+                    fragment: {
+                        str: hashString,
+                        list: fragment_list,
+                        obj: fragment_obj
                     }
-                };
-            }
-            return undefined;
+                },
+                fullUrl: function () {
+                    return domain + path + queryString + hashString;
+                }
+            };
         };
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -317,7 +264,8 @@
 
             const validateUrlInput = () => {
                 const url = urlInput.value.replaceAll('\\', '');
-                if (parseUrl(url)) {
+                const parsed = parseUrl(url);
+                if (parsed && parsed.parts.domain.length) {
                     urlInput.classList.remove('invalid');
                     urlInput.classList.add('valid');
                     parseButton.disabled = false;
@@ -350,17 +298,9 @@
                     const bgColor = isOdd ? (isSubtable ? '#2a2a2a' : '#222') : (isSubtable ? '#333' : '#282828');
                     row.style.backgroundColor = bgColor;
                     const labelCell = row.insertCell();
-                    let valueCellContent = value;
-                    if (decode && value) {
-                        try {
-                            valueCellContent = decodeURIComponent(value);
-                        } catch (e) {
-                            console.error("Error decoding value:", value, e);
-                        }
-                    }
                     const valueCell = row.insertCell();
                     labelCell.textContent = label;
-                    valueCell.innerHTML = valueCellContent || '-';
+                    valueCell.innerHTML = value || '-';
                     labelCell.style.fontWeight = 'bold';
                     labelCell.style.paddingRight = '15px';
                     valueCell.style.color = '#ccc';
@@ -370,23 +310,6 @@
                 let domain = r.parts.domain;
                 let fullUrl = r.fullUrl();
                 let path = r.parts.path;
-                if (decode) {
-                    try {
-                        domain = decodeURIComponent(domain);
-                    } catch (e) {
-                        console.error("Error decoding domain:", domain, e);
-                    }
-                    try {
-                        path = decodeURIComponent(path);
-                    } catch (e) {
-                        console.error("Error decoding path:", path, e);
-                    }
-                    try {
-                        fullUrl = decodeURIComponent(fullUrl);
-                    } catch (e) {
-                        console.error("Error decoding fullUrl:", fullUrl, e);
-                    }
-                }
                 let isOdd = true;
 
                 addTableRow("Domain", `<a href="${domain}" class="url-link">${domain}</a>`, isOdd);
@@ -400,24 +323,11 @@
                     let paramsSubTable = '<table class="sub-table">';
                     let index = 0;
                     let maxKeyWidth = 0;
-                    let keyValues = [];
 
                     for (const key in r.parts.parameters.obj) {
-                        let value = r.parts.parameters.obj[key] || '';
-                        let decodedKey = key;
-                        if (decode) {
-                            try {
-                                decodedKey = decodeURIComponent(key);
-                            } catch (e) {
-                                console.error("Error decoding key:", key, e);
-                            }
-                            try {
-                                value = decodeURIComponent(value);
-                            } catch (e) {
-                                console.error("Error decoding value:", value, e);
-                            }
-                        }
-
+                        const value = r.parts.parameters.obj[key] || '';
+                        const decodedKey = decode ? key : key;
+                        const decodedValue = decode ? value : value;
                         const keyHTML = `<span class="param-key-sub">${decodedKey}</span>`;
 
                         const tempDiv = document.createElement('div');
@@ -429,10 +339,9 @@
                         maxKeyWidth = Math.max(maxKeyWidth, tempDiv.offsetWidth);
                         document.body.removeChild(tempDiv);
 
+                        paramsSubTable += `<tr style="background-color: ${index % 2 === 0 ? '#2a2a2a' : '#333'}"><td class="param-key-cell" style="width: ${maxKeyWidth}px">${keyHTML}</td><td class="param-value-cell">${decodedValue}</td></tr>`;
                         index++;
-                        paramsSubTable += `<tr style="background-color: ${index % 2 === 0 ? '#2a2a2a' : '#333'}"><td class="param-key-cell" style="width: ${maxKeyWidth}px">${keyHTML}</td><td class="param-value-cell">${value}</td></tr>`;
                     }
-
                     paramsSubTable += '</table>';
                     addTableRow("Detailed Parameters", paramsSubTable, isOdd, true);
                     isOdd = !isOdd;
@@ -444,30 +353,12 @@
                     let fragmentSubTable = '<table class="sub-table">';
                     let index = 0;
                     let maxKeyWidth = 0;
-                    let keyValues = [];
 
                     for (const key in r.parts.fragment.obj) {
-                        let decodedKey = key;
-                        if (decode) {
-                            try {
-                                decodedKey = decodeURIComponent(key);
-                            } catch (e) {
-                                console.error("Error decoding key:", key, e);
-                            }
-                        }
-                        let value = r.parts.fragment.obj[key] || '';
-                        if (decode) {
-                            try {
-                                value = decodeURIComponent(value);
-                            } catch (e) {
-                                console.error("Error decoding value:", key, e);
-                            }
-                        }
+                        const value = r.parts.fragment.obj[key] || '';
+                        const decodedKey = decode ? key : key;
+                        const decodedValue = decode ? value : value;
                         const keyHTML = `<span class="param-key-sub">${decodedKey}</span>`;
-                        keyValues.push({
-                            keyHTML,
-                            value
-                        });
 
                         const tempDiv = document.createElement('div');
                         tempDiv.style.position = 'absolute';
@@ -478,17 +369,9 @@
                         maxKeyWidth = Math.max(maxKeyWidth, tempDiv.offsetWidth);
                         document.body.removeChild(tempDiv);
 
-                    }
-
-                    index = 0;
-                    for (const {
-                        keyHTML,
-                        value
-                    } of keyValues) {
-                        fragmentSubTable += `<tr style="background-color: ${index % 2 === 0 ? '#2a2a2a' : '#333'}"><td class="param-key-cell" style="width: ${maxKeyWidth}px">${keyHTML}</td><td class="param-value-cell">${value}</td></tr>`;
+                        fragmentSubTable += `<tr style="background-color: ${index % 2 === 0 ? '#2a2a2a' : '#333'}"><td class="param-key-cell" style="width: ${maxKeyWidth}px">${keyHTML}</td><td class="param-value-cell">${decodedValue}</td></tr>`;
                         index++;
                     }
-
                     fragmentSubTable += '</table>';
                     addTableRow("Detailed Fragment", fragmentSubTable, isOdd, true);
                     isOdd = !isOdd;
@@ -501,7 +384,5 @@
             decodeButton.addEventListener('click', () => handleParse(true));
         });
     </script>
-
 </body>
-
 </html>
