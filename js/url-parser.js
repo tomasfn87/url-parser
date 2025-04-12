@@ -1,62 +1,49 @@
 export default class Url {
     constructor(data) {
-        this.url = data.url.replaceAll('\\', '');
-        this.parsedUrl = {};
-        const RegExp = { 
-            UrlParts: /^((?:\w+:\/\/)?[^\.\/]+(?:\.[^.\/]+)+)((?:\/[^\/?#=&]*)*)?(\?(?:&?[^\/?#=&]+(?:=[^\/?#=&]*)?)+)?(#(?:&?[^\/?#=&]+(?:=[^\/?#=&]*)?)+)?$/
-        }
+        this.url = data.url;
         this.parsedUrl = {
             parts: {
                 domain: '',
                 path: '',
-                parameters: {
-                    str: '',
-                    list: [],
-                    obj: {}
-                },
-                fragment: {
-                    str: '',
-                    list: [],
-                    obj: {}
-                }
+                parameters: { str: '', list: [], obj: {} },
+                fragment: { str: '', list: [], obj: {} }
             }
         }
-        if (RegExp.UrlParts.test(this.url)) {
-            const groups = RegExp.UrlParts.exec(this.url);
-            let parameters_list = [];
-            if (groups[3]) {
-                parameters_list = groups[3].slice(1).split('&');}
-            let parameters_obj = {};
-            if (parameters_list.length) {
-                parameters_list.forEach(e => {
-                    const [key, value] = e.split('=');
-                    parameters_obj[key] = value;})}
-            let fragment_list = [];
-            if (groups[4]) {
-                fragment_list = groups[4].slice(1).split('&');}
-            let fragment_obj = {};
-            if (fragment_list.length) {
-                fragment_list.forEach(e => {
-                    const [key, value] = e.split('=');
-                    fragment_obj[key] = value;
-                })
-            }
-            this.parsedUrl = {
-                parts: {
-                    domain: groups[1],
-                    path: groups[2] || '/',
-                    parameters: {
-                        str: groups[3] || '',
-                        list: parameters_list,
-                        obj: parameters_obj
-                    },
-                    fragment: {
-                        str: groups[4] || '',
-                        list: fragment_list,
-                        obj: fragment_obj
-                    }
-                }
-            }
+        if (this.RegExp().UrlParts.test(this.url)) {
+            this.url = data.url.replaceAll('\\', '');
+            this.parseUrl();
+        }
+    }
+
+    RegExp() { 
+        return {
+            UrlParts: /^((?:\w+:\/\/)?[^\.\/]+(?:\.[^.\/]+?)+)((?:\/[^\/?#=&]*)*)?(\?(?:&?[^\/?#=&]+(?:=[^\/?#=&]*)?)+)?(#(?:&?[^\/?#=&]+(?:=[^\/?#=&]*)?)+)?$/
+        }
+    }
+
+    parseUrl() {
+        if (this.RegExp().UrlParts.test(this.url)) {
+            const groups = this.RegExp().UrlParts.exec(this.url);
+            this.parsedUrl.parts.domain = groups[1];
+            this.parsedUrl.parts.path = groups[2] || '/';
+            this.parsedUrl.parts.parameters.str = groups[3] || '';
+            this.parseKeyOptionalValue(
+                groups[3], this.parsedUrl.parts.parameters);
+            this.parsedUrl.parts.fragment.str = groups[4] || '';
+            this.parseKeyOptionalValue(
+                groups[4], this.parsedUrl.parts.fragment);
+        }
+    }
+
+    parseKeyOptionalValue(captureGroup, keyOptionalValue) {
+        if (captureGroup) {
+            keyOptionalValue.list = captureGroup.slice(1).split('&');
+        }
+        if (keyOptionalValue.list.length) {
+            keyOptionalValue.list.forEach(e => {
+                const [key, value] = e.split('=');
+                keyOptionalValue.obj[key] = value;
+            })
         }
     }
 
@@ -85,4 +72,3 @@ export default class Url {
         return this.parsedUrl
     }
 }
-

@@ -5,25 +5,29 @@ import fs from 'fs';
 import path from 'path';
 
 const main = () => {
-    const input = process.argv[2]
-    const object = (process.argv[3] || '').toLowerCase();
-    const r = new Url({ url: input });
-    if (object === "native") {
-        console.log(r.parsedUrl.parts);
+    const input = process.argv[2] || '';
+    if (!input) {
+        console.log("Empty URL.")
         return;
     }
-    if (!r) {
+    const object = (process.argv[3] || '').toLowerCase();
+    const r = new Url({ url: input });
+    if (!r.parsedUrl.parts.domain) {
         console.log("Invalid URL.");
+        return;
+    }
+    if (object === "native") {
+        console.log(r.parsedUrl.parts);
         return;
     }
     const {title, subtitle, content} = loadConfigFile("config.json");
     color.log(title, "Domain");
     process.stdout.write(":\n- ");
-    color.log(content, `${r.parsedUrl.parts.domain}\n\n`);
+    color.log(content, `${r.getDomain()}\n`);
     if (r.parsedUrl.parts.path) {
         color.log(title, "Path");
         process.stdout.write(":\n- ");
-        color.log(content, `${r.parsedUrl.parts.path}\n\n`);
+        color.log(content, `${r.getPath()}\n`);
     }
     let maxLength = 0;
     if (r.parsedUrl.parts.parameters.str) {
@@ -40,7 +44,7 @@ const main = () => {
             process.stdout.write(":");
             color.log(content, ` ${e[1]}\n`);
         });
-        console.log();}
+    }
     if (r.parsedUrl.parts.fragment.str) {
         color.log(title, "Fragment");
         process.stdout.write(":\n");
@@ -58,7 +62,6 @@ const main = () => {
                 color.log(content, `${e[0].padStart(maxLength)}`);
             console.log();
         });
-        console.log();
     }
     color.log(title, "Full URL");
     process.stdout.write(":\n- ");
