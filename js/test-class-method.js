@@ -37,29 +37,28 @@ export default class TestClassMethod {
     }
     
     runTests() {
-        process.stdout.write('* Running test for ');
-        console.log('\x1b[93m' + this.name + '\x1b[0m...\n');
+        process.stdout.write('Running test for ');
+        console.log('\x1b[93m' + this.name + '\x1b[0m...');
         let errors = 0;
         this.tests.forEach((e, i) => {
             const obj = new this.testClass(e.input);
             const result = obj[this.method](...this.methodParams);
             const test = result == e.expectedOutput;
             process.stdout.write(
-                '\x1b[93m' + 'Case\x1b[0m:\n → '
+                '  → \x1b[93m' + 'Case\x1b[0m:\n      → `'
                 + this.describeCase(e)
-                + '\n\x1b[33m' + 'Expected output' + '\x1b[0m:\n → '
+                + '`\n    \x1b[33m' + 'Expected output' + '\x1b[0m:\n      → `'
                 + e.expectedOutput
-                + '\n\x1b[96m' + 'Actual output' + '\x1b[0m:\n → '
-                + obj[this.method]() + '\n → [');
+                + '`\n    \x1b[96m' + 'Actual output' + '\x1b[0m:\n      → `'
+                + obj[this.method]() + '`\n  → (');
             if (test == true)
-                console.log('\x1b[32m' + 'Ok' + '\x1b[0m]');
+                console.log('\x1b[32m' + 'Ok' + '\x1b[0m)');
             else {
                 errors++;
-                console.log('\x1b[91m' + 'Fail' + '\x1b[0m]');
+                console.log('\x1b[91m' + 'Fail' + '\x1b[0m)');
             }
-            i != (this.tests.length - 1) && console.log()
         })
-        console.log();
+        process.stdout.write("  → ")
         if (errors === 0) {
             console.log('\x1b[32m' + 'Test passed ('
             + this.tests.length + ' test'

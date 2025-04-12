@@ -18,7 +18,6 @@ getDomainTest.addTestCases([
 ]);
 getDomainTest.runTests();
 
-console.log("\n");
 const getPathTest = new TestClassMethod(Url, "getPath", [], "Url.getPath");
 getPathTest.addTestCases([
     {
@@ -36,7 +35,6 @@ getPathTest.addTestCases([
 ]);
 getPathTest.runTests();
 
-console.log("\n");
 const getParametersTest = new TestClassMethod(Url, "getParameters", [], "Url.getParameters");
 getParametersTest.addTestCases([
     {
@@ -54,7 +52,6 @@ getParametersTest.addTestCases([
 ]);
 getParametersTest.runTests();
 
-console.log("\n");
 const getFragmentTest = new TestClassMethod(Url, "getFragment", [], "Url.getFragment");
 getFragmentTest.addTestCases([
     {
