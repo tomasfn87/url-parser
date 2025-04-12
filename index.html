@@ -248,12 +248,12 @@
     <script>
         const parseUrl = (url, decode = false) => {
             const RegExp = {
-                UrlParts: /^((?:https?:\/\/)?([^\/]+))((?:\/?[^\/?#]*)*)(\?([^#]*))?(#(.*))?$/
+                UrlParts: /^((?:\w+:\/\/)?[^\.\/]+(?:\.[^.\/]+)+)((?:\/[^\/?#=&]*)*)?(\?(?:&?[^\/?#=&]+(?:=[^\/?#=&]*)?)+)?(#(?:&?[^\/?#=&]+(?:=[^\/?#=&]*)?)+)?$/
             };
             url = url.replaceAll('\\', '');
             if (decode) {
                 try {
-                    url = decodeURI(url);
+                    url = decodeURIComponent(url);
                 } catch (e) {
                     console.error("Error decoding URL:", url, e);
                 }
@@ -262,9 +262,9 @@
                 const groups = RegExp.UrlParts.exec(url);
                 const domainWithProtocol = groups[1] || '';
                 const domain = domainWithProtocol;
-                const path = groups[3] || '/';
-                const queryString = groups[4] || '';
-                const hashString = groups[6] || '';
+                const path = groups[2] || '/';
+                const queryString = groups[3] || '';
+                const hashString = groups[4] || '';
 
                 let parameters_list = [];
                 let parameters_obj = {};
