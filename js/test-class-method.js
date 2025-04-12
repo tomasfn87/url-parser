@@ -16,20 +16,20 @@ export class ClassMethodTester {
         this.passedTests += passed;
     }
 
-    runTests() {
+    runTests(loud = true) {
         this.tests.forEach(e => {
-            const [failed, passed] = e.runTests();
+            const [failed, passed] = e.runTests(loud);
             this.updateTestCounter(failed, passed);
         })
         color.log('default', 'Summary:');
         if (this.failedTests === 0) {
-            color.log('green', '\x1b[32m' + ' test passed ('
+            color.log('green', ' test passed ('
                 + this.passedTests + ' test'
                 + (this.passedTests===1?'':'s') + ').');
             console.log();
             return;
         }
-        color.log('brightRed', '\x1b[91m' + ' test failed ('
+        color.log('brightRed', ' test failed ('
             + this.failedTests + ' error'
             + (this.failedTests===1?'':'s') + ' out of '
             + (this.failedTests + this.passedTests) + ' test'
@@ -74,8 +74,8 @@ export class ClassMethodTest {
         return description;
     }
     
-    runTests() {
-        process.stdout.write('Running test for ');
+    runTests(loud = true) {
+        color.log('default', 'Running test for ');
         color.log('brightYellow', this.name);
         console.log('...');
         let errors = 0;
@@ -83,27 +83,33 @@ export class ClassMethodTest {
             const obj = new this.testClass(e.input);
             const result = obj[this.method](...this.methodParams);
             const test = result == e.expectedOutput;
-            color.log('default', '  → ');
-            color.log('brightYellow', 'Case');
-            console.log(':\n    → `' + this.describeCase(e) + '    ');
-            color.log('default', '    ')
-            color.log('yellow', 'Expected output')
-            color.log('default', ':\n    → `' + e.expectedOutput + '`\n    ')
-            
-            color.log('brightCyan', 'Actual output')
-            if (test == true) {
-                color.log('default', ':\n    → `' + obj[this.method]() + '`\n        (');
-                color.log('green', 'Ok');
-            } else {
-                color.log('default', ':\n    → `');
-                color.log('strikethrough', obj[this.method]());
-                color.log('default', '`\n        (');
-                errors++;
-                color.log('brightRed', 'Fail');
+            if (loud) {
+                color.log('default', '  → ');
+                color.log('brightYellow', 'Case');
+                console.log(':\n    → `' + this.describeCase(e) + '`');
+                color.log('default', '    ')
+                color.log('yellow', 'Expected output')
+                color.log('default', ':\n    → `' + e.expectedOutput + '`\n    ')
+                color.log('brightCyan', 'Actual output')
             }
-            console.log(')');
+            if (test == true) {
+                if (loud) {
+                    color.log('default', ':\n    → `' 
+                        + obj[this.method]() + '`\n        (');
+                    color.log('green', 'Ok');
+                }
+            } else {
+                if (loud) {
+                    color.log('default', ':\n    → `');
+                    color.log('strikethrough', obj[this.method]());
+                    color.log('default', '`\n        (');
+                    color.log('brightRed', 'Fail');
+                }
+                errors++;
+            }
+            loud && console.log(')');
         })
-        process.stdout.write("  → Test result: ");
+        color.log('default', '  → Test result: ');
         if (errors === 0) {
             color.log('green', 'passed ('
                 + this.tests.length + ' test'

@@ -4,16 +4,12 @@ import Url from './url-parser.js';
 const getDomainTest = new ClassMethodTest(Url, "getDomain", [], "Url.getDomain");
 getDomainTest.addTestCases([
     {
-        input: {
-            url: "https://test.com/?q=test&id=21afea8219bc#privacy"
-        },
+        input: { url: "https://test.com/?q=test&id=21afea8219bc#privacy" },
         keys: [ "url" ],
         expectedOutput: "https://test.com"
     },
     {
-        input: {
-            url: "https://test.com?q=test&id=21afea8219bc#privacy"
-        },
+        input: { url: "https://test.com?q=test&id=21afea8219bc#privacy" },
         keys: [ "url" ],
         expectedOutput: "https://test.com"
     },
@@ -27,16 +23,12 @@ getDomainTest.addTestCases([
 const getPathTest = new ClassMethodTest(Url, "getPath", [], "Url.getPath");
 getPathTest.addTestCases([
     {
-        input: {
-            url: "https://test.com/?q=test&id=21afea8219bc#privacy"
-        },
+        input: { url: "https://test.com/?q=test&id=21afea8219bc#privacy" },
         keys: [ "url" ],
         expectedOutput: "/"
     },
     {
-        input: {
-            url: "https://test.com?q=test&id=21afea8219bc#privacy"
-        },
+        input: { url: "https://test.com?q=test&id=21afea8219bc#privacy" },
         keys: [ "url" ],
         expectedOutput: "/"
     },
@@ -50,16 +42,12 @@ getPathTest.addTestCases([
 const getParametersTest = new ClassMethodTest(Url, "getParameters", [], "Url.getParameters");
 getParametersTest.addTestCases([
     {
-        input: {
-            url: "https://test.com/?q=test&id=21afea8219bc#privacy"
-        },
+        input: { url: "https://test.com/?q=test&id=21afea8219bc#privacy" },
         keys: [ "url" ],
         expectedOutput: "?q=test&id=21afea8219bc"
     },
     {
-        input: {
-            url: "https://test.com?q=test&id=21afea8219bc#privacy"
-        },
+        input: { url: "https://test.com?q=test&id=21afea8219bc#privacy" },
         keys: [ "url" ],
         expectedOutput: "?q=test&id=21afea8219bc"
     },
@@ -73,16 +61,12 @@ getParametersTest.addTestCases([
 const getFragmentTest = new ClassMethodTest(Url, "getFragment", [], "Url.getFragment");
 getFragmentTest.addTestCases([
     {
-        input: {
-            url: "https://test.com/?q=test&id=21afea8219bc#privacy"
-        },
+        input: { url: "https://test.com/?q=test&id=21afea8219bc#privacy" },
         keys: [ "url" ],
         expectedOutput: "#privacy"
     },
     {
-        input: {
-            url: "https://test.com?q=test&id=21afea8219bc#privacy"
-        },
+        input: { url: "https://test.com?q=test&id=21afea8219bc#privacy" },
         keys: [ "url" ],
         expectedOutput: "#privacy"
     },
@@ -93,19 +77,15 @@ getFragmentTest.addTestCases([
     }
 ]);
 
-const getFullUrlTest = new ClassMethodTest(Url, "getFullUrl", [], "Url.getFragment");
+const getFullUrlTest = new ClassMethodTest(Url, "getFullUrl", [], "Url.getFullUrl");
 getFullUrlTest.addTestCases([
     {
-        input: {
-            url: "https://test.com/?q=test&id=21afea8219bc#privacy"
-        },
+        input: { url: "https://test.com/?q=test&id=21afea8219bc#privacy" },
         keys: [ "url" ],
         expectedOutput: "https://test.com/?q=test&id=21afea8219bc#privacy"
     },
     {
-        input: {
-            url: "https://test.com?q=test&id=21afea8219bc#privacy"
-        },
+        input: { url: "https://test.com?q=test&id=21afea8219bc#privacy" },
         keys: [ "url" ],
         expectedOutput: "https://test.com/?q=test&id=21afea8219bc#privacy"
     },
@@ -122,4 +102,6 @@ tester.addTestSet(getPathTest);
 tester.addTestSet(getParametersTest);
 tester.addTestSet(getFragmentTest);
 tester.addTestSet(getFullUrlTest);
-tester.runTests();
+
+const option = (process.argv[2] || '').toLowerCase();
+tester.runTests(option != '--silent');

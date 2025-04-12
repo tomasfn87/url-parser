@@ -48,3 +48,19 @@ $ node main.js 'https://github.com/tomasfn87/url-parser?utm_source=adpower&utm_m
 
 > *Example of* `config.json` *file.*
 
+---
+
+<br><br>
+
+## 3. Running Tests
+
+### 3.1. Standard
+
+```console
+npm test
+```
+
+```console
+npm run detailed-test
+```
+
