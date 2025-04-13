@@ -89,50 +89,52 @@ const bool Url::is_char_in_list(std::vector<char> list, char target) {
 
 const std::string Url::color_chars(
     std::vector<char> chars, std::string target,
-    std::string color_main, std::string color_aux) {
+    std::string color_main, std::string color_aux,
+    std::string color_delimiter) {
     std::stringstream ss;
-    int mode = 0;
+    std::string color_block;
+    std::string previous_color;
     for (size_t i = 0; i < target.size(); ++i) {
         if (is_char_in_list(key_value_delimiters, target[i])) {
-            if (mode != 1) {
-                mode = 1;
-                if (i != 0)
-                    ss << color_reset;
-                ss << color_1_1;
-            }
+            if (previous_color != color_delimiter) {
+                if (color_block.size() > 0)
+                    ss << color_str(color_block, previous_color);
+                previous_color = color_delimiter;
+                color_block = "";
+            }   
         } else if (is_char_in_list(chars, target[i])) {
-            if (mode != 2) {
-                mode = 2;
-                if (i != 0)
-                    ss << color_reset;
-                ss << color_main;
+            if (previous_color != color_main) {
+                if (color_block.size() > 0)
+                    ss << color_str(color_block, previous_color);
+                previous_color = color_main;
+                color_block = "";
             }
         } else {
-            if (mode != 3) {
-                mode = 3;
-                if (i != 0)
-                    ss << color_reset;
-                ss << color_aux;
+            if (previous_color != color_aux) {
+                if (color_block.size() > 0)
+                    ss << color_str(color_block, previous_color);
+                previous_color = color_aux;
+                color_block = "";
             }
         }
-        ss << std::string(1, target[i]);
+        color_block += std::string(1, target[i]);
     }
-    ss << color_reset;
+    ss << color_str(color_block, previous_color);
     return ss.str();
 }
 
 const void Url::print_colored_url() {
     std::cout 
         << color_chars(
-            domain_chars, parsed_url.domain, "", color_1_1)
+            domain_chars, parsed_url.domain, "", color_1_1, "")
         << color_chars(
-            path_chars, parsed_url.path, "", color_2_1)
+            path_chars, parsed_url.path, "", color_2_1, "")
         << color_chars(
             key_optional_value_chars, parsed_url.parameter.base_string,
-            "", color_3_1)
+            "", color_3_1, color_1_1)
         << color_chars(
             key_optional_value_chars, parsed_url.fragment.base_string,
-            "", color_4_1) << "\n";
+            "", color_4_1, color_1_1) << "\n";
 }
 
 const void Url::print_key_optional_value_list(
@@ -161,23 +163,23 @@ const void Url::print_parsed_url() {
     std::cout << color_str("*", color_dim) << " "
         << color_str("Domain", color_1) << color_str(":", color_dim)
         << "    " << color_chars(
-            domain_chars, parsed_url.domain, color_1_1, "") << "\n"
+            domain_chars, parsed_url.domain, color_1_1, "", "") << "\n"
         << color_str("*", color_dim) << " " << color_str("Path", color_2)
         << color_str(":", color_dim) << "      "
         << color_chars(
-            path_chars, parsed_url.path, color_2_1, "") << "\n";
+            path_chars, parsed_url.path, color_2_1, "", "") << "\n";
     if (parsed_url.parameter.base_string.size() > 0) {
         std::cout << color_str("*", color_dim) << " "
             << color_str("Parameter", color_3) << color_str(":", color_dim)
             << " " << color_chars(key_optional_value_chars,
-                parsed_url.parameter.base_string, color_3_1, "") << "\n";
+                parsed_url.parameter.base_string, color_3_1, "", color_1_1) << "\n";
         print_key_optional_value_list(parsed_url.parameter.map, color_3_1, color_3);
     }
     if (parsed_url.fragment.base_string.size() > 0) {
         std::cout << color_str("*", color_dim) << " "
             << color_str("Fragment", color_4) << color_str(":", color_dim)
             << "  " << color_chars(key_optional_value_chars,
-                parsed_url.fragment.base_string, color_4_1, "") << "\n";
+                parsed_url.fragment.base_string, color_4_1, "", color_1_1) << "\n";
         print_key_optional_value_list(parsed_url.fragment.map, color_4_1, color_4);
     }
 }

@@ -60,7 +60,8 @@ private:
     const bool is_char_in_list(std::vector<char> list, char target);
     const std::string color_chars(
         std::vector<char>, std::string target,
-        std::string color_main, std::string color_aux);
+        std::string color_main, std::string color_aux,
+        std::string color_delimiter);
     const void print_key_optional_value_list(
         std::vector<KeyOptionalValue> list, std::string color_main,
         std::string color_aux);
