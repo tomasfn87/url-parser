@@ -45,10 +45,10 @@ private:
     void update_url();
     const std::string color_reset = "\x1b[0m";
     const std::string color_dim = "\x1b[2m";
-    const std::string color_1 = "\x1b[35m";
-    const std::string color_1_1 = "\x1b[95m";
-    const std::string color_2 = "\x1b[33m";
-    const std::string color_2_1 = "\x1b[93m";
+    const std::string color_1 = "\x1b[32m";
+    const std::string color_1_1 = "\x1b[92m";
+    const std::string color_2 = "\x1b[35m";
+    const std::string color_2_1 = "\x1b[95m";
     const std::string color_3 = "\x1b[36m";
     const std::string color_3_1 = "\x1b[96m";
     const std::string color_4 = "\x1b[34m";

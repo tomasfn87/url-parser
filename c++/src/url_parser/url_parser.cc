@@ -140,15 +140,16 @@ const void Url::print_colored_url(bool decode) {
         << color_chars(
             path_chars, parsed_url.path, "", color_2_1, "")
         << color_chars(
-            key_optional_value_chars, p, "", color_3_1, color_1_1)
+            key_optional_value_chars, p, "", color_3_1, color_dim)
         << color_chars(
-            key_optional_value_chars, f, "", color_4_1, color_1_1) << "\n";
+            key_optional_value_chars, f, "", color_4_1, color_dim) << "\n";
 }
 
 const std::string Url::decode_uri_component(std::string uri) {
     std::string decoded = "";
     for (size_t i = 0; i < uri.length(); ++i) {
-        if (uri[i] == '%' && i + 2 < uri.length() && std::isxdigit(uri[i + 1]) && std::isxdigit(uri[i + 2])) {
+        if (uri[i] == '%' && i + 2 < uri.length() && std::isxdigit(uri[i + 1])
+            && std::isxdigit(uri[i + 2])) {
             std::string hex_str = uri.substr(i + 1, 2);
             try {
                 int char_code = std::stoi(hex_str, nullptr, 16);
@@ -212,14 +213,14 @@ const void Url::print_parsed_url(bool decode) {
         std::cout << color_str("*", color_dim) << " "
             << color_str("Parameter", color_3) << color_str(":", color_dim)
             << " " << color_chars(key_optional_value_chars, p, 
-                color_3_1, "", color_1_1) << "\n";
+                color_3_1, "", color_3) << "\n";
         print_key_optional_value_list(parsed_url.parameter.map, decode, color_3_1, color_3);
     }
     if (parsed_url.fragment.base_string.size() > 0) {
         std::cout << color_str("*", color_dim) << " "
             << color_str("Fragment", color_4) << color_str(":", color_dim)
             << "  " << color_chars(key_optional_value_chars, f,
-                color_4_1, "", color_1_1) << "\n";
+                color_4_1, "", color_4) << "\n";
         print_key_optional_value_list(parsed_url.fragment.map, decode, color_4_1, color_4);
     }
 }
