@@ -82,7 +82,7 @@ export class ClassMethodTest {
         this.tests.forEach(e => {
             const obj = new this.testClass(e.input);
             const result = obj[this.method](...this.methodParams);
-            const test = result == e.expectedOutput;
+            const test = result === e.expectedOutput;
             if (loud) {
                 color.log('default', '  → ');
                 color.log('brightYellow', 'Case');

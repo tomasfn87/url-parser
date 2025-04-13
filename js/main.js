@@ -10,15 +10,18 @@ const main = () => {
         console.log("Empty URL.")
         return;
     }
-    const object = (process.argv[3] || '').toLowerCase();
+    let decode = false;
     const r = new Url({ url: input });
     if (!r.parsedUrl.parts.domain) {
         console.log("Invalid URL.");
         return;
     }
-    if (object === "native") {
+    if (process.argv.slice(1).includes("--native")) {
         console.log(r.parsedUrl.parts);
         return;
+    }
+    if (process.argv.slice(1).includes("--decode")) {
+        decode = true;
     }
     const {title, subtitle, content} = loadConfigFile("config.json");
     color.log(title, "Domain");
@@ -40,9 +43,14 @@ const main = () => {
         });
         Object.entries(r.parsedUrl.parts.parameters.obj).forEach(e => {
             process.stdout.write("- ");
-            color.log(subtitle, `${e[0].padStart(maxLength)}`)
-            process.stdout.write(":");
-            color.log(content, ` ${e[1]}\n`);
+            if (e[1]) {
+                color.log(subtitle, `${e[0].padStart(maxLength)}`)
+                process.stdout.write(":");
+                color.log(content, ` ${decode?decodeURIComponent(e[1]):e[1]}`);
+            }
+            else
+                color.log(content, `${e[0].padStart(maxLength)}`);
+            console.log();
         });
     }
     if (r.parsedUrl.parts.fragment.str) {
@@ -57,7 +65,8 @@ const main = () => {
             if (e[1]) {
                 color.log(subtitle, `${e[0].padStart(maxLength)}`)
                 process.stdout.write(":");
-                color.log(content, ` ${e[1]}`);}
+                color.log(content, ` ${decode?decodeURIComponent(e[1]):e[1]}`);
+            }
             else
                 color.log(content, `${e[0].padStart(maxLength)}`);
             console.log();
@@ -65,7 +74,7 @@ const main = () => {
     }
     color.log(title, "Full URL");
     process.stdout.write(":\n- ");
-    color.log(content, `${r.getFullUrl()}\n`);
+    color.log(content, `${decode?decodeURIComponent(r.getFullUrl()):r.getFullUrl()}\n`);
 }
 
 const loadConfigFile = (file) => {

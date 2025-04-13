@@ -23,7 +23,15 @@ $ node main.js 'https://docs.google.com/spreadsheets/d/1UGUlQi8P0ekbMfb8xYG-JijG
 ### Struct View 
 
 ```console
-$ node main.js 'https://github.com/tomasfn87/url-parser?utm_source=adpower&utm_medium=cpc&utm_campaign=ai-hype-is-a-lie' native
+$ node main.js 'https://github.com/tomasfn87/url-parser?utm_source=adpower&utm_medium=cpc&utm_campaign=ai-hype-is-a-lie' --native
+```
+
+<br>
+
+### Decode URL
+
+```console
+$ node main.js 'https://github.com/tomasfn87/url-parser?/redirect=%2fcontact%2femail' --decode
 ```
 
 ---
