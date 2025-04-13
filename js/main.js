@@ -16,12 +16,32 @@ const main = () => {
         console.log("Invalid URL.");
         return;
     }
-    if (process.argv.slice(1).includes("--native")) {
-        console.log(r.parsedUrl.parts);
-        return;
-    }
     if (process.argv.slice(1).includes("--decode")) {
         decode = true;
+    }
+    if (process.argv.slice(1).includes("--native")) {
+        if (decode) {
+            r.parsedUrl.parts.parameters.str =
+                decodeURIComponent(r.parsedUrl.parts.parameters.str);
+            r.parsedUrl.parts.parameters.list.forEach((e, i) => {
+                r.parsedUrl.parts.parameters.list[i] = decodeURIComponent(e);
+            });
+            Object.keys(r.parsedUrl.parts.parameters.obj).forEach(e => {
+                r.parsedUrl.parts.parameters.obj[e] =
+                    decodeURIComponent(r.parsedUrl.parts.parameters.obj[e]);
+            })
+            r.parsedUrl.parts.fragment.str =
+                decodeURIComponent(r.parsedUrl.parts.fragment.str);
+            r.parsedUrl.parts.fragment.list.forEach((e, i) => {
+                r.parsedUrl.parts.fragment.list[i] = decodeURIComponent(e);
+            });
+            Object.keys(r.parsedUrl.parts.fragment.obj).forEach(e => {
+                r.parsedUrl.parts.fragment.obj[e] =
+                    decodeURIComponent(r.parsedUrl.parts.fragment.obj[e]);
+            })
+        }
+        console.log(r.parsedUrl.parts);
+        return;
     }
     const {title, subtitle, content} = loadConfigFile("config.json");
     color.log(title, "Domain");
