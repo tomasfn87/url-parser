@@ -79,7 +79,7 @@ export class ClassMethodTest {
         color.log('brightYellow', this.name);
         console.log('...');
         let errors = 0;
-        this.tests.forEach(e => {
+        this.tests.forEach((e, i) => {
             const obj = new this.testClass(e.input);
             const result = obj[this.method](...this.methodParams);
             const test = result === e.expectedOutput;
@@ -109,7 +109,7 @@ export class ClassMethodTest {
             }
             loud && console.log(')');
         })
-        color.log('default', '  → Test result: ');
+        color.log('default', '→ Test result: ');
         if (errors === 0) {
             color.log('green', 'passed ('
                 + this.tests.length + ' test'
@@ -121,6 +121,7 @@ export class ClassMethodTest {
                 + (this.tests.length===1?'':'s') + ').');
         }
         console.log();
+        loud && console.log();
         return [errors, this.tests.length - errors];
     }
 }
