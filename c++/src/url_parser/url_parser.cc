@@ -43,6 +43,10 @@ void Url::parse_key_optional_value_list(
     }
 }
 
+bool Url::is_valid() {
+    return std::regex_match(url, url_parts);
+}
+
 void Url::parse_url() {
     std::smatch parts;
     if (std::regex_match(url, parts, url_parts)) {

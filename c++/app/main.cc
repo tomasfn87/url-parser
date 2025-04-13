@@ -36,6 +36,10 @@ int main(int argc, char* argv[]) {
         }
         unique_ptr<Url> url(new Url());
         url->set_url(input);
+        if (!url->is_valid()) {
+            cout << "Invalid URL.\n";
+            return 1;
+        }
         url->print_colored_url(option == "--decode");
         url->print_parsed_url(option == "--decode");
     }
