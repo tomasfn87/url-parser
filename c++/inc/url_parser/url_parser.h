@@ -29,8 +29,8 @@ public:
     ~Url();
     Url(std::string url);
     void set_url(std::string new_url);
-    const void print_colored_url();
-    const void print_parsed_url();
+    const void print_colored_url(bool decode);
+    const void print_parsed_url(bool decode);
 private:
     std::string url;
     ParsedUrl parsed_url;
@@ -62,7 +62,8 @@ private:
         std::vector<char>, std::string target,
         std::string color_main, std::string color_aux,
         std::string color_delimiter);
+    const std::string decode_uri_component(std::string uri);
     const void print_key_optional_value_list(
-        std::vector<KeyOptionalValue> list, std::string color_main,
-        std::string color_aux);
+        std::vector<KeyOptionalValue> list, bool decode,
+        std::string color_main, std::string color_aux);
 };

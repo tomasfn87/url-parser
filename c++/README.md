@@ -2,7 +2,7 @@
 
 <br>
 
-Test it [`here`](https://onlinegdb.com/RxfpyB4e3V)
+Test it [`here`](https://onlinegdb.com/QVoT6W7_-)
 
 <br>
 
@@ -41,6 +41,10 @@ cmake --build .
 
 ```console
 ./build/app/app https://mysite.com/video?time=123s
+```
+
+```console
+./build/app/app https://mysite.com/?redirect=%2fcontact%2femail --decode
 ```
 
 #### Demo
