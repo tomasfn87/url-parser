@@ -25,10 +25,10 @@ int main(int argc, char* argv[]) {
         url_2->print_parsed_url(false);
  
         cout << "\n";
-        string u3 = "https://supersite.com/test?gclid=123123129dashdh123h7da&lang=EN-US#C=1&P=22&dark-mode";
+        string u3 = "https://supersite.com/test?gclid=123123129dashdh123h7da&lang=EN-US&redirect=%2fdownload%2febook#C=1&P=22&dark-mode";
         unique_ptr<Url> url_3(new Url(u3));
         url_3->print_colored_url(false);
-        url_3->print_parsed_url(false);
+        url_3->print_parsed_url(true);
     } else {
         if (input.size() < 1) {
             std::cout << "Empty URL.\n";
