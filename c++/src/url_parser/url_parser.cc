@@ -201,23 +201,23 @@ const void Url::print_parsed_url(bool decode) {
         p = decode_uri_component(p);
         f = decode_uri_component(f);
     }
-    std::cout << color_str("*", color_dim) << " "
+    std::cout << color_str("→", color_dim) << " "
         << color_str("Domain", color_1) << color_str(":", color_dim)
         << "    " << color_chars(
             domain_chars, parsed_url.domain, color_1_1, "", "") << "\n"
-        << color_str("*", color_dim) << " " << color_str("Path", color_2)
+        << color_str("→", color_dim) << " " << color_str("Path", color_2)
         << color_str(":", color_dim) << "      "
         << color_chars(
             path_chars, parsed_url.path, color_2_1, "", "") << "\n";
     if (parsed_url.parameter.base_string.size() > 0) {
-        std::cout << color_str("*", color_dim) << " "
+        std::cout << color_str("→", color_dim) << " "
             << color_str("Parameter", color_3) << color_str(":", color_dim)
             << " " << color_chars(key_optional_value_chars, p, 
                 color_3_1, "", color_3) << "\n";
         print_key_optional_value_list(parsed_url.parameter.map, decode, color_3_1, color_3);
     }
     if (parsed_url.fragment.base_string.size() > 0) {
-        std::cout << color_str("*", color_dim) << " "
+        std::cout << color_str("→", color_dim) << " "
             << color_str("Fragment", color_4) << color_str(":", color_dim)
             << "  " << color_chars(key_optional_value_chars, f,
                 color_4_1, "", color_4) << "\n";
