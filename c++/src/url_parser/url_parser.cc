@@ -23,7 +23,7 @@ void Url::parse_key_optional_value_list(
         search_start, target.base_string.cend(), matchs,
         std::regex(R"(([^?#&)" + delimiter + R"(]+(?:)"
             + delimiter + R"([^?#&)" + delimiter + R"(]+)?))"))) {
-        if (matchs.size() > 0 && matchs[1].str().size() > 0) {
+        if (matchs.size() && matchs[1].str().size()) {
             target.list.push_back(matchs[1].str());
             std::smatch key_value_matchs;
             std::string key_value = matchs[1].str();
@@ -51,7 +51,7 @@ void Url::parse_url() {
     std::smatch parts;
     if (std::regex_match(url, parts, url_parts)) {
         parsed_url.domain = parts[1].str();
-        if (parts[2].str().size() > 0)
+        if (parts[2].str().size())
             parsed_url.path = parts[2].str();
         else
             parsed_url.path = "/";
@@ -101,24 +101,27 @@ const std::string Url::color_chars(
     for (size_t i = 0; i < target.size(); ++i) {
         if (is_char_in_list(key_value_delimiters, target[i])) {
             if (previous_color != color_delimiter) {
-                if (color_block.size() > 0)
+                if (color_block.size()) {
                     ss << color_str(color_block, previous_color);
+                    color_block = "";
+                }
                 previous_color = color_delimiter;
-                color_block = "";
             }   
         } else if (is_char_in_list(chars, target[i])) {
             if (previous_color != color_main) {
-                if (color_block.size() > 0)
+                if (color_block.size()) {
                     ss << color_str(color_block, previous_color);
+                    color_block = "";
+                }
                 previous_color = color_main;
-                color_block = "";
             }
         } else {
             if (previous_color != color_aux) {
-                if (color_block.size() > 0)
+                if (color_block.size()) {
                     ss << color_str(color_block, previous_color);
+                    color_block = "";
+                }
                 previous_color = color_aux;
-                color_block = "";
             }
         }
         color_block += std::string(1, target[i]);
@@ -175,11 +178,11 @@ const void Url::print_key_optional_value_list(
             std::cout << "  " << color_str("{", color_dim) << "\n    ";
         else
             std::cout << "    ";
-        if (list[i].value.size() > 0)
+        if (list[i].value.size())
             std::cout << color_str(list[i].key, color_aux);
         else
             std::cout << color_str(list[i].key, color_main);
-        if (list[i].value.size() > 0) {
+        if (list[i].value.size()) {
             std::cout << color_str(":", color_dim) << " ";
             if (decode)
                 std::cout << color_str(
@@ -209,14 +212,14 @@ const void Url::print_parsed_url(bool decode) {
         << color_str(":", color_dim) << "      "
         << color_chars(
             path_chars, parsed_url.path, color_2_1, "", "") << "\n";
-    if (parsed_url.parameter.base_string.size() > 0) {
+    if (parsed_url.parameter.base_string.size()) {
         std::cout << color_str("→", color_dim) << " "
             << color_str("Parameter", color_3) << color_str(":", color_dim)
             << " " << color_chars(key_optional_value_chars, p, 
                 color_3_1, "", color_3) << "\n";
         print_key_optional_value_list(parsed_url.parameter.map, decode, color_3_1, color_3);
     }
-    if (parsed_url.fragment.base_string.size() > 0) {
+    if (parsed_url.fragment.base_string.size()) {
         std::cout << color_str("→", color_dim) << " "
             << color_str("Fragment", color_4) << color_str(":", color_dim)
             << "  " << color_chars(key_optional_value_chars, f,

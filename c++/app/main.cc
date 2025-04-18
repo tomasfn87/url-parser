@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
         url_3->print_colored_url(false);
         url_3->print_parsed_url(true);
     } else {
-        if (input.size() < 1) {
+        if (!input.size()) {
             std::cout << "Empty URL.\n";
             return 1;
         }
