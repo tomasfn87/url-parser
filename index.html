@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>URL Parser</title>
-    <meta name="description" content="Form to insert and analyze URLs.">
+    <meta name="description" content="Form to insert and analyze URLs with Domain Info.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
@@ -134,6 +134,30 @@
             display: flex;
             justify-content: space-between;
         }
+        .domain-info-button {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+            margin-left: 5px;
+            transition: background-color 0.3s;
+        }
+        .domain-info-button:hover {
+            background-color: #0056b3;
+        }
+        .domain-info-container {
+            padding: 10px;
+            margin-top: 5px;
+            background-color: #333;
+            border-left: 2px solid #007bff;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            font-family: monospace;
+            color: #eee;
+        }
         @media (max-width: 767px) {
             .sub-table tr {
                 display: block;
@@ -174,7 +198,7 @@
             <div class="form-group">
                 <label for="urlInput">Enter URL:</label>
                 <input type="text" class="form-control" id="urlInput"
-                    placeholder="https://example.com/path?param=value#fragment">
+                       placeholder="https://example.com/path?param=value#fragment">
             </div>
             <div id="button-container">
                 <button type="button" class="btn btn-primary" id="parseButton" disabled>Parse</button>
@@ -293,7 +317,9 @@
                     return;
                 }
 
-                const addTableRow = (label, value, isOdd, isSubtable = false) => {
+                let isOdd = true;
+
+                const addTableRow = (label, value, isOdd, isSubtable = false, isDomainRow = false, domain = '') => {
                     const row = parsedResultTableBody.insertRow();
                     const bgColor = isOdd ? (isSubtable ? '#2a2a2a' : '#222') : (isSubtable ? '#333' : '#282828');
                     row.style.backgroundColor = bgColor;
@@ -305,14 +331,40 @@
                     labelCell.style.paddingRight = '15px';
                     valueCell.style.color = '#ccc';
                     valueCell.style.backgroundColor = isOdd ? (isSubtable ? '' : '#333') : (isSubtable ? '' : '#3a3a3a');
+                
+                    if (isDomainRow && domain) {
+                        const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}`;
+                        const faviconImg = document.createElement('img');
+                        faviconImg.src = faviconUrl;
+                        faviconImg.width = 16;
+                        faviconImg.height = 16;
+                        faviconImg.style.marginRight = '8px';
+                        faviconImg.style.verticalAlign = 'middle';
+                
+                        const domainLink = document.createElement('a');
+                        domainLink.href = domain;
+                        domainLink.className = 'url-link';
+                        domainLink.textContent = domain;
+                
+                        valueCell.innerHTML = '';
+                
+                        faviconImg.onload = function() {
+                            valueCell.appendChild(faviconImg);
+                            valueCell.appendChild(domainLink);
+                        };
+                        faviconImg.onerror = function() {
+                            valueCell.appendChild(domainLink);
+                        };
+                
+                        valueCell.appendChild(domainLink);
+                    }
                 };
 
                 let domain = r.parts.domain;
                 let fullUrl = r.fullUrl();
                 let path = r.parts.path;
-                let isOdd = true;
 
-                addTableRow("Domain", `<a href="${domain}" class="url-link">${domain}</a>`, isOdd);
+                addTableRow("Domain", `<a href="${domain}" class="url-link">${domain}</a>`, isOdd, false, true, domain);
                 isOdd = !isOdd;
                 addTableRow("Path", path, isOdd);
                 isOdd = !isOdd;
