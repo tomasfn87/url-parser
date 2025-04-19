@@ -5,6 +5,11 @@ import Url from '../src/url-parser.js';
 const getDomainTest = new ClassMethodTest(Url, "getDomain", [], "Url.getDomain");
 getDomainTest.addTestCases([
     {
+        input: { url: "https://tagassistant.google.com/?hl=en&utm_source=gtm#/?source=TAG_MANAGER&id=GTM-MXNVD4PJ&gtm_auth=H0X5tN2DEEpfJ0eha8q7Ig&gtm_preview=env-5&cb=5607611040920180" },
+        keys: [ "url" ],
+        expectedOutput: "https://tagassistant.google.com"
+    },
+    {
         input: { url: "https://test.com/?q=test&id=21afea8219bc#privacy" },
         keys: [ "url" ],
         expectedOutput: "https://test.com"
@@ -23,6 +28,11 @@ getDomainTest.addTestCases([
 
 const getPathTest = new ClassMethodTest(Url, "getPath", [], "Url.getPath");
 getPathTest.addTestCases([
+    {
+        input: { url: "https://tagassistant.google.com/?hl=en&utm_source=gtm#/?source=TAG_MANAGER&id=GTM-MXNVD4PJ&gtm_auth=H0X5tN2DEEpfJ0eha8q7Ig&gtm_preview=env-5&cb=5607611040920180" },
+        keys: [ "url" ],
+        expectedOutput: "/"
+    },
     {
         input: { url: "https://test.com/?q=test&id=21afea8219bc#privacy" },
         keys: [ "url" ],
@@ -43,6 +53,11 @@ getPathTest.addTestCases([
 const getParametersTest = new ClassMethodTest(Url, "getParameters", [], "Url.getParameters");
 getParametersTest.addTestCases([
     {
+        input: { url: "https://tagassistant.google.com/?hl=en&utm_source=gtm#/?source=TAG_MANAGER&id=GTM-MXNVD4PJ&gtm_auth=H0X5tN2DEEpfJ0eha8q7Ig&gtm_preview=env-5&cb=5607611040920180" },
+        keys: [ "url" ],
+        expectedOutput: "?hl=en&utm_source=gtm"
+    },
+    {
         input: { url: "https://test.com/?q=test&id=21afea8219bc#privacy" },
         keys: [ "url" ],
         expectedOutput: "?q=test&id=21afea8219bc"
@@ -62,6 +77,11 @@ getParametersTest.addTestCases([
 const getFragmentTest = new ClassMethodTest(Url, "getFragment", [], "Url.getFragment");
 getFragmentTest.addTestCases([
     {
+        input: { url: "https://tagassistant.google.com/?hl=en&utm_source=gtm#/?source=TAG_MANAGER&id=GTM-MXNVD4PJ&gtm_auth=H0X5tN2DEEpfJ0eha8q7Ig&gtm_preview=env-5&cb=5607611040920180" },
+        keys: [ "url" ],
+        expectedOutput: "#/?source=TAG_MANAGER&id=GTM-MXNVD4PJ&gtm_auth=H0X5tN2DEEpfJ0eha8q7Ig&gtm_preview=env-5&cb=5607611040920180"
+    },
+    {
         input: { url: "https://test.com/?q=test&id=21afea8219bc#privacy" },
         keys: [ "url" ],
         expectedOutput: "#privacy"
@@ -80,6 +100,11 @@ getFragmentTest.addTestCases([
 
 const getFullUrlTest = new ClassMethodTest(Url, "getFullUrl", [], "Url.getFullUrl");
 getFullUrlTest.addTestCases([
+    {
+        input: { url: "https://tagassistant.google.com/?hl=en&utm_source=gtm#/?source=TAG_MANAGER&id=GTM-MXNVD4PJ&gtm_auth=H0X5tN2DEEpfJ0eha8q7Ig&gtm_preview=env-5&cb=5607611040920180" },
+        keys: [ "url" ],
+        expectedOutput: "https://tagassistant.google.com/?hl=en&utm_source=gtm#/?source=TAG_MANAGER&id=GTM-MXNVD4PJ&gtm_auth=H0X5tN2DEEpfJ0eha8q7Ig&gtm_preview=env-5&cb=5607611040920180"
+    },
     {
         input: { url: "https://test.com/?q=test&id=21afea8219bc#privacy" },
         keys: [ "url" ],
