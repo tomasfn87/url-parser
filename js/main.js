@@ -21,6 +21,8 @@ const main = () => {
     }
     if (process.argv.slice(1).includes("--native")) {
         if (decode) {
+            r.parsedUrl.parts.path =
+                decodeURIComponent(r.parsedUrl.parts.path);
             r.parsedUrl.parts.parameters.str =
                 decodeURIComponent(r.parsedUrl.parts.parameters.str);
             r.parsedUrl.parts.parameters.list.forEach((e, i) => {
@@ -50,7 +52,8 @@ const main = () => {
     if (r.parsedUrl.parts.path) {
         color.log(title, "Path");
         process.stdout.write(":\n- ");
-        color.log(content, `${r.getPath()}\n`);
+        color.log(content,
+            `${decode?decodeURIComponent(r.getPath()):r.getPath()}\n`);
     }
     let maxLength = 0;
     if (r.parsedUrl.parts.parameters.str) {

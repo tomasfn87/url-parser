@@ -222,7 +222,7 @@
     <script>
         const parseUrl = (url, decode = false) => {
             const RegExp = {
-                UrlParts: /^((?:\w+:\/\/)?[^\.\/]+(?:\.[^.\/]+?)+)((?:\/[^\/?#=&]*)*)?(\?(?:&?[^?#=&]+(?:=[^?#=&]*)?)+)?(#(?:&?[^?#=&]+(?:=[^?#=&]*)?)+)?$/
+                UrlParts: /^((?:\w+:\/\/)?[^\.\/]+(?:\.[^.\/]+?)+)((?:\/[^\/?#]*)*)?(\?(?:&?[^?#=&]+(?:=[^?#=&]*)?)+)?(#(?:&?[^?#=&]+(?:=[^?#=&]*)?)+)?$/
             };
             url = url.replaceAll('\\', '');
             if (decode) {
@@ -336,8 +336,8 @@
                         const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}`;
                         const faviconImg = document.createElement('img');
                         faviconImg.src = faviconUrl;
-                        faviconImg.width = 16;
-                        faviconImg.height = 16;
+                        faviconImg.width = 18;
+                        faviconImg.height = 18;
                         faviconImg.style.marginRight = '8px';
                         faviconImg.style.verticalAlign = 'middle';
                 
