@@ -17,7 +17,8 @@ export default class Url {
 
     RegExp() { 
         return {
-            UrlParts: /^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.:?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?[^?]+?)?(#[^#]+?)?$/
+            UrlParts: /^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.:?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?[^?]+?)?(#[^#]+?)?$/,
+            KeyOptionalValue: /([^?#&=]+)(?:=([^?#&=]+))?/
         }
     }
 
@@ -37,13 +38,19 @@ export default class Url {
 
     parseKeyOptionalValue(captureGroup, keyOptionalValue) {
         if (captureGroup) {
-            keyOptionalValue.list = captureGroup.slice(1).split('&');
-        }
-        if (keyOptionalValue.list.length) {
-            keyOptionalValue.list.forEach(e => {
-                const [key, value] = e.split('=');
-                keyOptionalValue.obj[key] = value;
-            })
+            while (this.RegExp().KeyOptionalValue.test(captureGroup)) {
+                const groups = this.RegExp().KeyOptionalValue.exec(captureGroup);
+                if (groups) {
+                    if (groups[2]) {
+                        keyOptionalValue.list.push(`${groups[1]}=${groups[2]||''}`);
+                        keyOptionalValue.obj[groups[1]] = groups[2];
+                    } else {
+                        keyOptionalValue.list.push(groups[1]);
+                        keyOptionalValue.obj[groups[1]] = '';
+                    }
+                    captureGroup = captureGroup.substring(groups[0].length+1);
+                }
+            }
         }
     }
 
