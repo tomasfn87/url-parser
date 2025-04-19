@@ -239,7 +239,7 @@
             </div>
             <div id="button-container">
                 <button type="button" class="btn btn-primary" id="parseButton">Parse</button>
-                <p> </p>
+                <p aria-hidden="true" style="margin: 0 10px;"> </p>
                 <button type="button" class="btn btn-primary" id="decodeButton">Decode</button>
             </div>
         </form>
@@ -257,6 +257,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
+        const youtubeVideoRegex = /(https?:\/\/)?(www\.)?(m\.)?youtu(\.be|be\.com)\/(o?embed\/|watch\?v=)?([0-9A-Za-z_-]{10}[048AEIMQUYcgkosw])([\?&]\S*)*/;
         const parseUrl = (url, decode = false) => {
             const RegExp = {
                 UrlParts: /^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.:?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?[^?]+?)?(#[^#]+?)?$/
@@ -322,6 +323,7 @@
             const urlInput = document.getElementById('urlInput');
             const parsedResultTableBody = document.querySelector('#parsedResult tbody');
             const decodeButton = document.getElementById('decodeButton');
+            const outputContainer = document.getElementById('output-container');
 
             const validateUrlInput = () => {
                 const url = urlInput.value.replaceAll('\\', '');
@@ -474,8 +476,6 @@
 
                 addTableRow("Full URL", `<a href="${fullUrl}" class="url-link">${fullUrl}</a>`, isOdd);
 
-                const youtubeVideoRegex = /(https?:\/\/)?(www\.)?(m\.)?youtu(\.be|be\.com)\/(o?embed\/|watch\?v=)?([0-9A-Za-z_-]{10}[048AEIMQUYcgkosw])([\?&]\S*)*/;
-
                 if (youtubeVideoRegex.test(urlToParse)) {
                     document.body.classList.add('youtube-background');
                     const match = urlToParse.match(youtubeVideoRegex);
@@ -491,8 +491,7 @@
                         iframe.width = '560';
                         iframe.height = '315';
 
-                        iframe.src = `https://www.youtube.com/embed/${videoId}`;
-                        iframe.src += '?enablejsapi=1';
+                        iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&origin=${encodeURIComponent(window.location.hostname)}`;
                         if (r.parts.parameters.obj.hasOwnProperty('t')
                             && /\d+/i.test(r.parts.parameters.obj.t)) {
                             iframe.src += '&start='
@@ -503,22 +502,19 @@
                                 + r.parts.parameters.obj.start
                                     .replace(/\D/, '');
                         }
-                        iframe.src += `&origin=${encodeURIComponent(
-                            window.location.hostname)}`;
-                        
-                        iframe["data-gtm-yt"] = "true";
 
+                        iframe["data-gtm-yt"] = "true";
                         iframe.frameBorder = '0';
                         iframe.allowFullscreen = true;
 
                         embedContainer.appendChild(iframe);
-                        document.getElementById('output-container').appendChild(embedContainer);
+                        outputContainer.appendChild(embedContainer);
                     } else {
                         const messageContainer = document.createElement('div');
                         messageContainer.style.marginTop = '20px';
                         messageContainer.style.color = '#ffaa00';
                         messageContainer.textContent = "Não foi possível extrair o ID do vídeo.";
-                        document.getElementById('output-container').appendChild(messageContainer);
+                        outputContainer.appendChild(messageContainer);
                     }
                 }
             };
