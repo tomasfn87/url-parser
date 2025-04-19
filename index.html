@@ -505,8 +505,8 @@
                         }
                         iframe.src += `&origin=${encodeURIComponent(
                             window.location.hostname)}`;
-                        iframe.src += `&widget_referrer=${encodeURIComponent(
-                            window.frames.top.document.referrer)}`;
+                        
+                        iframe["data-gtm-yt"] = "true";
 
                         iframe.frameBorder = '0';
                         iframe.allowFullscreen = true;
