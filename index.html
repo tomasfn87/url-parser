@@ -279,13 +279,13 @@
                 }
             };
         };
-
+    
         document.addEventListener('DOMContentLoaded', function () {
             const parseButton = document.getElementById('parseButton');
             const urlInput = document.getElementById('urlInput');
             const parsedResultTableBody = document.querySelector('#parsedResult tbody');
             const decodeButton = document.getElementById('decodeButton');
-
+    
             const validateUrlInput = () => {
                 const url = urlInput.value.replaceAll('\\', '');
                 const parsed = parseUrl(url);
@@ -301,14 +301,14 @@
                     decodeButton.disabled = true;
                 }
             };
-
+    
             urlInput.addEventListener('input', validateUrlInput);
-
+    
             const handleParse = (decode) => {
                 const url = urlInput.value.replaceAll('\\', '');
                 const r = parseUrl(url, decode);
                 parsedResultTableBody.innerHTML = '';
-
+    
                 if (!r) {
                     const row = parsedResultTableBody.insertRow();
                     const cell = row.insertCell();
@@ -316,9 +316,9 @@
                     cell.textContent = "Invalid URL.";
                     return;
                 }
-
+    
                 let isOdd = true;
-
+    
                 const addTableRow = (label, value, isOdd, isSubtable = false, isDomainRow = false, domain = '') => {
                     const row = parsedResultTableBody.insertRow();
                     const bgColor = isOdd ? (isSubtable ? '#2a2a2a' : '#222') : (isSubtable ? '#333' : '#282828');
@@ -331,7 +331,7 @@
                     labelCell.style.paddingRight = '15px';
                     valueCell.style.color = '#ccc';
                     valueCell.style.backgroundColor = isOdd ? (isSubtable ? '' : '#333') : (isSubtable ? '' : '#3a3a3a');
-                
+    
                     if (isDomainRow && domain) {
                         const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}`;
                         const faviconImg = document.createElement('img');
@@ -340,14 +340,14 @@
                         faviconImg.height = 18;
                         faviconImg.style.marginRight = '8px';
                         faviconImg.style.verticalAlign = 'middle';
-                
+    
                         const domainLink = document.createElement('a');
                         domainLink.href = domain;
                         domainLink.className = 'url-link';
                         domainLink.textContent = domain;
-                
+    
                         valueCell.innerHTML = '';
-                
+    
                         faviconImg.onload = function() {
                             valueCell.appendChild(faviconImg);
                             valueCell.appendChild(domainLink);
@@ -355,33 +355,33 @@
                         faviconImg.onerror = function() {
                             valueCell.appendChild(domainLink);
                         };
-                
+    
                         valueCell.appendChild(domainLink);
                     }
                 };
-
+    
                 let domain = r.parts.domain;
                 let fullUrl = r.fullUrl();
                 let path = r.parts.path;
-
+    
                 addTableRow("Domain", `<a href="${domain}" class="url-link">${domain}</a>`, isOdd, false, true, domain);
                 isOdd = !isOdd;
                 addTableRow("Path", path, isOdd);
                 isOdd = !isOdd;
-
+    
                 if (r.parts.parameters.list.length > 0) {
                     addTableRow("Parameters", r.parts.parameters.str, isOdd);
                     isOdd = !isOdd;
                     let paramsSubTable = '<table class="sub-table">';
                     let index = 0;
                     let maxKeyWidth = 0;
-
+    
                     for (const key in r.parts.parameters.obj) {
                         const value = r.parts.parameters.obj[key] || '';
                         const decodedKey = decode ? key : key;
                         const decodedValue = decode ? value : value;
                         const keyHTML = `<span class="param-key-sub">${decodedKey}</span>`;
-
+    
                         const tempDiv = document.createElement('div');
                         tempDiv.style.position = 'absolute';
                         tempDiv.style.visibility = 'hidden';
@@ -390,7 +390,7 @@
                         document.body.appendChild(tempDiv);
                         maxKeyWidth = Math.max(maxKeyWidth, tempDiv.offsetWidth);
                         document.body.removeChild(tempDiv);
-
+    
                         paramsSubTable += `<tr style="background-color: ${index % 2 === 0 ? '#2a2a2a' : '#333'}"><td class="param-key-cell" style="width: ${maxKeyWidth}px">${keyHTML}</td><td class="param-value-cell">${decodedValue}</td></tr>`;
                         index++;
                     }
@@ -398,20 +398,20 @@
                     addTableRow("Detailed Parameters", paramsSubTable, isOdd, true);
                     isOdd = !isOdd;
                 }
-
+    
                 if (r.parts.fragment.list.length > 0) {
                     addTableRow("Fragment", r.parts.fragment.str, isOdd);
                     isOdd = !isOdd;
                     let fragmentSubTable = '<table class="sub-table">';
                     let index = 0;
                     let maxKeyWidth = 0;
-
+    
                     for (const key in r.parts.fragment.obj) {
                         const value = r.parts.fragment.obj[key] || '';
                         const decodedKey = decode ? key : key;
                         const decodedValue = decode ? value : value;
                         const keyHTML = `<span class="param-key-sub">${decodedKey}</span>`;
-
+    
                         const tempDiv = document.createElement('div');
                         tempDiv.style.position = 'absolute';
                         tempDiv.style.visibility = 'hidden';
@@ -420,7 +420,7 @@
                         document.body.appendChild(tempDiv);
                         maxKeyWidth = Math.max(maxKeyWidth, tempDiv.offsetWidth);
                         document.body.removeChild(tempDiv);
-
+    
                         fragmentSubTable += `<tr style="background-color: ${index % 2 === 0 ? '#2a2a2a' : '#333'}"><td class="param-key-cell" style="width: ${maxKeyWidth}px">${keyHTML}</td><td class="param-value-cell">${decodedValue}</td></tr>`;
                         index++;
                     }
@@ -428,13 +428,25 @@
                     addTableRow("Detailed Fragment", fragmentSubTable, isOdd, true);
                     isOdd = !isOdd;
                 }
-
+    
                 addTableRow("Full URL", `<a href="${fullUrl}" class="url-link">${fullUrl}</a>`, isOdd);
             };
-
+    
             parseButton.addEventListener('click', () => handleParse(false));
             decodeButton.addEventListener('click', () => handleParse(true));
+    
+            urlInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    if (!parseButton.disabled) {
+                        handleParse(false);
+                    }
+                }
+            });
         });
     </script>
 </body>
+<script type="text/javascript">
+    console.log(" _   _______ _      ______                        \n| | | | ___ \\ |     | ___ \\                       \n| | | | |_/ / |     | |_/ /_ _ _ __ ___  ___ _ __ \n| | | |    /| |     |  __/ _` | '__/ __|/ _ \\ '__|\n| |_| | |\\ \\| |____ | | | (_| | |  \\__ \\  __/ |   \n \\___/\\_| \\_\\_____/ \\_|  \\__,_|_|  |___/\\___|_|   \n\nhttps://github.com/tomasfn87/url-parser");
+</script>
 </html>
