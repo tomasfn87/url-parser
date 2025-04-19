@@ -1,5 +1,6 @@
-import { ClassMethodTest, ClassMethodTester } from './test-class-method.js';
-import Url from './url-parser.js';
+import { ClassMethodTest, ClassMethodTester }
+    from '../util/test-class-method.js';
+import Url from '../src/url-parser.js';
 
 const getDomainTest = new ClassMethodTest(Url, "getDomain", [], "Url.getDomain");
 getDomainTest.addTestCases([

@@ -1,5 +1,5 @@
-import Url from './url-parser.js';
-import { color } from './color.js';
+import Url from './src/url-parser.js';
+import { color } from './util/color.js';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 import path from 'path';

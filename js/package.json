@@ -5,8 +5,8 @@
   "main": "main.js",
   "type": "module",
   "scripts": {
-    "test": "node url-parser.test.js --silent",
-    "detailed-test": "node url-parser.test.js"
+    "test": "node test/url-parser.test.js --silent",
+    "detailed-test": "node test/url-parser.test.js"
   },
   "repository": {
     "type": "git",
