@@ -189,6 +189,32 @@
                 background-color: transparent;
             }
         }
+        .youtube-background {
+            background-color: #000;
+            color: #eee;
+        }
+        .youtube-background h1,
+        .youtube-background h2,
+        .youtube-background label {
+            color: #eee;
+        }
+        .youtube-background .form-control {
+            background-color: #222;
+            color: #eee;
+            border-color: #555;
+        }
+        .youtube-background .form-control:focus {
+            background-color: #222;
+            border-color: #baff33;
+            box-shadow: 0 0 0 0.2rem rgba(186, 255, 51, 0.25);
+        }
+        .youtube-background .form-control::placeholder {
+            color: #999;
+        }
+        .youtube-background .url-table {
+            background-color: #222;
+            color: #eee;
+        }
     </style>
 </head>
 <body>
@@ -279,13 +305,13 @@
                 }
             };
         };
-    
+
         document.addEventListener('DOMContentLoaded', function () {
             const parseButton = document.getElementById('parseButton');
             const urlInput = document.getElementById('urlInput');
             const parsedResultTableBody = document.querySelector('#parsedResult tbody');
             const decodeButton = document.getElementById('decodeButton');
-    
+
             const validateUrlInput = () => {
                 const url = urlInput.value.replaceAll('\\', '');
                 const parsed = parseUrl(url);
@@ -301,14 +327,26 @@
                     decodeButton.disabled = true;
                 }
             };
-    
+
             urlInput.addEventListener('input', validateUrlInput);
-    
+
             const handleParse = (decode) => {
                 const url = urlInput.value.replaceAll('\\', '');
+
+                if (url.startsWith('youtu.be')) {
+                    window.location.href = url;
+                    return;
+                }
+
                 const r = parseUrl(url, decode);
                 parsedResultTableBody.innerHTML = '';
-    
+
+                const existingEmbedContainer = document.getElementById('youtube-embed-container');
+                if (existingEmbedContainer) {
+                    existingEmbedContainer.remove();
+                }
+                document.body.classList.remove('youtube-background');
+
                 if (!r) {
                     const row = parsedResultTableBody.insertRow();
                     const cell = row.insertCell();
@@ -316,9 +354,9 @@
                     cell.textContent = "Invalid URL.";
                     return;
                 }
-    
+
                 let isOdd = true;
-    
+
                 const addTableRow = (label, value, isOdd, isSubtable = false, isDomainRow = false, domain = '') => {
                     const row = parsedResultTableBody.insertRow();
                     const bgColor = isOdd ? (isSubtable ? '#2a2a2a' : '#222') : (isSubtable ? '#333' : '#282828');
@@ -331,7 +369,7 @@
                     labelCell.style.paddingRight = '15px';
                     valueCell.style.color = '#ccc';
                     valueCell.style.backgroundColor = isOdd ? (isSubtable ? '' : '#333') : (isSubtable ? '' : '#3a3a3a');
-    
+
                     if (isDomainRow && domain) {
                         const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}`;
                         const faviconImg = document.createElement('img');
@@ -340,14 +378,14 @@
                         faviconImg.height = 18;
                         faviconImg.style.marginRight = '8px';
                         faviconImg.style.verticalAlign = 'middle';
-    
+
                         const domainLink = document.createElement('a');
                         domainLink.href = domain;
                         domainLink.className = 'url-link';
                         domainLink.textContent = domain;
-    
+
                         valueCell.innerHTML = '';
-    
+
                         faviconImg.onload = function() {
                             valueCell.appendChild(faviconImg);
                             valueCell.appendChild(domainLink);
@@ -355,33 +393,32 @@
                         faviconImg.onerror = function() {
                             valueCell.appendChild(domainLink);
                         };
-    
                         valueCell.appendChild(domainLink);
                     }
                 };
-    
+
                 let domain = r.parts.domain;
                 let fullUrl = r.fullUrl();
                 let path = r.parts.path;
-    
+
                 addTableRow("Domain", `<a href="${domain}" class="url-link">${domain}</a>`, isOdd, false, true, domain);
                 isOdd = !isOdd;
                 addTableRow("Path", path, isOdd);
                 isOdd = !isOdd;
-    
+
                 if (r.parts.parameters.list.length > 0) {
                     addTableRow("Parameters", r.parts.parameters.str, isOdd);
                     isOdd = !isOdd;
                     let paramsSubTable = '<table class="sub-table">';
                     let index = 0;
                     let maxKeyWidth = 0;
-    
+
                     for (const key in r.parts.parameters.obj) {
                         const value = r.parts.parameters.obj[key] || '';
                         const decodedKey = decode ? key : key;
                         const decodedValue = decode ? value : value;
                         const keyHTML = `<span class="param-key-sub">${decodedKey}</span>`;
-    
+
                         const tempDiv = document.createElement('div');
                         tempDiv.style.position = 'absolute';
                         tempDiv.style.visibility = 'hidden';
@@ -390,7 +427,7 @@
                         document.body.appendChild(tempDiv);
                         maxKeyWidth = Math.max(maxKeyWidth, tempDiv.offsetWidth);
                         document.body.removeChild(tempDiv);
-    
+
                         paramsSubTable += `<tr style="background-color: ${index % 2 === 0 ? '#2a2a2a' : '#333'}"><td class="param-key-cell" style="width: ${maxKeyWidth}px">${keyHTML}</td><td class="param-value-cell">${decodedValue}</td></tr>`;
                         index++;
                     }
@@ -398,20 +435,20 @@
                     addTableRow("Detailed Parameters", paramsSubTable, isOdd, true);
                     isOdd = !isOdd;
                 }
-    
+
                 if (r.parts.fragment.list.length > 0) {
                     addTableRow("Fragment", r.parts.fragment.str, isOdd);
                     isOdd = !isOdd;
                     let fragmentSubTable = '<table class="sub-table">';
                     let index = 0;
                     let maxKeyWidth = 0;
-    
+
                     for (const key in r.parts.fragment.obj) {
                         const value = r.parts.fragment.obj[key] || '';
                         const decodedKey = decode ? key : key;
                         const decodedValue = decode ? value : value;
                         const keyHTML = `<span class="param-key-sub">${decodedKey}</span>`;
-    
+
                         const tempDiv = document.createElement('div');
                         tempDiv.style.position = 'absolute';
                         tempDiv.style.visibility = 'hidden';
@@ -420,7 +457,7 @@
                         document.body.appendChild(tempDiv);
                         maxKeyWidth = Math.max(maxKeyWidth, tempDiv.offsetWidth);
                         document.body.removeChild(tempDiv);
-    
+
                         fragmentSubTable += `<tr style="background-color: ${index % 2 === 0 ? '#2a2a2a' : '#333'}"><td class="param-key-cell" style="width: ${maxKeyWidth}px">${keyHTML}</td><td class="param-value-cell">${decodedValue}</td></tr>`;
                         index++;
                     }
@@ -428,8 +465,55 @@
                     addTableRow("Detailed Fragment", fragmentSubTable, isOdd, true);
                     isOdd = !isOdd;
                 }
-    
+
                 addTableRow("Full URL", `<a href="${fullUrl}" class="url-link">${fullUrl}</a>`, isOdd);
+
+                const youtubeVideoRegex = /(https?:\/\/)?(www\.)?(m\.)?youtu(\.be|be\.com)\/(o?embed\/|watch\?v=)?([0-9A-Za-z_-]{10}[048AEIMQUYcgkosw])([\?&]\S*)*/;
+
+                if (youtubeVideoRegex.test(url)) {
+                    document.body.classList.add('youtube-background');
+                    const match = url.match(youtubeVideoRegex);
+                    const videoId = match && match[6];
+
+                    if (videoId) {
+                        const embedContainer = document.createElement('div');
+                        embedContainer.id = 'youtube-embed-container';
+                        embedContainer.style.marginTop = '20px';
+                        embedContainer.style.textAlign = 'center';
+
+                        const iframe = document.createElement('iframe');
+                        iframe.width = '560';
+                        iframe.height = '315';
+
+                        iframe.src = `https://www.youtube.com/embed/${videoId}`;
+                        iframe.src += '?enablejsapi=1';
+                        if (r.parts.parameters.obj.hasOwnProperty('t')
+                            && /\d+/i.test(r.parts.parameters.obj.t)) {
+                            iframe.src += '&start='
+                                + r.parts.parameters.obj.t.replace(/D/, '');
+                        } else if (r.parts.parameters.obj.hasOwnProperty('start')
+                            && /\d+/.test(r.parts.parameters.obj.start))
+                            iframe.src += '&start='
+                                + r.parts.parameters.obj.start
+                                    .replace(/\D/, '');
+                        iframe.src += `&origin=${encodeURIComponent(
+                            window.location.href)}`;
+                        iframe.src += `&widget_referrer=${encodeURIComponent(
+                            window.frames.top.document.referrer)}`;
+
+                        iframe.frameBorder = '0';
+                        iframe.allowFullscreen = true;
+            
+                        embedContainer.appendChild(iframe);
+                        document.getElementById('output-container').appendChild(embedContainer);
+                    } else {
+                        const messageContainer = document.createElement('div');
+                        messageContainer.style.marginTop = '20px';
+                        messageContainer.style.color = '#ffaa00';
+                        messageContainer.textContent = "Não foi possível extrair o ID do vídeo.";
+                        document.getElementById('output-container').appendChild(messageContainer);
+                    }
+                }
             };
     
             parseButton.addEventListener('click', () => handleParse(false));
