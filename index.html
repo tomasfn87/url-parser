@@ -512,7 +512,7 @@
                                 + r.parts.parameters.obj.start
                                     .replace(/\D/, '');
                         iframe.src += `&origin=${encodeURIComponent(
-                            window.location.href)}`;
+                            window.location.hostname)}`;
                         iframe.src += `&widget_referrer=${encodeURIComponent(
                             window.frames.top.document.referrer)}`;
 
