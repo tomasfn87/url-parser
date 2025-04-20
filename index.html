@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google Tag Manager -->
     <script>
         (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -9,7 +8,6 @@
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-MXNVD4PJ');
     </script>
-    <!-- End Google Tag Manager -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>URL Parser</title>
@@ -227,12 +225,10 @@
     </style>
 </head>
 <body>
-    <!-- Google Tag Manager (noscript) -->
     <noscript>
         <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MXNVD4PJ"
         height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
-    <!-- End Google Tag Manager (noscript) -->
     <div class="container">
         <h1>URL Parser</h1>
         <form id="urlForm">
@@ -261,62 +257,50 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        const parseUrl = (url, decode = false) => {
-            const RegExp = {
-                UrlParts: /^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.:?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?[^?]+?)?(#[^#]+?)?$/
-            };
-            url = url.replaceAll('\\', '');
-            if (decode) {
-                try {
-                    url = decodeURIComponent(url);
-                } catch (e) {
-                    console.error("Error decoding URL:", url, e);
-                    return undefined;
-                }
+        const regexp = {
+            UrlParts: /^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.:?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?[^?]+?)?(#[^#]+?)?$/,
+            KeyOptionalValue: /([^?#&=]+)(?:=([^?#&=]+))?/,
+            YouTubeVideo: /(https?:\/\/)?(www\.)?(m\.)?youtu(\.be|be\.com)\/(?:embed\/|watch\?v=)?([0-9A-Za-z_-]{11})/
+        };
+
+        const parseKeyOptionalValue = (captureGroup, keyOptionalValue) => {
+            if (captureGroup) {
+                captureGroup = captureGroup.substring(1);
+                const params = captureGroup.split('&');
+                params.forEach(param => {
+                    const parts = param.split('=');
+                    const key = parts[0];
+                    const value = parts.length > 1 ? parts[1] : '';
+                    keyOptionalValue.list.push(`<span class="math-inline">\{key\}</span>{value ? '=' + value : ''}`);
+                    keyOptionalValue.obj[key] = value;
+                });
             }
-            if (!RegExp.UrlParts.test(url)) {
+        }
+
+        const parseUrl = (url) => {
+            url = url.replaceAll('\\', '');
+            const match = url.match(regexp.UrlParts);
+            if (!match) {
                 return undefined;
             }
-            const groups = RegExp.UrlParts.exec(url);
-            const domain = groups[1] || '';
-            const path = groups[2] || '/';
-            const queryString = groups[3] || '';
-            const hashString = groups[4] || '';
-            let parameters_list = [];
-            let parameters_obj = {};
-            if (queryString) {
-                parameters_list = queryString.slice(1).split('&');
-                parameters_list.forEach(e => {
-                    let [key, value] = e.split('=');
-                    parameters_obj[key] = value !== undefined ? value : '';
-                });
-            }
-            let fragment_list = [];
-            let fragment_obj = {};
-            if (hashString) {
-                fragment_list = hashString.slice(1).split('&');
-                fragment_list.forEach(e => {
-                    const [key, value] = e.split('=');
-                    fragment_obj[key] = value !== undefined ? value : '';
-                });
-            }
+            const domain = match[1] || '';
+            const path = match[2] || '/';
+            const queryString = match[3] || '';
+            const hashString = match[4] || '';
+            let parameters = { str: queryString, list: [], obj: {} }
+            let fragment = { str: hashString, list: [], obj: {} }
+            parseKeyOptionalValue(queryString, parameters);
+            parseKeyOptionalValue(hashString, fragment);
+
             return {
                 parts: {
                     domain: domain,
                     path: path,
-                    parameters: {
-                        str: queryString,
-                        list: parameters_list,
-                        obj: parameters_obj
-                    },
-                    fragment: {
-                        str: hashString,
-                        list: fragment_list,
-                        obj: fragment_obj
-                    }
+                    parameters: parameters,
+                    fragment: fragment
                 },
                 fullUrl: function () {
-                    return domain + path + queryString + hashString;
+                    return (match[1] || '') + path + queryString + hashString;
                 }
             };
         };
@@ -330,7 +314,7 @@
             const validateUrlInput = () => {
                 const url = urlInput.value.replaceAll('\\', '');
                 const parsed = parseUrl(url);
-                if (parsed && parsed.parts.domain.length) {
+                if (parsed && parsed.parts.domain) {
                     urlInput.classList.remove('invalid');
                     urlInput.classList.add('valid');
                     parseButton.disabled = false;
@@ -353,13 +337,9 @@
                     return;
                 }
 
-                const r = parseUrl(url, decode);
+                const r = parseUrl(url);
                 parsedResultTableBody.innerHTML = '';
-
-                const existingEmbedContainer = document.getElementById('youtube-embed-container');
-                if (existingEmbedContainer) {
-                    existingEmbedContainer.remove();
-                }
+                document.getElementById('output-container').querySelectorAll('#youtube-embed-container, .youtube-message-container').forEach(el => el.remove());
                 document.body.classList.remove('youtube-background');
 
                 if (!r) {
@@ -416,13 +396,13 @@
                 let fullUrl = r.fullUrl();
                 let path = r.parts.path;
 
-                addTableRow("Domain", `<a href="${domain}" class="url-link">${domain}</a>`, isOdd, false, true, domain);
+                addTableRow("Domain", domain, isOdd, false, true, domain);
                 isOdd = !isOdd;
                 addTableRow("Path", path, isOdd);
                 isOdd = !isOdd;
 
                 if (r.parts.parameters.list.length > 0) {
-                    addTableRow("Parameters", r.parts.parameters.str, isOdd);
+                    addTableRow("Parameters", decode?decodeURIComponent(r.parts.parameters.str):r.parts.parameters.str, isOdd);
                     isOdd = !isOdd;
                     let paramsSubTable = '<table class="sub-table">';
                     let index = 0;
@@ -430,8 +410,8 @@
 
                     for (const key in r.parts.parameters.obj) {
                         const value = r.parts.parameters.obj[key] || '';
-                        const decodedKey = decode ? key : key;
-                        const decodedValue = decode ? value : value;
+                        const decodedKey = decode ? decodeURIComponent(key) : key;
+                        const decodedValue = decode ? decodeURIComponent(value) : value;
                         const keyHTML = `<span class="param-key-sub">${decodedKey}</span>`;
 
                         const tempDiv = document.createElement('div');
@@ -452,7 +432,7 @@
                 }
 
                 if (r.parts.fragment.list.length > 0) {
-                    addTableRow("Fragment", r.parts.fragment.str, isOdd);
+                    addTableRow("Fragment", decode?decodeURIComponent(r.parts.fragment.str):r.parts.fragment.str, isOdd);
                     isOdd = !isOdd;
                     let fragmentSubTable = '<table class="sub-table">';
                     let index = 0;
@@ -460,8 +440,8 @@
 
                     for (const key in r.parts.fragment.obj) {
                         const value = r.parts.fragment.obj[key] || '';
-                        const decodedKey = decode ? key : key;
-                        const decodedValue = decode ? value : value;
+                        const decodedKey = decode ? decodeURIComponent(key) : key;
+                        const decodedValue = decode ? decodeURIComponent(value) : value;
                         const keyHTML = `<span class="param-key-sub">${decodedKey}</span>`;
 
                         const tempDiv = document.createElement('div');
@@ -481,14 +461,12 @@
                     isOdd = !isOdd;
                 }
 
-                addTableRow("Full URL", `<a href="${fullUrl}" class="url-link">${fullUrl}</a>`, isOdd);
+                addTableRow("Full URL", `<a href="${fullUrl}" class="url-link">${decode?decodeURIComponent(fullUrl):fullUrl}</a>`, isOdd);
 
-                const youtubeVideoRegex = /(https?:\/\/)?(www\.)?(m\.)?youtu(\.be|be\.com)\/(o?embed\/|watch\?v=)?([0-9A-Za-z_-]{10}[048AEIMQUYcgkosw])([\?&]\S*)*/;
-
-                if (youtubeVideoRegex.test(url)) {
+                 if (regexp.YouTubeVideo.test(url)) {
                     document.body.classList.add('youtube-background');
-                    const match = url.match(youtubeVideoRegex);
-                    const videoId = match && match[6];
+                    const match = url.match(regexp.YouTubeVideo);
+                    const videoId = match && match[5];
 
                     if (videoId) {
                         const embedContainer = document.createElement('div');
@@ -499,30 +477,24 @@
                         const iframe = document.createElement('iframe');
                         iframe.width = '560';
                         iframe.height = '315';
-
                         iframe.src = `https://www.youtube.com/embed/${videoId}`;
                         iframe.src += '?enablejsapi=1';
-                        iframe.src += `&origin=${encodeURIComponent(
-                            window.location.hostname)}`;
-                        if (r.parts.parameters.obj.hasOwnProperty('t')
-                            && /\d+/.test(r.parts.parameters.obj.t)) {
-                            iframe.src += '&start='
-                                + r.parts.parameters.obj.t.replace('s', '');;
-                        } else if (r.parts.parameters.obj.hasOwnProperty('start')
-                            && /\d+/.test(r.parts.parameters.obj.start))
-                            iframe.src += '&start='
-                                + r.parts.parameters.obj.start
-                                    .replace('s', '');
+                        iframe.src += `&origin=${encodeURIComponent(window.location.hostname)}`;
+
+                        if (r.parts.parameters.obj.hasOwnProperty('t') && /\d+/.test(r.parts.parameters.obj.t)) {
+                            iframe.src += '&start=' + r.parts.parameters.obj.t.replace('s', '');;
+                        } else if (r.parts.parameters.obj.hasOwnProperty('start') && /\d+/.test(r.parts.parameters.obj.start))
+                            iframe.src += '&start=' + r.parts.parameters.obj.start.replace('s', '');
 
                         iframe["data-gtm-yt"] = "true";
-
                         iframe.frameBorder = '0';
                         iframe.allowFullscreen = true;
-            
+
                         embedContainer.appendChild(iframe);
                         document.getElementById('output-container').appendChild(embedContainer);
                     } else {
                         const messageContainer = document.createElement('div');
+                        messageContainer.classList.add('youtube-message-container');
                         messageContainer.style.marginTop = '20px';
                         messageContainer.style.color = '#ffaa00';
                         messageContainer.textContent = "Não foi possível extrair o ID do vídeo.";
@@ -530,10 +502,10 @@
                     }
                 }
             };
-    
+
             parseButton.addEventListener('click', () => handleParse(false));
             decodeButton.addEventListener('click', () => handleParse(true));
-    
+
             urlInput.addEventListener('keypress', function(event) {
                 if (event.key === 'Enter') {
                     event.preventDefault();
@@ -546,6 +518,6 @@
     </script>
 </body>
 <script type="text/javascript">
-    console.log(" _   _______ _      ______                        \n| | | | ___ \\ |     | ___ \\                       \n| | | | |_/ / |     | |_/ /_ _ _ __ ___  ___ _ __ \n| | | |    /| |     |  __/ _` | '__/ __|/ _ \\ '__|\n| |_| | |\\ \\| |____ | | | (_| | |  \\__ \\  __/ |   \n \\___/\\_| \\_\\_____/ \\_|  \\__,_|_|  |___/\\___|_|   \n\nhttps://github.com/tomasfn87/url-parser");
+    console.log(" _   _______ _       ______                                      \n| | | | ___ \\ |     | ___ \\                                       \n| | | | |_/ / |     | |_/ /_ _ _ __ ___ ___ _ __ \n| | | |  __/| |     |  __/ _` | '__/ __|/ _ \\ '__|\n| |_| | |\\ \\| |____ | | | (_| | |  \\__ \\  __/ |   \n \\___/\\_| \\_/_____/ \\_|  \\__,_|_|  |___/\\___|_|   \n\nhttps://github.com/tomasfn87/url-parser");
 </script>
 </html>
