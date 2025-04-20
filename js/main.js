@@ -56,14 +56,23 @@ const main = () => {
             `${decode?decodeURIComponent(r.getPath()):r.getPath()}\n`);
     }
     let maxLength = 0;
+    if (Object.keys(r.parsedUrl.parts.parameters.obj).length) {
+        Object.entries(r.parsedUrl.parts.parameters.obj).forEach(e => {
+            if (e[1] && e[0].length > maxLength)
+                maxLength = e[0].length;
+        });
+    }
+    if (Object.keys(r.parsedUrl.parts.fragment.obj).length) {
+        Object.entries(r.parsedUrl.parts.fragment.obj).forEach(e => {
+            if (e[1] && e[0].length > maxLength)
+                maxLength = e[0].length;
+        });
+    }
     if (r.parsedUrl.parts.parameters.str) {
         color.log(title, "Parameters");
         process.stdout.write(":\n");
     }
     if (Object.keys(r.parsedUrl.parts.parameters.obj).length) {
-        Object.entries(r.parsedUrl.parts.parameters.obj).forEach(e => {
-            if (e[0].length > maxLength) maxLength = e[0].length;
-        });
         Object.entries(r.parsedUrl.parts.parameters.obj).forEach(e => {
             process.stdout.write("- ");
             if (e[1]) {
@@ -72,7 +81,7 @@ const main = () => {
                 color.log(content, ` ${decode?decodeURIComponent(e[1]):e[1]}`);
             }
             else
-                color.log(content, `${e[0].padStart(maxLength)}`);
+                color.log(content, `${e[0]}`);
             console.log();
         });
     }
@@ -82,8 +91,6 @@ const main = () => {
     }
     if (Object.keys(r.parsedUrl.parts.fragment.obj).length) {
         Object.entries(r.parsedUrl.parts.fragment.obj).forEach(e => {
-            if (e[0].length > maxLength) maxLength = e[0].length;});
-        Object.entries(r.parsedUrl.parts.fragment.obj).forEach(e => {
             process.stdout.write("- ");
             if (e[1]) {
                 color.log(subtitle, `${e[0].padStart(maxLength)}`)
@@ -91,7 +98,7 @@ const main = () => {
                 color.log(content, ` ${decode?decodeURIComponent(e[1]):e[1]}`);
             }
             else
-                color.log(content, `${e[0].padStart(maxLength)}`);
+                color.log(content, `${e[0]}`);
             console.log();
         });
     }

@@ -37,7 +37,7 @@ export default class Url {
     }
 
     parseKeyOptionalValue(captureGroup, keyOptionalValue) {
-        if (captureGroup) {
+        if (captureGroup)
             while (this.RegExp().KeyOptionalValue.test(captureGroup)) {
                 const groups = this.RegExp().KeyOptionalValue.exec(captureGroup);
                 if (groups) {
@@ -51,7 +51,6 @@ export default class Url {
                     captureGroup = captureGroup.substring(groups[0].length+1);
                 }
             }
-        }
     }
 
     getDomain() {
