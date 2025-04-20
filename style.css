@@ -1,0 +1,257 @@
+body {
+    padding-top: 20px;
+    background-color: #444;
+    color: #d4d4d4;
+    font-family: sans-serif;
+    overflow-x: hidden;
+}
+
+h1, h2, label {
+    color: #d4d4d4;
+    text-align: center;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #6C6C6C;
+}
+
+#urlForm {
+    margin-bottom: 20px;
+}
+
+#output-container {
+    margin-top: 20px;
+}
+
+.url-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    color: #d4d4d4;
+    background-color: #1e1e1e;
+    font-family: monospace;
+}
+
+.url-table th, .url-table td {
+    padding: 8px;
+    text-align: left;
+    word-break: break-word;
+}
+
+.url-table td:first-child {
+    font-weight: bold;
+    padding-right: 15px;
+    min-width: 180px;
+}
+
+.url-table td:nth-child(2) {
+    color: #ccc;
+}
+
+.form-control {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    border: 1px solid #555;
+    font-family: monospace;
+    transition: color 0.3s, text-shadow 0.3s, border-color 0.3s;
+}
+
+.form-control.invalid {
+    color: #ff4d4d;
+    text-shadow: 0 0 5px rgba(255, 77, 77, 0.8);
+    border-color: #ff4d4d;
+}
+
+.form-control.valid {
+    color: #baff33;
+    border-color: #baff33;
+}
+
+.form-control:focus {
+    background-color: #1e1e1e;
+    border-color: #baff33;
+    box-shadow: 0 0 0 0.2rem rgba(186, 255, 51, 0.25);
+}
+
+.form-control::placeholder {
+    color: #999;
+    font-family: monospace;
+    transition: color 0.3s, text-shadow 0.3s, border-color 0.3s;
+}
+
+.btn-primary {
+    display: block;
+    width: 48%;
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.btn-primary:disabled {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: #fff;
+    cursor: not-allowed;
+}
+
+.param-key {
+    font-weight: bold;
+}
+
+.url-link {
+    color: inherit;
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.url-link:hover {
+    color: #baff33;
+    text-decoration: underline;
+}
+
+.sub-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 5px;
+    color: #d4d4d4;
+    font-family: monospace;
+}
+
+.sub-table td {
+    padding: 5px;
+    text-align: left;
+    font-size: 0.9em;
+    border: none;
+    word-break: break-word;
+}
+
+.sub-table .param-key-sub {
+    font-weight: bold;
+    color: #eee;
+    margin-right: 5px;
+}
+
+.sub-table .param-key-cell {
+    white-space: nowrap;
+}
+
+#button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.domain-info-button {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8em;
+    margin-left: 5px;
+    transition: background-color 0.3s;
+}
+
+.domain-info-button:hover {
+    background-color: #0056b3;
+}
+
+.domain-info-container {
+    padding: 10px;
+    margin-top: 5px;
+    background-color: #333;
+    border-left: 2px solid #007bff;
+    font-size: 0.9em;
+    white-space: pre-wrap;
+    font-family: monospace;
+    color: #eee;
+}
+
+@media (max-width: 767px) {
+    .sub-table tr {
+        display: block;
+    }
+
+    .sub-table td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .sub-table .param-key-cell {
+        background-color: #2a2a2a;
+        padding: 5px;
+        white-space: normal;
+    }
+
+    .sub-table .param-value-cell {
+        background-color: #333;
+        padding: 5px;
+    }
+}
+
+@media (min-width: 768px) {
+    .sub-table tr {
+        display: table-row;
+    }
+
+    .sub-table td {
+        display: table-cell;
+        width: auto;
+    }
+
+    .sub-table .param-key-cell, .sub-table .param-value-cell {
+        background-color: transparent;
+    }    
+}
+
+#youtube-embed-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#youtube-embed-container iframe {
+    border: none;
+}
+
+.youtube-background {
+    background-color: #000;
+    color: #eee;
+}
+
+.youtube-background h1,
+.youtube-background h2,
+.youtube-background label {
+    color: #eee;
+}
+
+.youtube-background .form-control {
+    background-color: #222;
+    color: #eee;
+    border-color: #555;
+}
+
+.youtube-background .form-control:focus {
+    background-color: #222;
+    border-color: #baff33;
+    box-shadow: 0 0 0 0.2rem rgba(186, 255, 51, 0.25);
+}
+
+.youtube-background .form-control::placeholder {
+    color: #999;
+}
+
+.youtube-background .url-table {
+    background-color: #222;
+    color: #eee;
+}
