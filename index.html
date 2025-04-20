@@ -8,6 +8,18 @@
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-MXNVD4PJ');
     </script>
+    <script>
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+
+        function onYouTubeIframeAPIReady() {
+            console.log('YouTube Iframe API is ready.');
+        }
+    </script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>URL Parser</title>
@@ -46,9 +58,7 @@
         </div>
     </div>
     <hr>
-    <div id="youtube-embed-container">
-        <iframe></iframe>
-    </div>
+    <div id="youtube-embed-container"></div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -106,7 +116,8 @@
             const urlInput = document.getElementById('urlInput');
             const parsedResultTableBody = document.querySelector('#parsedResult tbody');
             const decodeButton = document.getElementById('decodeButton');
-
+            const youtubeEmbedContainer = document.getElementById('youtube-embed-container');
+    
             const validateUrlInput = () => {
                 const url = urlInput.value.replaceAll('\\', '');
                 const parsed = parseUrl(url);
@@ -122,22 +133,22 @@
                     decodeButton.disabled = true;
                 }
             };
-
+    
             urlInput.addEventListener('input', validateUrlInput);
-
+    
             const handleParse = (decode) => {
                 const url = urlInput.value.replaceAll('\\', '');
-
+    
                 if (url.startsWith('youtu.be')) {
                     window.location.href = url;
                     return;
                 }
-
+    
                 const r = parseUrl(url);
                 parsedResultTableBody.innerHTML = '';
                 document.getElementById('output-container').querySelectorAll('#youtube-embed-container, .youtube-message-container').forEach(el => el.remove());
                 document.body.classList.remove('youtube-background');
-
+    
                 if (!r) {
                     const row = parsedResultTableBody.insertRow();
                     const cell = row.insertCell();
@@ -145,9 +156,9 @@
                     cell.textContent = "Invalid URL.";
                     return;
                 }
-
+    
                 let isOdd = true;
-
+    
                 const addTableRow = (label, value, isOdd, isSubtable = false, isDomainRow = false, domain = '') => {
                     const row = parsedResultTableBody.insertRow();
                     const bgColor = isOdd ? (isSubtable ? '#2a2a2a' : '#222') : (isSubtable ? '#333' : '#282828');
@@ -160,7 +171,7 @@
                     labelCell.style.paddingRight = '15px';
                     valueCell.style.color = '#ccc';
                     valueCell.style.backgroundColor = isOdd ? (isSubtable ? '' : '#333') : (isSubtable ? '' : '#3a3a3a');
-
+    
                     if (isDomainRow && domain) {
                         const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}`;
                         const faviconImg = document.createElement('img');
@@ -169,14 +180,14 @@
                         faviconImg.height = 18;
                         faviconImg.style.marginRight = '8px';
                         faviconImg.style.verticalAlign = 'middle';
-
+    
                         const domainLink = document.createElement('a');
                         domainLink.href = domain;
                         domainLink.className = 'url-link';
                         domainLink.textContent = domain;
-
+    
                         valueCell.innerHTML = '';
-
+    
                         faviconImg.onload = function() {
                             valueCell.appendChild(faviconImg);
                             valueCell.appendChild(domainLink);
@@ -187,29 +198,29 @@
                         valueCell.appendChild(domainLink);
                     }
                 };
-
+    
                 let domain = r.parts.domain;
                 let fullUrl = r.fullUrl();
                 let path = r.parts.path;
-
+    
                 addTableRow("Domain", domain, isOdd, false, true, domain);
                 isOdd = !isOdd;
                 addTableRow("Path", path, isOdd);
                 isOdd = !isOdd;
-
+    
                 if (r.parts.parameters.list.length > 0) {
                     addTableRow("Parameters", decode?decodeURIComponent(r.parts.parameters.str):r.parts.parameters.str, isOdd);
                     isOdd = !isOdd;
                     let paramsSubTable = '<table class="sub-table">';
                     let index = 0;
                     let maxKeyWidth = 0;
-
+    
                     for (const key in r.parts.parameters.obj) {
                         const value = r.parts.parameters.obj[key] || '';
                         const decodedKey = decode ? decodeURIComponent(key) : key;
                         const decodedValue = decode ? decodeURIComponent(value) : value;
                         const keyHTML = `<span class="param-key-sub">${decodedKey}</span>`;
-
+    
                         const tempDiv = document.createElement('div');
                         tempDiv.style.position = 'absolute';
                         tempDiv.style.visibility = 'hidden';
@@ -218,7 +229,7 @@
                         document.body.appendChild(tempDiv);
                         maxKeyWidth = Math.max(maxKeyWidth, tempDiv.offsetWidth);
                         document.body.removeChild(tempDiv);
-
+    
                         paramsSubTable += `<tr style="background-color: ${index % 2 === 0 ? '#2a2a2a' : '#333'}"><td class="param-key-cell" style="width: ${maxKeyWidth}px">${keyHTML}</td><td class="param-value-cell">${decodedValue}</td></tr>`;
                         index++;
                     }
@@ -226,20 +237,20 @@
                     addTableRow("Detailed Parameters", paramsSubTable, isOdd, true);
                     isOdd = !isOdd;
                 }
-
+    
                 if (r.parts.fragment.list.length > 0) {
                     addTableRow("Fragment", decode?decodeURIComponent(r.parts.fragment.str):r.parts.fragment.str, isOdd);
                     isOdd = !isOdd;
                     let fragmentSubTable = '<table class="sub-table">';
                     let index = 0;
                     let maxKeyWidth = 0;
-
+    
                     for (const key in r.parts.fragment.obj) {
                         const value = r.parts.fragment.obj[key] || '';
                         const decodedKey = decode ? decodeURIComponent(key) : key;
                         const decodedValue = decode ? decodeURIComponent(value) : value;
                         const keyHTML = `<span class="param-key-sub">${decodedKey}</span>`;
-
+    
                         const tempDiv = document.createElement('div');
                         tempDiv.style.position = 'absolute';
                         tempDiv.style.visibility = 'hidden';
@@ -248,7 +259,7 @@
                         document.body.appendChild(tempDiv);
                         maxKeyWidth = Math.max(maxKeyWidth, tempDiv.offsetWidth);
                         document.body.removeChild(tempDiv);
-
+    
                         fragmentSubTable += `<tr style="background-color: ${index % 2 === 0 ? '#2a2a2a' : '#333'}"><td class="param-key-cell" style="width: ${maxKeyWidth}px">${keyHTML}</td><td class="param-value-cell">${decodedValue}</td></tr>`;
                         index++;
                     }
@@ -256,27 +267,37 @@
                     addTableRow("Detailed Fragment", fragmentSubTable, isOdd, true);
                     isOdd = !isOdd;
                 }
-
+    
                 addTableRow("Full URL", `<a href="${fullUrl}" class="url-link">${decode?decodeURIComponent(fullUrl):fullUrl}</a>`, isOdd);
-
-                const iframe = document.querySelector('#youtube-embed-container iframe');
+    
                 if (regexp.YouTubeVideo.test(url)) {
                     document.body.classList.add('youtube-background');
                     const match = url.match(regexp.YouTubeVideo);
                     const videoId = match && match[5];
                     if (videoId) {
-                        iframe.width = 560;
-                        iframe.height = 512;
-                        iframe.src = `https://www.youtube.com/embed/${videoId}`;
-                        iframe.src += '?autoplay=1&mute=1&enablejsapi=1';
-                        iframe.src += `&origin=${encodeURIComponent(window.location.hostname)}`;
-                        if (r.parts.parameters.obj.hasOwnProperty('t') && /\d+/.test(r.parts.parameters.obj.t)) {
-                            iframe.src += '&start=' + r.parts.parameters.obj.t.replace('s', '');;
-                        } else if (r.parts.parameters.obj.hasOwnProperty('start') && /\d+/.test(r.parts.parameters.obj.start))
-                            iframe.src += '&start=' + r.parts.parameters.obj.start.replace('s', '');
-                        // iframe["data-gtm-yt"] = "true";
-                        iframe.frameBorder = '0';
-                        iframe.allowFullscreen = true;
+                        youtubeEmbedContainer.innerHTML = '';
+                        let videoStart = '';
+                        if (r.parts.parameters.obj.hasOwnProperty('t')
+                            && /\d+/.test(r.parts.parameters.obj.t)) {
+                            videoStart = r.parts.parameters.obj.t;
+                        } else if (r.parts.parameters.obj.hasOwnProperty('start')
+                            && /\d+/.test(r.parts.parameters.obj.start))
+                            videoStart = r.parts.parameters.obj.start;
+                        player = new YT.Player('youtube-embed-container', {
+                            height: '270',
+                            width: '480',
+                            videoId: videoId,
+                            playerVars: {
+                                'playsinline': 1,
+                                'autoplay': 1,
+                                'mute': 1,
+                                'start': parseInt(videoStart)
+                            },
+                            events: {
+                                'onReady': onPlayerReadyYouTube,
+                                'onStateChange': onPlayerStateChangeYouTube
+                            }
+                        });
                     } else {
                         const messageContainer = document.createElement('div');
                         messageContainer.classList.add('youtube-message-container');
@@ -286,13 +307,22 @@
                         document.getElementById('output-container').appendChild(messageContainer);
                     }
                 } else {
-                    iframe.src = '';
+                    youtubeEmbedContainer.innerHTML = '';
+                    document.body.classList.remove('youtube-background');
                 }
             };
-
+    
+            function onPlayerReadyYouTube(event) {
+                console.log('YouTube Player is ready');
+            }
+    
+            function onPlayerStateChangeYouTube(event) {
+                console.log('Player state changed:', event.data);
+            }
+    
             parseButton.addEventListener('click', () => handleParse(false));
             decodeButton.addEventListener('click', () => handleParse(true));
-
+    
             urlInput.addEventListener('keypress', function(event) {
                 if (event.key === 'Enter') {
                     event.preventDefault();
@@ -302,10 +332,8 @@
                 }
             });
         });
+    
+        console.log(" _   _______ _       ______                                      \n| | | | ___ \\ |     | ___ \\                                       \n| | | | |_/ / |     | |_/ /_ _ _ __ ___ ___ _ __ \n| | | |  __/| |     |  __/ _` | '__/ __|/ _ \\ '__|\n| |_| | |\\ \\| |____ | | | (_| | |  \\__ \\  __/ |   \n \\___/\\_| \\_/_____/ \\_|  \\__,_|_|  |___/\\___|_|   \n\nhttps://github.com/tomasfn87/url-parser\n\n");
     </script>
-</body>
-<script type="text/javascript">
-    console.log(" _   _______ _       ______                                      \n| | | | ___ \\ |     | ___ \\                                       \n| | | | |_/ / |     | |_/ /_ _ _ __ ___ ___ _ __ \n| | | |  __/| |     |  __/ _` | '__/ __|/ _ \\ '__|\n| |_| | |\\ \\| |____ | | | (_| | |  \\__ \\  __/ |   \n \\___/\\_| \\_/_____/ \\_|  \\__,_|_|  |___/\\___|_|   \n\nhttps://github.com/tomasfn87/url-parser\n\n");
-</script>
 </html>
 

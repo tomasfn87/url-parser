@@ -218,10 +218,19 @@ th, td {
 #youtube-embed-container {
     margin-top: 20px;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #youtube-embed-container iframe {
     border: none;
+    display: block;
+    margin: 0 auto;
 }
 
 .youtube-background {
