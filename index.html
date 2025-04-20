@@ -13,11 +13,9 @@
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
         var player;
-
         function onYouTubeIframeAPIReady() {
-            console.log('YouTube Iframe API is ready.');
+            // console.log('YouTube Iframe API is ready.');
         }
     </script>
     <meta charset="utf-8">
@@ -65,22 +63,27 @@
     <script>
         const regexp = {
             UrlParts: /^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.:?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?[^?]+?)?(#[^#]+?)?$/,
-            KeyOptionalValue: /([^?#&=]+)(?:=([^?#&=]+))?/,
-            YouTubeVideo: /(https?:\/\/)?(www\.)?(m\.)?youtu(\.be|be\.com)\/(?:embed\/|watch\?v=)?([0-9A-Za-z_-]{11})/
+            Query: /([^?#&=]+)(?:=([^?#&=]+))?/,
+            Fragment: /([^?#&=]+)(?:=([^#&=]+))?/,
+            YouTubeVideo: /(https?:\/\/)?(www\.)?(m\.)?youtu(\.be|be\.com)\/(?:watch\?v=|embed\/)([0-9A-Za-z_-]{11})([\?&]\S*)?/i,
+            YouTubePlaylist: /(https?:\/\/)?(www\.)?(m\.)?youtu(\.be|be\.com)\/.*?list=([0-9A-Za-z_-]+)/i
         };
 
-        const parseKeyOptionalValue = (captureGroup, keyOptionalValue) => {
-            if (captureGroup) {
-                captureGroup = captureGroup.substring(1);
-                const params = captureGroup.split('&');
-                params.forEach(param => {
-                    const parts = param.split('=');
-                    const key = parts[0];
-                    const value = parts.length > 1 ? parts[1] : '';
-                    keyOptionalValue.list.push(`<span class="math-inline">\{key\}</span>{value ? '=' + value : ''}`);
-                    keyOptionalValue.obj[key] = value;
-                });
-            }
+        const parseKeyOptionalValue = (captureGroup, keyOptionalValue, re) => {
+            if (captureGroup)
+                while (re.test(captureGroup)) {
+                    const groups = re.exec(captureGroup);
+                    if (groups) {
+                        if (groups[2]) {
+                            keyOptionalValue.list.push(`${groups[1]}=${groups[2]||''}`);
+                            keyOptionalValue.obj[groups[1]] = groups[2];
+                        } else {
+                            keyOptionalValue.list.push(groups[1]);
+                            keyOptionalValue.obj[groups[1]] = '';
+                        }
+                        captureGroup = captureGroup.substring(groups[0].length+1);
+                    }
+                }
         }
 
         const parseUrl = (url) => {
@@ -95,9 +98,8 @@
             const hashString = match[4] || '';
             let parameters = { str: queryString, list: [], obj: {} }
             let fragment = { str: hashString, list: [], obj: {} }
-            parseKeyOptionalValue(queryString, parameters);
-            parseKeyOptionalValue(hashString, fragment);
-
+            parseKeyOptionalValue(queryString, parameters, regexp.Query);
+            parseKeyOptionalValue(hashString, fragment, regexp.Fragment);
             return {
                 parts: {
                     domain: domain,
@@ -171,7 +173,6 @@
                     labelCell.style.paddingRight = '15px';
                     valueCell.style.color = '#ccc';
                     valueCell.style.backgroundColor = isOdd ? (isSubtable ? '' : '#333') : (isSubtable ? '' : '#3a3a3a');
-    
                     if (isDomainRow && domain) {
                         const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}`;
                         const faviconImg = document.createElement('img');
@@ -198,11 +199,9 @@
                         valueCell.appendChild(domainLink);
                     }
                 };
-    
                 let domain = r.parts.domain;
                 let fullUrl = r.fullUrl();
                 let path = r.parts.path;
-    
                 addTableRow("Domain", domain, isOdd, false, true, domain);
                 isOdd = !isOdd;
                 addTableRow("Path", path, isOdd);
@@ -214,13 +213,11 @@
                     let paramsSubTable = '<table class="sub-table">';
                     let index = 0;
                     let maxKeyWidth = 0;
-    
                     for (const key in r.parts.parameters.obj) {
                         const value = r.parts.parameters.obj[key] || '';
                         const decodedKey = decode ? decodeURIComponent(key) : key;
                         const decodedValue = decode ? decodeURIComponent(value) : value;
                         const keyHTML = `<span class="param-key-sub">${decodedKey}</span>`;
-    
                         const tempDiv = document.createElement('div');
                         tempDiv.style.position = 'absolute';
                         tempDiv.style.visibility = 'hidden';
@@ -229,7 +226,6 @@
                         document.body.appendChild(tempDiv);
                         maxKeyWidth = Math.max(maxKeyWidth, tempDiv.offsetWidth);
                         document.body.removeChild(tempDiv);
-    
                         paramsSubTable += `<tr style="background-color: ${index % 2 === 0 ? '#2a2a2a' : '#333'}"><td class="param-key-cell" style="width: ${maxKeyWidth}px">${keyHTML}</td><td class="param-value-cell">${decodedValue}</td></tr>`;
                         index++;
                     }
@@ -244,13 +240,11 @@
                     let fragmentSubTable = '<table class="sub-table">';
                     let index = 0;
                     let maxKeyWidth = 0;
-    
                     for (const key in r.parts.fragment.obj) {
                         const value = r.parts.fragment.obj[key] || '';
                         const decodedKey = decode ? decodeURIComponent(key) : key;
                         const decodedValue = decode ? decodeURIComponent(value) : value;
                         const keyHTML = `<span class="param-key-sub">${decodedKey}</span>`;
-    
                         const tempDiv = document.createElement('div');
                         tempDiv.style.position = 'absolute';
                         tempDiv.style.visibility = 'hidden';
@@ -313,11 +307,11 @@
             };
     
             function onPlayerReadyYouTube(event) {
-                console.log('YouTube Player is ready');
+                // console.log('YouTube Player is ready');
             }
     
             function onPlayerStateChangeYouTube(event) {
-                console.log('Player state changed:', event.data);
+                // console.log('Player state changed:', event.data);
             }
     
             parseButton.addEventListener('click', () => handleParse(false));
@@ -332,8 +326,6 @@
                 }
             });
         });
-    
         console.log(" _   _______ _       ______                                      \n| | | | ___ \\ |     | ___ \\                                       \n| | | | |_/ / |     | |_/ /_ _ _ __ ___ ___ _ __ \n| | | |  __/| |     |  __/ _` | '__/ __|/ _ \\ '__|\n| |_| | |\\ \\| |____ | | | (_| | |  \\__ \\  __/ |   \n \\___/\\_| \\_/_____/ \\_|  \\__,_|_|  |___/\\___|_|   \n\nhttps://github.com/tomasfn87/url-parser\n\n");
     </script>
 </html>
-
