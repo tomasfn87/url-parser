@@ -14,6 +14,7 @@
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         var player;
+        var youTubePlaylistId;
         function onYouTubeIframeAPIReady() {
             // console.log('YouTube Iframe API is ready.');
         }
@@ -264,7 +265,35 @@
     
                 addTableRow("Full URL", `<a href="${fullUrl}" class="url-link">${decode?decodeURIComponent(fullUrl):fullUrl}</a>`, isOdd);
     
-                if (regexp.YouTubeVideo.test(url)) {
+                if (regexp.YouTubePlaylist.test(url)) {
+                    document.body.classList.add('youtube-background');
+                    const match = url.match(regexp.YouTubePlaylist);
+                    const playlistId = match && match[5];
+                    if (playlistId) {
+                        youtubeEmbedContainer.innerHTML = '';
+                        youTubePlaylistId = playlistId;
+                        player = new YT.Player('youtube-embed-container', {
+                            height: '270',
+                            width: '480',
+                            playerVars: {
+                                'playsinline': 1,
+                                'autoplay': 1,
+                                'mute': 1
+                            },
+                            events: {
+                                'onReady': onPlayerReadyYouTube,
+                                'onStateChange': onPlayerStateChangeYouTube
+                            }
+                        })
+                    } else {
+                        const messageContainer = document.createElement('div');
+                        messageContainer.classList.add('youtube-message-container');
+                        messageContainer.style.marginTop = '20px';
+                        messageContainer.style.color = '#ffaa00';
+                        messageContainer.textContent = "Não foi possível extrair o ID da playlist.";
+                        document.getElementById('output-container').appendChild(messageContainer);
+                    } 
+                } else if (regexp.YouTubeVideo.test(url)) {
                     document.body.classList.add('youtube-background');
                     const match = url.match(regexp.YouTubeVideo);
                     const videoId = match && match[5];
@@ -307,7 +336,16 @@
             };
     
             function onPlayerReadyYouTube(event) {
-                // console.log('YouTube Player is ready');
+                if (youTubePlaylistId) {
+                    event.target.loadPlaylist({
+                        list: youTubePlaylistId,
+                        listType: 'playlist',
+                        index: 0,
+                        startSeconds: 0
+                    })
+                    event.target.playVideo();
+                    youTubePlaylistId = '';
+                }
             }
     
             function onPlayerStateChangeYouTube(event) {
