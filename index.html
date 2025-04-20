@@ -502,19 +502,19 @@
 
                         iframe.src = `https://www.youtube.com/embed/${videoId}`;
                         iframe.src += '?enablejsapi=1';
+                        iframe.src += `&origin=${encodeURIComponent(
+                            window.location.hostname)}`;
                         if (r.parts.parameters.obj.hasOwnProperty('t')
-                            && /\d+/i.test(r.parts.parameters.obj.t)) {
+                            && /\d+/.test(r.parts.parameters.obj.t)) {
                             iframe.src += '&start='
-                                + r.parts.parameters.obj.t.replace(/D/, '');
+                                + r.parts.parameters.obj.t.replace('s', '');;
                         } else if (r.parts.parameters.obj.hasOwnProperty('start')
                             && /\d+/.test(r.parts.parameters.obj.start))
                             iframe.src += '&start='
                                 + r.parts.parameters.obj.start
-                                    .replace(/\D/, '');
-                        iframe.src += `&origin=${encodeURIComponent(
-                            window.location.hostname)}`;
-                        iframe.src += `&widget_referrer=${encodeURIComponent(
-                            window.frames.top.document.referrer)}`;
+                                    .replace('s', '');
+
+                        iframe["data-gtm-yt"] = "true";
 
                         iframe.frameBorder = '0';
                         iframe.allowFullscreen = true;
