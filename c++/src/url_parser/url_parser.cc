@@ -184,16 +184,20 @@ const void Url::print_key_optional_value_list(
         else
             std::cout << "    ";
         if (list[i].value.size())
-            std::cout << color_str(list[i].key, color_aux);
+            std::cout << color_chars(key_optional_value_chars,
+                list[i].key, color_main, color_aux, color_aux);
         else
-            std::cout << color_str(list[i].key, color_main);
+            std::cout << color_chars(key_optional_value_chars,
+                list[i].key, color_main, color_aux, color_aux);
         if (list[i].value.size()) {
             std::cout << color_str(":", color_dim) << " ";
             if (decode)
-                std::cout << color_str(
-                    decode_uri_component(list[i].value), color_main);
+                std::cout << color_chars(key_optional_value_chars, 
+                    decode_uri_component(list[i].value),
+                        color_aux, color_main, color_dim);
             else
-                std::cout << color_str(list[i].value, color_main);
+                std::cout << color_chars(key_optional_value_chars,
+                    list[i].value, color_aux, color_main, color_dim);
         }
         if (i == (list.size() - 1))
             std::cout << "\n  " << color_str("}", color_dim) << "\n";

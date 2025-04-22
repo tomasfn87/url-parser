@@ -58,7 +58,7 @@ private:
     const std::vector<char> domain_chars = {':', '/', '.'};
     const std::vector<char> path_chars = {'/'};
     const std::vector<char> key_value_delimiters = {'='};
-    const std::vector<char> key_optional_value_chars = {'?', '#', '&'};
+    const std::vector<char> key_optional_value_chars = {'?', '#', '&', '/'};
     const bool is_char_in_list(std::vector<char> list, char target);
     const std::string color_chars(
         std::vector<char>, std::string target,
