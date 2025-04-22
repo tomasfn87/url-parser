@@ -67,7 +67,7 @@
             UrlParts: /^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.:?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?[^?]+?)?(#[^#]+?)?$/,
             Query: /([^?#&=]+)(?:=([^?#&=]+))?/,
             Fragment: /([^?#&=]+)(?:=([^#&=]+))?/,
-            YouTubeVideo: /(https?:\/\/)?(www\.)?(m\.)?youtu(\.be|be\.com)\/(?:watch\?v=|embed\/)([0-9A-Za-z_-]{11})([\?&]\S*)?/i,
+            YouTubeVideo: /(https?:\/\/)?(www\.)?(m\.)?youtu(\.be|be\.com)\/(?:watch\?.*&?v=|embed\/)?([0-9A-Za-z_-]{11})([\?&]\S*)?/i,
             YouTubePlaylist: /(https?:\/\/)?(www\.)?(m\.)?youtu(\.be|be\.com)\/.*?list=([0-9A-Za-z_-]+)/i,
             YouTubeUser: /(https?:\/\/)?(www\.)?(m\.)?youtu(\.be|be\.com)\/@([^\/?#]+).*/i
         };
