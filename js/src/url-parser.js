@@ -18,7 +18,8 @@ export default class Url {
     RegExp() { 
         return {
             UrlParts: /^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.:?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?[^?]+?)?(#[^#]+?)?$/,
-            KeyOptionalValue: /([^?#&=]+)(?:=([^?#&=]+))?/
+            Query: /([^?#&=]+)(?:=([^?#&=]+))?/,
+            Fragment: /([^#&=]+)(?:=([^#&=]+))?/
         }
     }
 
@@ -29,17 +30,17 @@ export default class Url {
             this.parsedUrl.parts.path = groups[2] || '/';
             this.parsedUrl.parts.parameters.str = groups[3] || '';
             this.parseKeyOptionalValue(
-                groups[3], this.parsedUrl.parts.parameters);
+                groups[3], this.parsedUrl.parts.parameters, this.RegExp().Query);
             this.parsedUrl.parts.fragment.str = groups[4] || '';
             this.parseKeyOptionalValue(
-                groups[4], this.parsedUrl.parts.fragment);
+                groups[4], this.parsedUrl.parts.fragment, this.RegExp().Fragment);
         }
     }
 
-    parseKeyOptionalValue(captureGroup, keyOptionalValue) {
+    parseKeyOptionalValue(captureGroup, keyOptionalValue, re) {
         if (captureGroup)
-            while (this.RegExp().KeyOptionalValue.test(captureGroup)) {
-                const groups = this.RegExp().KeyOptionalValue.exec(captureGroup);
+            while (re.test(captureGroup)) {
+                const groups = re.exec(captureGroup);
                 if (groups) {
                     if (groups[2]) {
                         keyOptionalValue.list.push(`${groups[1]}=${groups[2]||''}`);

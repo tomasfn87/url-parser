@@ -66,10 +66,10 @@
         const regexp = {
             UrlParts: /^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.:?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?[^?]+?)?(#[^#]+?)?$/,
             Query: /([^?#&=]+)(?:=([^?#&=]+))?/,
-            Fragment: /([^?#&=]+)(?:=([^#&=]+))?/,
-            YouTubeVideo: /(https?:\/\/)?(www\.)?(m\.)?youtu(\.be|be\.com)\/(?:watch\?.*&?v=|embed\/)?([0-9A-Za-z_-]{11})([\?&]\S*)?/i,
-            YouTubePlaylist: /(https?:\/\/)?(www\.)?(m\.)?youtu(\.be|be\.com)\/.*?list=([0-9A-Za-z_-]+)/i,
-            YouTubeUser: /(https?:\/\/)?(www\.)?(m\.)?youtu(\.be|be\.com)\/@([^\/?#]+).*/i
+            Fragment: /([^#&=]+)(?:=([^#&=]+))?/,
+            YouTubeVideo: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?(?:(?:watch)?\?.*v=|embed\/)?([0-9A-Za-z_-]{11}).*/i,
+            YouTubePlaylist: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?.*?list=([0-9A-Za-z_-]+)/i,
+            YouTubeUser: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?.*@([^\/?#=]+).*/i
         };
 
         const parseKeyOptionalValue = (captureGroup, keyOptionalValue, re) => {
@@ -143,12 +143,6 @@
     
             const handleParse = (decode) => {
                 const url = urlInput.value.replaceAll('\\', '');
-    
-                if (url.startsWith('youtu.be')) {
-                    window.location.href = url;
-                    return;
-                }
-    
                 const r = parseUrl(url);
                 parsedResultTableBody.innerHTML = '';
                 document.getElementById('output-container').querySelectorAll('#youtube-embed-container, .youtube-message-container').forEach(el => el.remove());
@@ -271,7 +265,7 @@
                 if (regexp.YouTubePlaylist.test(url)) {
                     document.body.classList.add('youtube-background');
                     const match = url.match(regexp.YouTubePlaylist);
-                    const playlistId = match && match[5];
+                    const playlistId = match && match[4];
                     if (playlistId) {
                         youtubeEmbedContainer.innerHTML = '';
                         youTubePlaylistId = playlistId;
@@ -300,7 +294,7 @@
                 } else if (regexp.YouTubeVideo.test(url)) {
                     document.body.classList.add('youtube-background');
                     const match = url.match(regexp.YouTubeVideo);
-                    const videoId = match && match[5];
+                    const videoId = match && match[4];
                     if (videoId) {
                         youtubeEmbedContainer.innerHTML = '';
                         let videoStart = '';
@@ -337,7 +331,7 @@
                 } else if (regexp.YouTubeUser.test(url)) {
                     document.body.classList.add('youtube-background');
                     const match = url.match(regexp.YouTubeUser);
-                    const userId = match && match[5];
+                    const userId = match && match[4];
                     if (userId) {
                         youtubeEmbedContainer.innerHTML = '';
                         youTubeUserId = userId;

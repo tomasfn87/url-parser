@@ -16,21 +16,24 @@ void Url::remove_all_chars(std::string& target, char remove) {
 }
 
 void Url::parse_key_optional_value_list(
-    KeyOptionalValueData& target, std::string delimiter) {
+    KeyOptionalValueData& target, std::string forbidden_chars,
+    std::string delimiter) {
     std::smatch matchs;
     std::string::const_iterator search_start = target.base_string.cbegin();
     while (std::regex_search(
         search_start, target.base_string.cend(), matchs,
-        std::regex(R"(([^?#&)" + delimiter + R"(]+(?:)"
-            + delimiter + R"([^?#&)" + delimiter + R"(]+)?))"))) {
+        std::regex(R"(([^)" + forbidden_chars + delimiter + R"(]+(?:)"
+            + delimiter + R"([^)" + forbidden_chars + delimiter
+            + R"(]+)?))"))) {
         if (matchs.size() && matchs[1].str().size()) {
             target.list.push_back(matchs[1].str());
             std::smatch key_value_matchs;
             std::string key_value = matchs[1].str();
             if (std::regex_search(
                 key_value.cbegin(), key_value.cend(), key_value_matchs,
-                std::regex(R"(([^?#&)" + delimiter + R"(]+)(?:)"
-                    + delimiter + R"(([^?#&)" + delimiter + R"(]+))?)"))) {
+                std::regex(R"(([^)" + forbidden_chars + delimiter + R"(]+)(?:)"
+                    + delimiter + R"(([^)" + forbidden_chars + delimiter
+                    + R"(]+))?)"))) {
                 KeyOptionalValue kov;
                 kov.key = key_value_matchs[1].str();
                 if (key_value_matchs.size() > 2) {
@@ -58,8 +61,8 @@ void Url::parse_url() {
         parsed_url.parameter.base_string = parts[3].str();
         parsed_url.fragment.base_string = parts[4].str();
     }
-    parse_key_optional_value_list(parsed_url.parameter, R"(=)");
-    parse_key_optional_value_list(parsed_url.fragment, R"(=)");
+    parse_key_optional_value_list(parsed_url.parameter, R"(?#&)", R"(=)");
+    parse_key_optional_value_list(parsed_url.fragment, R"(#&)", R"(=)");
 }
 
 void Url::update_url() {
