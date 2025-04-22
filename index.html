@@ -177,7 +177,7 @@
                     valueCell.style.color = '#ccc';
                     valueCell.style.backgroundColor = isOdd ? (isSubtable ? '' : '#333') : (isSubtable ? '' : '#3a3a3a');
                     if (isDomainRow && domain) {
-                        const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}`;
+                        const faviconUrl = `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${`https://${domain.replace(/^\s*\w+:\/\//, '')}`}&size=18`;
                         const faviconImg = document.createElement('img');
                         faviconImg.src = faviconUrl;
                         faviconImg.width = 18;
