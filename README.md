@@ -1,5 +1,15 @@
 # URL Parser
 
+- Algorithm to isolate the main parts and the key-value sets of a URL.
+
+## C++
+
+- Colorizes the URL parts and highlights characters; CLI app.
+
+## JavaScript
+
+- Same code used in the WebApp but organized as a class; it also includes a test class; CLI app.
+
 ## WebApp 
 
 - Link: [`URL Parser`](https://tomasfn87.github.io/url-parser/)
