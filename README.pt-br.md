@@ -41,3 +41,7 @@
   - Usuário do YouTube
     - [`https://` `www.youtube.com/` `@Google`](https://www.youtube.com/@Google)
     - :warning: nem todas as listas de vídeos enviados pelo usuário foram [carregadas](https://github.com/tomasfn87/url-parser/blob/main/index.html#L376) com sucesso; canais maiores parecem funcionar bem.
+
+## Arte
+
+- Arte do Ícone por [@julieta_1864](https://instagram.com/julieta_1864)

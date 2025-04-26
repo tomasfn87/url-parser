@@ -41,3 +41,7 @@
   - YouTube User
     - [`https://` `www.youtube.com/` `@Google`](https://www.youtube.com/@Google)
     - :warning:not all user uploaded videos lists were sucessfully [loaded](https://github.com/tomasfn87/url-parser/blob/main/index.html#L376); bigger channels seem to work fine.
+
+## Art
+
+- Icon Art by [@julieta_1864](https://instagram.com/julieta_1864)
