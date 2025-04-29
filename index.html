@@ -191,12 +191,12 @@
                         faviconImg.style.verticalAlign = 'middle';
     
                         const domainLink = document.createElement('a');
-                        domainLink.href = domain;
+                        domainLink.href = `https://${domain.replace(/^\s*\w+:\/\//, '')}`;
                         domainLink.className = 'url-link';
                         domainLink.textContent = domain;
-    
+                        
                         valueCell.innerHTML = '';
-    
+                        
                         faviconImg.onload = function() {
                             valueCell.appendChild(faviconImg);
                             valueCell.appendChild(domainLink);
@@ -204,7 +204,6 @@
                         faviconImg.onerror = function() {
                             valueCell.appendChild(domainLink);
                         };
-                        valueCell.appendChild(domainLink);
                     }
                 };
                 let domain = r.parts.domain;
@@ -270,7 +269,7 @@
                     isOdd = !isOdd;
                 }
     
-                addTableRow("Full URL", `<a href="${fullUrl}" class="url-link">${decode?decodeURIComponent(fullUrl):fullUrl}</a>`, isOdd);
+                addTableRow("Full URL", `<a href="${`https://${fullUrl.replace(/^\s*\w+:\/\//, '')}`}" class="url-link">${decode?decodeURIComponent(fullUrl):fullUrl}</a>`, isOdd);
     
                 // YouTube Playlist
                 if (regexp.YouTubePlaylist.test(url)) {
