@@ -215,6 +215,16 @@ th, td {
     }    
 }
 
+#github-logo {
+    float: right;
+    fill: #DDD;
+    opacity: 65%;
+}
+  
+#github-logo:hover {
+    opacity: 85%;
+}
+
 #youtube-embed-container {
     margin-top: 20px;
     text-align: center;
