@@ -413,6 +413,12 @@
                         const callback = (EmbedController) => {};
                         IFrameAPI.createController(element, options, callback);
                     };
+                    const spotifyPlayer = document.querySelector('iframe[src^="https://open.spotify.com"]');
+                    spotifyPlayer.contentWindow.postMessage({
+                        type: 'listeningOn',
+                        domain: window.location.hostname,
+                        gtmId: 'MXNVD4PJ'
+                    }, 'https://open.spotify.com');
                 } else {
                     youtubeEmbedContainer.innerHTML = '';
                     document.body.classList.remove('youtube-background');
