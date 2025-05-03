@@ -40,7 +40,7 @@ $ node main.js 'https://github.com/tomasfn87/url-parser?/redirect=%2fcontact%2fe
 
 ## 2. How to customize colors
 
-- When you run `main.js` without `native` as second argument for the first time, a file named `config.json` will be created;
+- When you run `main.js` without `--native` as second argument for the first time, a file named `config.json` will be created;
 - This file can be edited to alter the output of the **User-friendly View**;
 - If invalid options are inserted, the default color will be used instead, and an error message will appear prior to the actual output of the program to inform the user that the configuration did not work and what are the available options to choose from.
 
@@ -67,6 +67,8 @@ $ node main.js 'https://github.com/tomasfn87/url-parser?/redirect=%2fcontact%2fe
 ```console
 npm test
 ```
+
+### 3.2. Detailed
 
 ```console
 npm run detailed-test
