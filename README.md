@@ -16,18 +16,18 @@
 
 ## Description
 
-- [Parses](https://github.com/tomasfn87/url-parser/blob/main/index.html#L102) a URL in 4 parts:
+- [Parses](https://github.com/tomasfn87/url-parser/blob/main/index.html#L120) a URL in 4 parts:
   - `Domain`;
   - `Path`;
   - `Parameters`;
   - `Fragment`.
-- **Domain** tries to [obtain](https://github.com/tomasfn87/url-parser/blob/main/index.html#L184) the site's icon (`favicon`) using a Google API;
-- **Parameters** and **Fragment** are [parsed](https://github.com/tomasfn87/url-parser/blob/main/index.html#L85) into `key` and (optional) `value`;
-- **Decode**: press the [`Decode`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L133) button to solve encoded characters and actually read the URL's content.
+- **Domain** tries to [obtain](https://github.com/tomasfn87/url-parser/blob/main/index.html#L202) the site's icon (`favicon`) using a Google API;
+- **Parameters** and **Fragment** are [parsed](https://github.com/tomasfn87/url-parser/blob/main/index.html#L103) into `key` and (optional) `value`;
+- **Decode**: press the [`Decode`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L151) button to solve encoded characters and actually read the URL's content.
 
-## YouTube
+### [`YouTube`](https://www.youtube.com)
 
-- Supports `YouTube` - for [`videos`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L303), [`playlists`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L274) and [`user uploaded videos`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L340):
+- Supports `YouTube` - for [`videos`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L320), [`playlists`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L291) and [`user uploaded videos`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L357):
   - When a `YouTube` **video**, **playlist** or **user** URL is detected, a `YouTube IFrame API player` will appear bellow the result table;
   - **Videos**, **playlists** and **user uploaded videos** are `automatically played`;
   - **Videos**, **playlists** and **user uploaded videos** start `muted`.
@@ -40,7 +40,19 @@
     - [`https://` `www.youtube.com/` `?list=PLUQEQQ0Bum94su5p55Hr55R97X-SsMzQl`](https://www.youtube.com/?list=PLUQEQQ0Bum94su5p55Hr55R97X-SsMzQl)
   - YouTube User
     - [`https://` `www.youtube.com/` `@Google`](https://www.youtube.com/@Google)
-    - :warning: not all user uploaded videos lists were sucessfully [loaded](https://github.com/tomasfn87/url-parser/blob/main/index.html#L386); bigger channels seem to work fine.
+    - :warning: not all user uploaded videos lists were sucessfully [loaded](https://github.com/tomasfn87/url-parser/blob/main/index.html#L440); bigger channels seem to work fine.
+
+### [`Vimeo`](https://www.vimeo.com)
+
+- [Videos](https://github.com/tomasfn87/url-parser/blob/main/index.html#L386).
+
+### [`Spotify`](https://www.spotify.com)
+
+- [Tracks](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401);
+- [Episodes](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401);
+- [Artists](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401);
+- [Albums](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401);
+- [Playlists](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401).
 
 ## Art
 

@@ -16,18 +16,18 @@
 
 ### Descrição
 
-- [Divide](https://github.com/tomasfn87/url-parser/blob/main/index.html#L102) a URL em 4 partes:
+- [Divide](https://github.com/tomasfn87/url-parser/blob/main/index.html#L120) a URL em 4 partes:
   - `Domínio`;
   - `Caminho`;
   - `Parâmetros`;
   - `Fragmento`.
-- **Domínio** tenta [obter](https://github.com/tomasfn87/url-parser/blob/main/index.html#L184) o ícone do site (`favicon`) usando uma API do Google;
-- **Parâmetros** e **Fragmento** são [divididos](https://github.com/tomasfn87/url-parser/blob/main/index.html#L85) em `chave` e `valor` (opcional);
-- **Decodificar**: aperte o botão [`Decodificar`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L133) para resolver caracteres codificados e de fato ler o conteúdo da URL.
+- **Domínio** tenta [obter](https://github.com/tomasfn87/url-parser/blob/main/index.html#L202) o ícone do site (`favicon`) usando uma API do Google;
+- **Parâmetros** e **Fragmento** são [divididos](https://github.com/tomasfn87/url-parser/blob/main/index.html#L103) em `chave` e `valor` (opcional);
+- **Decodificar**: aperte o botão [`Decodificar`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L151) para resolver caracteres codificados e de fato ler o conteúdo da URL.
 
-### YouTube
+### [`YouTube`](https://www.youtube.com)
 
-- Suporta `YouTube` - para [`vídeos`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L303), [`listas de reprodução`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L274) e [`vídeos enviados pelo usuário`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L340):
+- Suporta `YouTube` - para [`vídeos`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L320), [`listas de reprodução`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L291) e [`vídeos enviados pelo usuário`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L357):
   - Quando uma URL do `YouTube` de **vídeo**, **lista de reprodução** ou **usuário** é detectada, um `Reprodutor da API de IFrame do YouTube` irá aparecer abaixo da tabela do resultado;
   - **Videos**, **listas de reprodução** e **vídeos enviados pelo usuário** são `automaticamente executados`;
   - **Videos**, **listas de reprodução** e **vídeos enviados pelo usuário** iniciam `mudos`.
@@ -40,7 +40,19 @@
     - [`https://` `www.youtube.com/` `?list=PLUQEQQ0Bum94su5p55Hr55R97X-SsMzQl`](https://www.youtube.com/?list=PLUQEQQ0Bum94su5p55Hr55R97X-SsMzQl)
   - Usuário do YouTube
     - [`https://` `www.youtube.com/` `@Google`](https://www.youtube.com/@Google)
-    - :warning: nem todas as listas de vídeos enviados pelo usuário foram [carregadas](https://github.com/tomasfn87/url-parser/blob/main/index.html#L386) com sucesso; canais maiores parecem funcionar bem.
+    - :warning: nem todas as listas de vídeos enviados pelo usuário foram [carregadas](https://github.com/tomasfn87/url-parser/blob/main/index.html#L440) com sucesso; canais maiores parecem funcionar bem.
+
+### [`Vimeo`](https://www.vimeo.com)
+
+- [Vídeos](https://github.com/tomasfn87/url-parser/blob/main/index.html#L386).
+
+### [`Spotify`](https://www.spotify.com)
+
+- [Faixas](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401);
+- [Episódios](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401);
+- [Artistas](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401);
+- [Álbuns](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401);
+- [Listas de reprodução](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401).
 
 ## Arte
 
