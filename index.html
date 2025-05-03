@@ -398,18 +398,17 @@
                             skipping_forward: true
                         }
                     );
-                // Spotify Song
+                // Spotify Content
                 } else if (regexp.SpotifyContent.test(url)) {
                     document.body.classList.add('youtube-background');
                     const match = url.match(regexp.SpotifyContent);
                     const contentType = match && match[3];
                     const contentId = match && match[4];
-                    console.log(`TYPE: ${contentType} ID: ${contentId}`);
                     window.onSpotifyIframeApiReady = (IFrameAPI) => {
                         const element = document.getElementById('spotify-embed-container');
                         const options = {
                             uri: `spotify:${contentType}:${contentId}`,
-                            height: 200
+                            height: 300
                         };
                         const callback = (EmbedController) => {};
                         IFrameAPI.createController(element, options, callback);
