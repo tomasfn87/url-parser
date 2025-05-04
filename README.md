@@ -52,7 +52,8 @@
 - [Episodes](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401);
 - [Artists](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401);
 - [Albums](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401);
-- [Playlists](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401).
+- [Playlists](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401);
+- [Contribution](https://community.spotify.com/t5/Spotify-for-Developers/Spotify-iFrame-tracking-via-GTM-Any-code/m-p/6945950) to Google [Tag Manager](https://tagmanager.google.com) / [Analytics](https://analytics.google.com) tracking solution for Spotify content.
 
 ## Art
 
