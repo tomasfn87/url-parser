@@ -16,18 +16,18 @@
 
 ## Description
 
-- [Parses](https://github.com/tomasfn87/url-parser/blob/main/index.html#L120) a URL in 4 parts:
+- [Parses](https://github.com/tomasfn87/url-parser/blob/main/index.html#L121) a URL in 4 parts:
   - `Domain`;
   - `Path`;
   - `Parameters`;
   - `Fragment`.
-- **Domain** tries to [obtain](https://github.com/tomasfn87/url-parser/blob/main/index.html#L202) the site's icon (`favicon`) using a Google API;
-- **Parameters** and **Fragment** are [parsed](https://github.com/tomasfn87/url-parser/blob/main/index.html#L103) into `key` and (optional) `value`;
-- **Decode**: press the [`Decode`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L151) button to solve encoded characters and actually read the URL's content.
+- **Domain** tries to [obtain](https://github.com/tomasfn87/url-parser/blob/main/index.html#L203) the site's icon (`favicon`) using a Google API;
+- **Parameters** and **Fragment** are [parsed](https://github.com/tomasfn87/url-parser/blob/main/index.html#L104) into `key` and (optional) `value`;
+- **Decode**: press the [`Decode`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L152) button to solve encoded characters and actually read the URL's content.
 
 ### [`YouTube`](https://www.youtube.com)
 
-- Supports `YouTube` - for [`videos`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L320), [`playlists`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L291) and [`user uploaded videos`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L357):
+- Supports `YouTube` - for [`videos`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L321), [`playlists`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L292) and [`user uploaded videos`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L358):
   - When a `YouTube` **video**, **playlist** or **user** URL is detected, a `YouTube IFrame API player` will appear bellow the result table;
   - **Videos**, **playlists** and **user uploaded videos** are `automatically played`;
   - **Videos**, **playlists** and **user uploaded videos** start `muted`.
@@ -40,19 +40,19 @@
     - [`https://` `www.youtube.com/` `?list=PLUQEQQ0Bum94su5p55Hr55R97X-SsMzQl`](https://www.youtube.com/?list=PLUQEQQ0Bum94su5p55Hr55R97X-SsMzQl)
   - YouTube User
     - [`https://` `www.youtube.com/` `@Google`](https://www.youtube.com/@Google)
-    - :warning: not all user uploaded videos lists were sucessfully [loaded](https://github.com/tomasfn87/url-parser/blob/main/index.html#L440); bigger channels seem to work fine.
+    - :warning: not all user uploaded videos lists were sucessfully [loaded](https://github.com/tomasfn87/url-parser/blob/main/index.html#L441); bigger channels seem to work fine.
 
 ### [`Vimeo`](https://www.vimeo.com)
 
-- [Videos](https://github.com/tomasfn87/url-parser/blob/main/index.html#L386).
+- [Videos](https://github.com/tomasfn87/url-parser/blob/main/index.html#L387).
 
 ### [`Spotify`](https://www.spotify.com)
 
-- [Tracks](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401);
-- [Episodes](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401);
-- [Artists](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401);
-- [Albums](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401);
-- [Playlists](https://github.com/tomasfn87/url-parser/blob/main/index.html#L401);
+- [Tracks](https://github.com/tomasfn87/url-parser/blob/main/index.html#L402);
+- [Episodes](https://github.com/tomasfn87/url-parser/blob/main/index.html#L402);
+- [Artists](https://github.com/tomasfn87/url-parser/blob/main/index.html#L402);
+- [Albums](https://github.com/tomasfn87/url-parser/blob/main/index.html#L402);
+- [Playlists](https://github.com/tomasfn87/url-parser/blob/main/index.html#L402);
 - [Contribution](https://community.spotify.com/t5/Spotify-for-Developers/Spotify-iFrame-tracking-via-GTM-Any-code/m-p/6945950) to Google [Tag Manager](https://tagmanager.google.com) / [Analytics](https://analytics.google.com) tracking solution for Spotify content.
 
 ## Art
