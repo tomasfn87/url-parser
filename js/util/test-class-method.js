@@ -92,7 +92,7 @@ export class ClassMethodTest {
                 color.log('default', ':\n    → `' + e.expectedOutput + '`\n    ')
                 color.log('brightCyan', 'Actual output')
             }
-            if (test == true) {
+            if (test) {
                 if (loud) {
                     color.log('default', ':\n    → `' 
                         + obj[this.method]() + '`\n        (');
