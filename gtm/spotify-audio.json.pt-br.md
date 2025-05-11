@@ -2,10 +2,10 @@
 
 ## Descrição
 
-- **Tag HTML Personalizado** para [***Google Tag Manager***](https://tagmanager.google.com) que é capaz de detectar qual conteúdo está sendo executado e até que ponto ocorreu a execução, sob a forma de valores inteiros entre 1 and 99 como porcentagem e sob a forma de valores reais em segundos;
+- **Tag HTML Personalizado** para [***Google Tag Manager***](https://tagmanager.google.com) que é capaz de detectar qual conteúdo está sendo executado e até que ponto ocorreu a execução, sob a forma de valores inteiros entre 1 and 99 (em porcentagens) e sob a forma de valores reais (em segundos);
 - Nenhuma informação humanamente amigável está disponível *(nenhum nome de **episódio**, **faixa**, **artista**, **álbum**, **lista de reprodução** ou **show** será capturada, ainda que talvez seja possível por **Raspagem de DOM**)*:
 - Cada conteúdo é identificado por uma [`URI do Spotify`](https://developer.spotify.com/documentation/web-api/concepts/spotify-uris-ids), que consiste em três partes:
-  - `{plataforma}` **:** `{tipo de conteúd}` **:** `{identificador}`;
+  - `{plataforma}` **:** `{tipo de conteúdo}` **:** `{identificador}`;
   - ***Exemplos:***
     - `spotify` **:** `album` **:** `7Ff0Q5oeEoVKHtxJJoXyId`;
     - `spotify` **:** `artist` **:** `1on7ZQ2pvgeQF4vmIA09x5`;
@@ -49,7 +49,7 @@
 
 ```javascript
 (function obterUrlSpotifyDeUri(uri) {
-    var erUriSpotify = /spotify:(album|arist|episode|playlist|show|track):([^:\/?#&]+)/i;
+    var erUriSpotify = /spotify:(album|artist|episode|playlist|show|track):([^:\/?#&]+)/i;
     var resultado = { uri_spotify: uri, url_spotify: '' };
     if (erUriSpotify.test(uri)) {
         var correspondencias = erUriSpotify.exec(uri);
@@ -74,7 +74,7 @@
 
 ---
 
-## Pré-Configuração: IFrame do Spotify
+## Pré-Configuração: IFrame do Reprodutor Spotify
 
 ```html
 <iframe src="https://open.spotify.com/embed/track/3qN5qMTKyEEmiTZD38CmPA" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
@@ -86,6 +86,123 @@ reprodutorSpotify.contentWindow.postMessage({
     domain: window.location.hostname,
     gtmId: 'SEU-ID-CONTEINER-GTM'
 }, 'https://open.spotify.com');
+</script>
+```
+
+---
+
+## Tag HTML Personalizado de Spotify Audio para [Google Tag Manager](https://tagmanager.google.com)
+
+> Para maiores detalhes de implementação, favor visitar o [tópico da Comunidade do Spotify](https://community.spotify.com/t5/Spotify-for-Developers/Spotify-iFrame-tracking-via-GTM-Any-code/m-p/6945950) onde esta implementação foi desenvolvida e publicada.
+
+```html
+<script>
+// - A operação abaixo é necessária para garantir que a
+// a lista de porcentagens a serem detectadas como eventos
+// de progresso  siga o formato correto.
+function truncateRemoveInvalidValuesDeduplicateSort(arr) {
+  var truncatedList = arr.map(function(element) {
+    return Math.trunc(element);
+  }).filter(function(element) {
+    return element > 0 && element < 100;
+  });
+  var uniqueValuesObject = {};
+  for (var i = 0; i < truncatedList.length; i++) {
+    uniqueValuesObject[truncatedList[i]] = true;
+  }
+  var uniqueList = Object.keys(uniqueValuesObject).map(function(key) {
+    return parseInt(key, 10);
+  });
+  uniqueList.sort(function(a, b) {
+    return a - b;
+  });
+  return uniqueList;
+}
+
+// - Edite a lista abaixo para configurar os valores de porcentagem dos eventos de progresso:
+// (Lista de valores inteiros únicos de 1 a 99, ordenados em ordem crescente)
+var spotifyPercentagesToBeDetected = truncateRemoveInvalidValuesDeduplicateSort(
+  [99, 20, 10.5, 60, 100, 40.05, 80, 90, 30, 50, 70, 0, 99.3]
+);
+// A lista é  certamente [10, 20, 30, 40, 50, 60, 70, 80, 90, 99] uma vez processada.
+
+// - Checa se um valor calculado de porcentagem deve ser detectado ou não.
+function shouldPercentageBeDetected(percent, detectionList) {
+  for (var i = 0; i < detectionList.length; i++) {
+    if (percent >= detectionList[i] && !(detectionList[i+1] && detectionList[i+1] <= percent)) {
+       return { check: true, value: detectionList[i] };
+    }
+  }
+  return { check: false, value: undefined };
+}
+
+var spotifyWasPaused = false;
+var spotifyAudioCompleted = false;
+var spotifyRegisteredProgress = [];
+var spotifyLastDuration = 0.0;
+var spotifyLastURI = '';
+window.addEventListener('message', function(event) {
+  if (event.origin === 'https://open.spotify.com') {
+    var audioPercent = Math.trunc((event.data.payload.position / event.data.payload.duration) * 100) || 0;
+    var audioCurrentTime = (event.data.payload.position / 1000) || 0;
+    var audioDuration = (event.data.payload.duration / 1000) || 0;
+    var spotifyURI = event.data.payload.playingURI;
+    var spotifyEvent = {
+      event: 'spotifyEvent',
+      audioPercent: audioPercent,
+      audioCurrentTime: audioCurrentTime,
+      audioDuration: audioDuration,
+      spotifyURI: spotifyURI
+    }
+    // - Reiniciar as Variáveis de Controle de Reprodução caso a URI ou a Duração
+    // tenham sido alteradas (detecção da troca de faixas dentro de lista de reprodução, álbum ou artista).
+    if ((spotifyURI && spotifyURI !== spotifyLastURI) || (spotifyURI && spotifyURI === spotifyLastURI && spotifyLastDuration !== audioDuration && spotifyLastDuration && audioDuration && Math.round(spotifyLastDuration) !== Math.round(audioDuration))) {
+      spotifyAudioCompleted = false;
+      spotifyWasPaused = false;
+      spotifyRegisteredProgress = [];
+    }
+    // 1. Eventos de Progresso
+    if (spotifyURI && shouldPercentageBeDetected(audioPercent, spotifyPercentagesToBeDetected).check) {
+      if (!spotifyRegisteredProgress.includes(shouldPercentageBeDetected(audioPercent, spotifyPercentagesToBeDetected).value)) {
+        spotifyRegisteredProgress.push(shouldPercentageBeDetected(audioPercent, spotifyPercentagesToBeDetected).value);
+        spotifyEvent.audioStatus = 'progress';
+        spotifyEvent.audioPercent = shouldPercentageBeDetected(audioPercent, spotifyPercentagesToBeDetected).value;
+        dataLayer.push(spotifyEvent);
+        spotifyLastURI = spotifyURI;
+        if (audioDuration) spotifyLastDuration = audioDuration;
+      }
+    }
+    // 2. Atualizações de Reprodução
+    // 2.1. Reprodução Iniciada
+    if (spotifyURI && event.data.type === 'playback_started') {
+      spotifyEvent.audioStatus = 'playback_started';
+      dataLayer.push(spotifyEvent);
+      spotifyLastURI = spotifyURI;
+    // 2.2. Reprodução Pausada
+    } else if (spotifyURI && event.data.type === 'playback_update' && event.data.payload.isPaused && audioCurrentTime && !spotifyWasPaused) {
+      spotifyEvent.audioStatus = 'playback_paused';
+      dataLayer.push(spotifyEvent);
+      spotifyLastURI = spotifyURI;
+      if (audioDuration) spotifyLastDuration = audioDuration;
+      spotifyWasPaused = true;
+    // 2.3. Reprodução Retomada
+    } else if (spotifyURI && event.data.type === 'playback_update' && !event.data.payload.isPaused && spotifyWasPaused && event.data.payload.position) {
+      spotifyEvent.audioStatus = 'playback_resumed';
+      dataLayer.push(spotifyEvent);
+      spotifyLastURI = spotifyURI;
+      if (audioDuration) spotifyLastDuration = audioDuration;
+      spotifyWasPaused = false;
+    // 2.4. Completo
+    } else if (spotifyURI && event.data.type === 'playback_update' && audioDuration === audioCurrentTime && !spotifyAudioCompleted) {
+      spotifyEvent.audioStatus = 'complete';
+      spotifyEvent.audioPercent = 100;
+      dataLayer.push(spotifyEvent);
+      spotifyLastURI = spotifyURI;
+      if (audioDuration) spotifyLastDuration = audioDuration;
+      spotifyAudioCompleted = true;
+    }
+  }
+}, false);
 </script>
 ```
 

@@ -2,7 +2,7 @@
 
 ## Description
 
-- **Custom HTML Tag** for [***Google Tag Manager***](https://tagmanager.google.com) which is able detect which content is being played and how far it's been played, as integer values between 1 and 99 in percentage and as floting point values as seconds;
+- **Custom HTML Tag** for [***Google Tag Manager***](https://tagmanager.google.com) which is able detect which content is being played and how far it's been played, as integer values between 1 and 99 (in percentages) and as floating point values (in seconds);
 - No actual human friendly information is availabe *(no **episode**, **track**, **artist**, **album**, **playlist** or **show name** will be captured even though it might be viable via **DOM Scraping**)*:
 - Each content is identified by a [`Spotify URI`](https://developer.spotify.com/documentation/web-api/concepts/spotify-uris-ids), which consists in three parts:
   - `{platform}` **:** `{content type}` **:** `{identifier}`;
@@ -49,7 +49,7 @@
 
 ```javascript
 (function getSpotifyUrlfromUri(uri) {
-    var reSpotifyUri = /spotify:(album|arist|episode|playlist|show|track):([^:\/?#&]+)/i;
+    var reSpotifyUri = /spotify:(album|artist|episode|playlist|show|track):([^:\/?#&]+)/i;
     var result = { spotify_uri: uri, spotify_url: '' };
     if (reSpotifyUri.test(uri)) {
         var matches = reSpotifyUri.exec(uri);
@@ -74,7 +74,7 @@
 
 ---
 
-## Pre-Configuration: Spotify's IFrame
+## Pre-Configuration: Spotify Player's IFrame
 
 ```html
 <iframe src="https://open.spotify.com/embed/track/3qN5qMTKyEEmiTZD38CmPA" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
@@ -82,10 +82,127 @@
 // Send a message to the Spotify player to let it know our domain
 var spotifyPlayer = document.querySelector('iframe[src^="https://open.spotify.com"]');
 spotifyPlayer.contentWindow.postMessage({
-  type: 'listeningOn',
-  domain: window.location.hostname,
-  gtmId: 'YOUR-GTM-CONTAINER-ID'
+    type: 'listeningOn',
+    domain: window.location.hostname,
+    gtmId: 'YOUR-GTM-CONTAINER-ID'
 }, 'https://open.spotify.com');
+</script>
+```
+
+---
+
+## Spotify Audio Custom HTML Tag for [Google Tag Manager](https://tagmanager.google.com)
+
+> For further implementation details, please visit the [Spotify's Community topic](https://community.spotify.com/t5/Spotify-for-Developers/Spotify-iFrame-tracking-via-GTM-Any-code/m-p/6945950) where this implementation was developed and published.
+
+```html
+<script>
+// - The operation below is needed to ensure the list of
+// percentages to be detected as progress events follow
+// the correct format.
+function truncateRemoveInvalidValuesDeduplicateSort(arr) {
+  var truncatedList = arr.map(function(element) {
+    return Math.trunc(element);
+  }).filter(function(element) {
+    return element > 0 && element < 100;
+  });
+  var uniqueValuesObject = {};
+  for (var i = 0; i < truncatedList.length; i++) {
+    uniqueValuesObject[truncatedList[i]] = true;
+  }
+  var uniqueList = Object.keys(uniqueValuesObject).map(function(key) {
+    return parseInt(key, 10);
+  });
+  uniqueList.sort(function(a, b) {
+    return a - b;
+  });
+  return uniqueList;
+}
+
+// - Edit the list below to setup progress events' percentage values:
+// (List with unique integer values ranging from 1 to 99, sorted in ascending order)
+var spotifyPercentagesToBeDetected = truncateRemoveInvalidValuesDeduplicateSort(
+  [99, 20, 10.5, 60, 100, 40.05, 80, 90, 30, 50, 70, 0, 99.3]
+);
+// List is certainly [10, 20, 30, 40, 50, 60, 70, 80, 90, 99] after the cleansing.
+
+// - Check if a calculated percentage value should or not be detected.
+function shouldPercentageBeDetected(percent, detectionList) {
+  for (var i = 0; i < detectionList.length; i++) {
+    if (percent >= detectionList[i] && !(detectionList[i+1] && detectionList[i+1] <= percent)) {
+       return { check: true, value: detectionList[i] };
+    }
+  }
+  return { check: false, value: undefined };
+}
+
+var spotifyWasPaused = false;
+var spotifyAudioCompleted = false;
+var spotifyRegisteredProgress = [];
+var spotifyLastDuration = 0.0;
+var spotifyLastURI = '';
+window.addEventListener('message', function(event) {
+  if (event.origin === 'https://open.spotify.com') {
+    var audioPercent = Math.trunc((event.data.payload.position / event.data.payload.duration) * 100) || 0;
+    var audioCurrentTime = (event.data.payload.position / 1000) || 0;
+    var audioDuration = (event.data.payload.duration / 1000) || 0;
+    var spotifyURI = event.data.payload.playingURI;
+    var spotifyEvent = {
+      event: 'spotifyEvent',
+      audioPercent: audioPercent,
+      audioCurrentTime: audioCurrentTime,
+      audioDuration: audioDuration,
+      spotifyURI: spotifyURI
+    }
+    // - Restart Playback Control Variables in case URI ou Duration has
+    // changed (track change detection within playlist, album or artist).
+    if ((spotifyURI && spotifyURI !== spotifyLastURI) || (spotifyURI && spotifyURI === spotifyLastURI && spotifyLastDuration !== audioDuration && spotifyLastDuration && audioDuration && Math.round(spotifyLastDuration) !== Math.round(audioDuration))) {
+      spotifyAudioCompleted = false;
+      spotifyWasPaused = false;
+      spotifyRegisteredProgress = [];
+    }
+    // 1. Progress Events
+    if (spotifyURI && shouldPercentageBeDetected(audioPercent, spotifyPercentagesToBeDetected).check) {
+      if (!spotifyRegisteredProgress.includes(shouldPercentageBeDetected(audioPercent, spotifyPercentagesToBeDetected).value)) {
+        spotifyRegisteredProgress.push(shouldPercentageBeDetected(audioPercent, spotifyPercentagesToBeDetected).value);
+        spotifyEvent.audioStatus = 'progress';
+        spotifyEvent.audioPercent = shouldPercentageBeDetected(audioPercent, spotifyPercentagesToBeDetected).value;
+        dataLayer.push(spotifyEvent);
+        spotifyLastURI = spotifyURI;
+        if (audioDuration) spotifyLastDuration = audioDuration;
+      }
+    }
+    // 2. Playback updates
+    // 2.1. Playback Start
+    if (spotifyURI && event.data.type === 'playback_started') {
+      spotifyEvent.audioStatus = 'playback_started';
+      dataLayer.push(spotifyEvent);
+      spotifyLastURI = spotifyURI;
+    // 2.2. Playback Paused
+    } else if (spotifyURI && event.data.type === 'playback_update' && event.data.payload.isPaused && audioCurrentTime && !spotifyWasPaused) {
+      spotifyEvent.audioStatus = 'playback_paused';
+      dataLayer.push(spotifyEvent);
+      spotifyLastURI = spotifyURI;
+      if (audioDuration) spotifyLastDuration = audioDuration;
+      spotifyWasPaused = true;
+    // 2.3. Playback Resumed
+    } else if (spotifyURI && event.data.type === 'playback_update' && !event.data.payload.isPaused && spotifyWasPaused && event.data.payload.position) {
+      spotifyEvent.audioStatus = 'playback_resumed';
+      dataLayer.push(spotifyEvent);
+      spotifyLastURI = spotifyURI;
+      if (audioDuration) spotifyLastDuration = audioDuration;
+      spotifyWasPaused = false;
+    // 2.4. Complete
+    } else if (spotifyURI && event.data.type === 'playback_update' && audioDuration === audioCurrentTime && !spotifyAudioCompleted) {
+      spotifyEvent.audioStatus = 'complete';
+      spotifyEvent.audioPercent = 100;
+      dataLayer.push(spotifyEvent);
+      spotifyLastURI = spotifyURI;
+      if (audioDuration) spotifyLastDuration = audioDuration;
+      spotifyAudioCompleted = true;
+    }
+  }
+}, false);
 </script>
 ```
 
@@ -93,11 +210,11 @@ spotifyPlayer.contentWindow.postMessage({
 
 ## Importing **Tags**, **Triggers** and **Variables** in `Google Tag Manager`
 
-- Save the `JSON` below to a file and **import** it in [*Google Tag Manager*](https://tagmanager.google.com):
+- Save the `JSON` below to a file and **import it** in [*Google Tag Manager*](https://tagmanager.google.com):
   - [`Admin`](https://tagmanager.google.com/#/admin) > `Import Container`.
 - Add a constant named `{{GA4 - Property ID}}` with your **[Google Analytics 4](https://analytics.google.com)'s Property ID**.
 
-### Google Tag Manager Exported Container `JSON` file
+### Google Tag Manager's Exported Container `JSON` file
 
 ```json
 {
