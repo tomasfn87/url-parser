@@ -1,34 +1,34 @@
-# [`Spotify`](https://www.spotify.com) Audio Tag for [Google Tag Manager](https://tagmanager.google.com)
+# Tag de Áudio do [`Spotify`](https://www.spotify.com) para `Google Tag Manager`
 
-## Description
+## Descrição
 
-- **Custom HTML Tag** for [***Google Tag Manager***](https://tagmanager.google.com) which is able detect which content is being played and how far it's been played, as integer values between 1 and 99 in percentage and as floting point values as seconds;
-- No actual human friendly information is availabe *(no **episode**, **track**, **artist**, **album**, **playlist** or **show name** will be captured even though it might be viable via **DOM Scraping**)*:
-- Each content is identified by a [`Spotify URI`](https://developer.spotify.com/documentation/web-api/concepts/spotify-uris-ids), which consists in three parts:
-  - `{platform}` **:** `{content type}` **:** `{identifier}`;
-  - ***Examples:***
+- **Tag HTML Personalizado** para [***Google Tag Manager***](https://tagmanager.google.com) que é capaz de detectar qual conteúdo está sendo executado e até que ponto ocorreu a execução, sob a forma de valores inteiros entre 1 and 99 como porcentagem e sob a forma de valores reais em segundos;
+- Nenhuma informação humanamente amigável está disponível *(nenhum nome de **episódio**, **faixa**, **artista**, **álbum**, **lista de reprodução** ou **show** será capturada, ainda que talvez seja possível por **Raspagem de DOM**)*:
+- Cada conteúdo é identificado por uma [`URI do Spotify`](https://developer.spotify.com/documentation/web-api/concepts/spotify-uris-ids), que consiste em três partes:
+  - `{plataforma}` **:** `{tipo de conteúd}` **:** `{identificador}`;
+  - ***Exemplos:***
     - `spotify` **:** `album` **:** `7Ff0Q5oeEoVKHtxJJoXyId`;
     - `spotify` **:** `artist` **:** `1on7ZQ2pvgeQF4vmIA09x5`;
     - `spotify` **:** `episode` **:** `5DVGuabuaHaC9UxQodcyvf`;
     - `spotify` **:** `playlist` **:** `0E6htK22DGE5d4jj3r6dmS`.
-  - Different ***tracks*** executed within a ***playlist*** are identified only by their **duration**:
-    - This allows us to count how many **tracks** where executed (*partially or completely*) within a grouped content (*playlist, artists or album*).
- - **Show URLs** (*i.e. [`open.spotify.com/show/3bdzILat9px7eH27ziXl8K`](https://open.spotify.com/show/3bdzILat9px7eH27ziXl8K)*) redirect to the show's last episode;
+  - Diferentes ***faixas*** executadas dentro de uma ***lista de reprodução*** são identificadas apenas pela **duração**:
+    - Isso nos permite contar quantas **faixas** foram executadas (*parcial or completamente*) dentro de um conteúdo agrupado (*lista de reprodução, artista ou álbum*).
+ - **URLs de Show** (*i.e. [`open.spotify.com/show/3bdzILat9px7eH27ziXl8K`](https://open.spotify.com/show/3bdzILat9px7eH27ziXl8K)*) redirecionam para o último episódio do show;
 
 ---
 
-## Implemented Events
+## Eventos Implementados
 
 - `audio_playback_started`;
 - `audio_playback_paused`;
 - `audio_playback_resumed`;
 - `audio_complete`;
 - `audio_progress`:
-  - ***Detected percentages values*** are **configured** and **validated** in the `Spotify audio Custom HTML tag` (i.e. `[ 25, 50, 75 ]`).
+  - ***Valores detectados de porcentagem*** são **configurados** e **validados** na `Tag HTML Personalizado do Spotify` (i.e. `[ 25, 50, 75 ]`).
 
 ---
 
-## Tag Parameters
+## Parâmetros da Tag
 
 - `audio_content`;
 - `audio_current_time`;
@@ -39,65 +39,65 @@
 
 ---
 
-## `JavaScript` function to convert **Spotify's** ***URI*** into ***URL***
+## Função `JavaScript` para converter ***URI*** do **Spotify** em ***URL***
 
-- Any URI can be transformed into a [`open.spotify.com`](https://open.spotify.com) link by following the **template** below:
+- Qualquer URI pode ser transformada em um link [`open.spotify.com`](https://open.spotify.com) seguindo o **modelo** abaixo:
    - **`URI`**:
      - `spotify` **:** `album` **:** `7Ff0Q5oeEoVKHtxJJoXyId`.
    - **`URL`**:
      - `https://open.spotify.com` **/** `album` **/** `7Ff0Q5oeEoVKHtxJJoXyId`.
 
 ```javascript
-(function getSpotifyUrlfromUri(uri) {
-    var reSpotifyUri = /spotify:(album|arist|episode|playlist|show|track):([^:\/?#&]+)/i;
-    var result = { spotify_uri: uri, spotify_url: '' };
-    if (reSpotifyUri.test(uri)) {
-        var matches = reSpotifyUri.exec(uri);
-        var contentType = matches[1];
-        var contentId = matches[2];
-        result.spotify_url = `https://open.spotify.com/${contentType}/${contentId}`;
+(function obterUrlSpotifyDeUri(uri) {
+    var erUriSpotify = /spotify:(album|arist|episode|playlist|show|track):([^:\/?#&]+)/i;
+    var resultado = { uri_spotify: uri, url_spotify: '' };
+    if (erUriSpotify.test(uri)) {
+        var correspondencias = erUriSpotify.exec(uri);
+        var tipoConteudo = correspondencias[1];
+        var idConteudo = correspondencias[2];
+        resultado.url_spotify = `https://open.spotify.com/${tipoConteudo}/${idConteudo}`;
     }
-    return result;
+    return resultado;
 })(
     'spotify:album:7Ff0Q5oeEoVKHtxJJoXyId'
 );
 ```
 
-### Expected Output
+### Saída Esperada
 
 ```javascript
 {
-    spotify_uri: 'spotify:album:7Ff0Q5oeEoVKHtxJJoXyId',
-    spotify_url: 'https://open.spotify.com/album/7Ff0Q5oeEoVKHtxJJoXyId'
+    uri_spotify: 'spotify:album:7Ff0Q5oeEoVKHtxJJoXyId',
+    url_spotify: 'https://open.spotify.com/album/7Ff0Q5oeEoVKHtxJJoXyId'
 }
 ```
 
 ---
 
-## Pre-Configuration: Spotify's IFrame
+## Pré-Configuração: IFrame do Spotify
 
 ```html
 <iframe src="https://open.spotify.com/embed/track/3qN5qMTKyEEmiTZD38CmPA" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 <script>
-// Send a message to the Spotify player to let it know our domain
-var spotifyPlayer = document.querySelector('iframe[src^="https://open.spotify.com"]');
-spotifyPlayer.contentWindow.postMessage({
-  type: 'listeningOn',
-  domain: window.location.hostname,
-  gtmId: 'YOUR-GTM-CONTAINER-ID'
+// Envia uma mensagem para o reprodutor do Spotify para que saiba nosso domínio
+var reprodutorSpotify = document.querySelector('iframe[src^="https://open.spotify.com"]');
+reprodutorSpotify.contentWindow.postMessage({
+    type: 'listeningOn',
+    domain: window.location.hostname,
+    gtmId: 'SEU-ID-CONTEINER-GTM'
 }, 'https://open.spotify.com');
 </script>
 ```
 
 ---
 
-## Importing **Tags**, **Triggers** and **Variables** in `Google Tag Manager`
+## Importando **Tags**, **Acionadores** and **Variáveis** no `Google Tag Manager`
 
-- Save the `JSON` below to a file and **import** it in [*Google Tag Manager*](https://tagmanager.google.com):
-  - [`Admin`](https://tagmanager.google.com/#/admin) > `Import Container`.
-- Add a constant named `{{GA4 - Property ID}}` with your **[Google Analytics 4](https://analytics.google.com)'s Property ID**.
+- Salve o `JSON` abaixo em um arquivo e **importe-o** no [*Google Tag Manager*](https://tagmanager.google.com):
+  - [`Admin`](https://tagmanager.google.com/#/admin) > `Importar Contêiner`.
+- Adicione uma constante chamada `{{GA4 - Property ID}}` com seu **ID de Propriedade do [Google Analytics 4](https://analytics.google.com)**.
 
-### Google Tag Manager Exported Container `JSON` file
+### Arquivo `JSON` de Contêiner Exportado do Google Tag Manager
 
 ```json
 {
