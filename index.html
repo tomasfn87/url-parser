@@ -98,7 +98,8 @@
             YouTubePlaylist: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?.*?list=([0-9A-Za-z_-]+)/i,
             YouTubeUser: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?.*@([^\/?#=]+).*/i,
             VimeoVideo: /(https?:\/\/)?(\w+\.)?vimeo.com\/(\d+)/i,
-            SpotifyContent: /(https?:\/\/)?(\w+\.)?spotify.com\/.*(track|episode|playlist|album|artist|show)\/([^\/?#=]+)\S*/i
+            SpotifyContent: /(?:https?:\/\/)?(?:open\.)?spotify(?:\.com)?[:\/](album|artist|episode|playlist|show|track)[:\/]([^ \/?&#=]+)([\/\?\S+])?/i,
+            SpotifyUri: /spotify:(album|artist|episode|playlist|show|track):([^ \/?&#=]+)/i
         };
 
         const parseKeyOptionalValue = (captureGroup, keyOptionalValue, re) => {
@@ -154,8 +155,7 @@
     
             const validateUrlInput = () => {
                 const url = urlInput.value.replaceAll('\\', '');
-                const parsed = parseUrl(url);
-                if (parsed && parsed.parts.domain) {
+                if (regexp.UrlParts.test(url) || regexp.SpotifyUri.test(url)) {
                     urlInput.classList.remove('invalid');
                     urlInput.classList.add('valid');
                     parseButton.disabled = false;
@@ -171,7 +171,16 @@
             urlInput.addEventListener('input', validateUrlInput);
     
             const handleParse = (decode) => {
-                const url = urlInput.value.replaceAll('\\', '');
+                let url = urlInput.value.replaceAll('\\', '');
+                if (url.match(regexp.SpotifyUri)) {
+                    url = (function(uri) {
+                        var matches = regexp.SpotifyUri.exec(uri);
+                        var contentType = matches[1];
+                        var contentId = matches[2];
+                        return `https://open.spotify.com/${contentType}/${contentId}`;
+                        })(url);
+                }
+                console.log("URL:", url);
                 const r = parseUrl(url);
                 parsedResultTableBody.innerHTML = '';
                 document.getElementById('output-container').querySelectorAll('#youtube-embed-container, .youtube-message-container').forEach(el => el.remove());
@@ -403,8 +412,8 @@
                 } else if (regexp.SpotifyContent.test(url)) {
                     document.body.classList.add('youtube-background');
                     const match = url.match(regexp.SpotifyContent);
-                    const contentType = match && match[3];
-                    const contentId = match && match[4];
+                    const contentType = match && match[1];
+                    const contentId = match && match[2];
                     window.onSpotifyIframeApiReady = (IFrameAPI) => {
                         const element = document.getElementById('spotify-embed-container');
                         const options = {
