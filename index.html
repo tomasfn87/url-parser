@@ -98,7 +98,7 @@
             YouTubePlaylist: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?.*?list=([0-9A-Za-z_-]+)/i,
             YouTubeUser: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?.*@([^\/?#=]+).*/i,
             VimeoVideo: /(https?:\/\/)?(\w+\.)?vimeo.com\/(\d+)/i,
-            SpotifyContent: /(?:https?:\/\/)?(?:open\.)?spotify(?:\.com)?[:\/](album|artist|episode|playlist|show|track)[:\/]([^ \/?&#=]+)([\/\?\S+])?/i,
+            SpotifyContent: /(?:https?:\/\/)?(?:\w+\.)?spotify.com\/.*(track|episode|playlist|album|artist|show)\/([^\/?#=]+)\S*/i,
             SpotifyUri: /spotify:(album|artist|episode|playlist|show|track):([^ \/?&#=]+)/i
         };
 
@@ -180,7 +180,7 @@
                         return `https://open.spotify.com/${contentType}/${contentId}`;
                         })(url);
                 }
-                console.log("URL:", url);
+
                 const r = parseUrl(url);
                 parsedResultTableBody.innerHTML = '';
                 document.getElementById('output-container').querySelectorAll('#youtube-embed-container, .youtube-message-container').forEach(el => el.remove());
