@@ -1,9 +1,14 @@
+html {
+    height: 100%;
+}
+
 body {
     padding-top: 20px;
     background-color: #444;
     color: #d4d4d4;
     font-family: sans-serif;
     overflow-x: hidden;
+    height: 100%;
 }
 
 h1, h2, label {
