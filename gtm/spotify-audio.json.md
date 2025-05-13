@@ -104,7 +104,7 @@ spotifyPlayer.contentWindow.postMessage({
 var spotifyPercentagesToBeDetected = (
   function(arr) {
     var truncatedList = arr.filter(function(element) {
-        return typeof element === 'number';
+      return typeof element === 'number';
     }).map(function(element) {
       return Math.trunc(element);
     }).filter(function(element) {

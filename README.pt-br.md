@@ -56,6 +56,7 @@
 - [Listas de reprodução](https://github.com/tomasfn87/url-parser/blob/main/index.html#L411);
 - [Contribuição](https://community.spotify.com/t5/Spotify-for-Developers/Spotify-iFrame-tracking-via-GTM-Any-code/m-p/6945950) com a solução de tracking para Google [Tag Manager](https://tagmanager.google.com) / [Analytics](https://analytics.google.com) para conteúdo do Spotify:
   - [Documentação](https://github.com/tomasfn87/url-parser/blob/main/gtm/spotify-audio.json.pt-br.md).
+- URIs do Spotify são aceitas e convertidas em URLs.
 
 ## Arte
 
