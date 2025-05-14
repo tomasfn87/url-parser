@@ -50,13 +50,13 @@
 
 ```javascript
 (function getSpotifyUrlfromUri(uri) {
-    var reSpotifyUri = /spotify:(album|artist|episode|playlist|show|track):([^:\/?#&]+)/i;
+    var reSpotifyUri = /spotify:([^:]+):([^:]+)/i;
     var result = { spotify_uri: uri, spotify_url: '' };
     if (reSpotifyUri.test(uri)) {
         var matches = reSpotifyUri.exec(uri);
         var contentType = matches[1];
         var contentId = matches[2];
-        result.spotify_url = `https://open.spotify.com/${contentType}/${contentId}`;
+        result.spotify_url = 'https://open.spotify.com/'+contentType+'/'+contentId;
     }
     return result;
 })(
@@ -101,28 +101,26 @@ spotifyPlayer.contentWindow.postMessage({
 // - The operation below is needed to assure the list of
 // percentages to be detected as progress events follow
 // the correct format.
-var spotifyPercentagesToBeDetected = (
-  function(arr) {
-    var truncatedList = arr.filter(function(element) {
-      return typeof element === 'number';
-    }).map(function(element) {
-      return Math.trunc(element);
-    }).filter(function(element) {
-      return element > 0 && element < 100;
-    });
-    var uniqueValuesObject = {};
-    for (var i = 0; i < truncatedList.length; i++) {
-      uniqueValuesObject[truncatedList[i]] = true;
-    }
-    var uniqueList = Object.keys(uniqueValuesObject).map(function(key) {
-      return parseInt(key, 10);
-    });
-    uniqueList.sort(function(a, b) {
-      return a - b;
-    });
-    return uniqueList;
+var spotifyPercentagesToBeDetected = (function(arr) {
+  var truncatedList = arr.filter(function(element) {
+    return typeof element === 'number';
+  }).map(function(element) {
+    return Math.trunc(element);
+  }).filter(function(element) {
+    return element > 0 && element < 100;
+  });
+  var uniqueValuesObject = {};
+  for (var i = 0; i < truncatedList.length; i++) {
+    uniqueValuesObject[truncatedList[i]] = true;
   }
-)(
+  var uniqueList = Object.keys(uniqueValuesObject).map(function(key) {
+    return parseInt(key, 10);
+  });
+  uniqueList.sort(function(a, b) {
+    return a - b;
+  });
+  return uniqueList;
+})(
   // - Edit the list below to setup progress events' percentage values:
   [99, 20, 10.5, 60, 100, 40.05, 80, 90, 30, 50, 70, 0, 99.3, "no"]
   // (Expected: list with unique integer values ranging from 1 to 99, sorted in ascending order)
@@ -133,7 +131,7 @@ var spotifyPercentagesToBeDetected = (
 function shouldPercentageBeDetected(percent, detectionList) {
   for (var i = 0; i < detectionList.length; i++) {
     if (percent >= detectionList[i] && !(detectionList[i+1] && detectionList[i+1] <= percent)) {
-       return { check: true, value: detectionList[i] };
+      return { check: true, value: detectionList[i] };
     }
   }
   return { check: false, value: undefined };
@@ -150,19 +148,23 @@ window.addEventListener('message', function(event) {
     var audioCurrentTime = (event.data.payload.position / 1000) || 0;
     var audioDuration = (event.data.payload.duration / 1000) || 0;
     var spotifyURI = event.data.payload.playingURI;
-    var audioContentType = (
-      function(uri) { 
-        var reSpotifyUri = /spotify:([^:]+):[^:]+/i;
-        if (reSpotifyUri.test(uri))
-          return reSpotifyUri.exec(uri)[1];
-        return '';
-      })(spotifyURI);
+    var reSpotifyUri = /spotify:([^:]+):([^:]+)/i;
+    var audioData = (function(uri) {
+      if (reSpotifyUri.test(uri)) {
+        var p = reSpotifyUri.exec(uri);
+        return {
+          contentType: p[1],
+          url: 'https://open.spotify.com/'+p[1]+'/'+p[2]
+        };
+      }
+    })(spotifyURI);
     var spotifyEvent = {
       event: 'spotifyEvent',
       audioPercent: audioPercent,
       audioCurrentTime: audioCurrentTime,
       audioDuration: audioDuration,
-      audioContentType: audioContentType,
+      audioContentType: audioData.contentType,
+      audioUrl: audioData.url,
       spotifyURI: spotifyURI
     }
     // - Restart Playback Control Variables in case URI ou Duration has
@@ -230,7 +232,7 @@ window.addEventListener('message', function(event) {
 ```json
 {
     "exportFormatVersion": 2,
-    "exportTime": "2025-05-13 05:15:51",
+    "exportTime": "2025-05-14 04:03:13",
     "containerVersion": {
         "path": "accounts/6054360526/containers/218106977/versions/0",
         "accountId": "6054360526",
@@ -393,6 +395,21 @@ window.addEventListener('message', function(event) {
                                         "value": "{{DLV - audioContentType}}"
                                     }
                                 ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "audio_url"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DLV - audioUrl}}"
+                                    }
+                                ]
                             }
                         ]
                     },
@@ -407,7 +424,7 @@ window.addEventListener('message', function(event) {
                         "value": "{{GA4 - Property ID}}"
                     }
                 ],
-                "fingerprint": "1747101871290",
+                "fingerprint": "1747188193405",
                 "firingTriggerId": [
                     "40"
                 ],
@@ -430,7 +447,7 @@ window.addEventListener('message', function(event) {
                     {
                         "type": "TEMPLATE",
                         "key": "html",
-                        "value": "<script>\n// - The operation below is needed to assure the list of\n// percentages to be detected as progress events follow\n// the correct format.\nvar spotifyPercentagesToBeDetected = (\n  function(arr) {\n    var truncatedList = arr.filter(function(element) {\n        return typeof element === 'number';\n    }).map(function(element) {\n      return Math.trunc(element);\n    }).filter(function(element) {\n      return element > 0 && element < 100;\n    });\n    var uniqueValuesObject = {};\n    for (var i = 0; i < truncatedList.length; i++) {\n      uniqueValuesObject[truncatedList[i]] = true;\n    }\n    var uniqueList = Object.keys(uniqueValuesObject).map(function(key) {\n      return parseInt(key, 10);\n    });\n    uniqueList.sort(function(a, b) {\n      return a - b;\n    });\n    return uniqueList;\n  }\n)(\n  // - Edit the list below to setup progress events' percentage values:\n  [99, 20, 10.5, 60, 100, 40.05, 80, 90, 30, 50, 70, 0, 99.3, \"no\"]\n  // (Expected: list with unique integer values ranging from 1 to 99, sorted in ascending order)\n);\n// List is certainly [10, 20, 30, 40, 50, 60, 70, 80, 90, 99] after being processed.\n\n// - Check if a calculated percentage value should or not be detected.\nfunction shouldPercentageBeDetected(percent, detectionList) {\n  for (var i = 0; i < detectionList.length; i++) {\n    if (percent >= detectionList[i] && !(detectionList[i+1] && detectionList[i+1] <= percent)) {\n       return { check: true, value: detectionList[i] };\n    }\n  }\n  return { check: false, value: undefined };\n}\n\nvar spotifyWasPaused = false;\nvar spotifyAudioCompleted = false;\nvar spotifyRegisteredProgress = [];\nvar spotifyLastDuration = 0.0;\nvar spotifyLastURI = '';\nwindow.addEventListener('message', function(event) {\n  if (event.origin === 'https://open.spotify.com') {\n    var audioPercent = Math.trunc((event.data.payload.position / event.data.payload.duration) * 100) || 0;\n    var audioCurrentTime = (event.data.payload.position / 1000) || 0;\n    var audioDuration = (event.data.payload.duration / 1000) || 0;\n    var spotifyURI = event.data.payload.playingURI;\n    var audioContentType = (\n      function(uri) { \n        var reSpotifyUri = /spotify:([^:]+):[^:]+/i;\n        if (reSpotifyUri.test(uri))\n          return reSpotifyUri.exec(uri)[1];\n        return '';\n      })(spotifyURI);\n    var spotifyEvent = {\n      event: 'spotifyEvent',\n      audioPercent: audioPercent,\n      audioCurrentTime: audioCurrentTime,\n      audioDuration: audioDuration,\n      audioContentType: audioContentType,\n      spotifyURI: spotifyURI\n    }\n    // - Restart Playback Control Variables in case URI ou Duration has\n    // changed (track change detection within playlist, album or artist).\n    if ((spotifyURI && spotifyURI !== spotifyLastURI) || (spotifyURI && spotifyURI === spotifyLastURI && spotifyLastDuration !== audioDuration && spotifyLastDuration && audioDuration && Math.round(spotifyLastDuration) !== Math.round(audioDuration))) {\n      spotifyAudioCompleted = false;\n      spotifyWasPaused = false;\n      spotifyRegisteredProgress = [];\n    }\n    // 1. Progress Events\n    if (spotifyURI && shouldPercentageBeDetected(audioPercent, spotifyPercentagesToBeDetected).check) {\n      if (!spotifyRegisteredProgress.includes(shouldPercentageBeDetected(audioPercent, spotifyPercentagesToBeDetected).value)) {\n        spotifyRegisteredProgress.push(shouldPercentageBeDetected(audioPercent, spotifyPercentagesToBeDetected).value);\n        spotifyEvent.audioStatus = 'progress';\n        spotifyEvent.audioPercent = shouldPercentageBeDetected(audioPercent, spotifyPercentagesToBeDetected).value;\n        dataLayer.push(spotifyEvent);\n        spotifyLastURI = spotifyURI;\n        if (audioDuration) spotifyLastDuration = audioDuration;\n      }\n    }\n    // 2. Playback updates\n    // 2.1. Playback Start\n    if (spotifyURI && event.data.type === 'playback_started') {\n      spotifyEvent.audioStatus = 'playback_started';\n      dataLayer.push(spotifyEvent);\n      spotifyLastURI = spotifyURI;\n    // 2.2. Playback Paused\n    } else if (spotifyURI && event.data.type === 'playback_update' && event.data.payload.isPaused && audioCurrentTime && !spotifyWasPaused) {\n      spotifyEvent.audioStatus = 'playback_paused';\n      dataLayer.push(spotifyEvent);\n      spotifyLastURI = spotifyURI;\n      if (audioDuration) spotifyLastDuration = audioDuration;\n      spotifyWasPaused = true;\n    // 2.3. Playback Resumed\n    } else if (spotifyURI && event.data.type === 'playback_update' && !event.data.payload.isPaused && spotifyWasPaused && event.data.payload.position) {\n      spotifyEvent.audioStatus = 'playback_resumed';\n      dataLayer.push(spotifyEvent);\n      spotifyLastURI = spotifyURI;\n      if (audioDuration) spotifyLastDuration = audioDuration;\n      spotifyWasPaused = false;\n    // 2.4. Complete\n    } else if (spotifyURI && event.data.type === 'playback_update' && audioDuration === audioCurrentTime && !spotifyAudioCompleted) {\n      spotifyEvent.audioStatus = 'complete';\n      spotifyEvent.audioPercent = 100;\n      dataLayer.push(spotifyEvent);\n      spotifyLastURI = spotifyURI;\n      if (audioDuration) spotifyLastDuration = audioDuration;\n      spotifyAudioCompleted = true;\n    }\n  }\n}, false);\n</script>"
+                        "value": "<script>\n// - The operation below is needed to assure the list of\n// percentages to be detected as progress events follow\n// the correct format.\nvar spotifyPercentagesToBeDetected = (function(arr) {\n  var truncatedList = arr.filter(function(element) {\n    return typeof element === 'number';\n  }).map(function(element) {\n    return Math.trunc(element);\n  }).filter(function(element) {\n    return element > 0 && element < 100;\n  });\n  var uniqueValuesObject = {};\n  for (var i = 0; i < truncatedList.length; i++) {\n    uniqueValuesObject[truncatedList[i]] = true;\n  }\n  var uniqueList = Object.keys(uniqueValuesObject).map(function(key) {\n    return parseInt(key, 10);\n  });\n  uniqueList.sort(function(a, b) {\n    return a - b;\n  });\n  return uniqueList;\n})(\n  // - Edit the list below to setup progress events' percentage values:\n  [99, 20, 10.5, 60, 100, 40.05, 80, 90, 30, 50, 70, 0, 99.3, \"no\"]\n  // (Expected: list with unique integer values ranging from 1 to 99, sorted in ascending order)\n);\n// List is certainly [10, 20, 30, 40, 50, 60, 70, 80, 90, 99] after being processed.\n\n// - Check if a calculated percentage value should or not be detected.\nfunction shouldPercentageBeDetected(percent, detectionList) {\n  for (var i = 0; i < detectionList.length; i++) {\n    if (percent >= detectionList[i] && !(detectionList[i+1] && detectionList[i+1] <= percent)) {\n      return { check: true, value: detectionList[i] };\n    }\n  }\n  return { check: false, value: undefined };\n}\n\nvar spotifyWasPaused = false;\nvar spotifyAudioCompleted = false;\nvar spotifyRegisteredProgress = [];\nvar spotifyLastDuration = 0.0;\nvar spotifyLastURI = '';\nwindow.addEventListener('message', function(event) {\n  if (event.origin === 'https://open.spotify.com') {\n    var audioPercent = Math.trunc((event.data.payload.position / event.data.payload.duration) * 100) || 0;\n    var audioCurrentTime = (event.data.payload.position / 1000) || 0;\n    var audioDuration = (event.data.payload.duration / 1000) || 0;\n    var spotifyURI = event.data.payload.playingURI;\n    var reSpotifyUri = /spotify:([^:]+):([^:]+)/i;\n    var audioData = (function(uri) {\n      if (reSpotifyUri.test(uri)) {\n        var p = reSpotifyUri.exec(uri);\n        return {\n          contentType: p[1],\n          url: 'https://open.spotify.com/'+p[1]+'/'+p[2]\n        };\n      }\n    })(spotifyURI);\n    var spotifyEvent = {\n      event: 'spotifyEvent',\n      audioPercent: audioPercent,\n      audioCurrentTime: audioCurrentTime,\n      audioDuration: audioDuration,\n      audioContentType: audioData.contentType,\n      audioUrl: audioData.url,\n      spotifyURI: spotifyURI\n    }\n    // - Restart Playback Control Variables in case URI ou Duration has\n    // changed (track change detection within playlist, album or artist).\n    if ((spotifyURI && spotifyURI !== spotifyLastURI) || (spotifyURI && spotifyURI === spotifyLastURI && spotifyLastDuration !== audioDuration && spotifyLastDuration && audioDuration && Math.round(spotifyLastDuration) !== Math.round(audioDuration))) {\n      spotifyAudioCompleted = false;\n      spotifyWasPaused = false;\n      spotifyRegisteredProgress = [];\n    }\n    // 1. Progress Events\n    if (spotifyURI && shouldPercentageBeDetected(audioPercent, spotifyPercentagesToBeDetected).check) {\n      if (!spotifyRegisteredProgress.includes(shouldPercentageBeDetected(audioPercent, spotifyPercentagesToBeDetected).value)) {\n        spotifyRegisteredProgress.push(shouldPercentageBeDetected(audioPercent, spotifyPercentagesToBeDetected).value);\n        spotifyEvent.audioStatus = 'progress';\n        spotifyEvent.audioPercent = shouldPercentageBeDetected(audioPercent, spotifyPercentagesToBeDetected).value;\n        dataLayer.push(spotifyEvent);\n        spotifyLastURI = spotifyURI;\n        if (audioDuration) spotifyLastDuration = audioDuration;\n      }\n    }\n    // 2. Playback updates\n    // 2.1. Playback Start\n    if (spotifyURI && event.data.type === 'playback_started') {\n      spotifyEvent.audioStatus = 'playback_started';\n      dataLayer.push(spotifyEvent);\n      spotifyLastURI = spotifyURI;\n    // 2.2. Playback Paused\n    } else if (spotifyURI && event.data.type === 'playback_update' && event.data.payload.isPaused && audioCurrentTime && !spotifyWasPaused) {\n      spotifyEvent.audioStatus = 'playback_paused';\n      dataLayer.push(spotifyEvent);\n      spotifyLastURI = spotifyURI;\n      if (audioDuration) spotifyLastDuration = audioDuration;\n      spotifyWasPaused = true;\n    // 2.3. Playback Resumed\n    } else if (spotifyURI && event.data.type === 'playback_update' && !event.data.payload.isPaused && spotifyWasPaused && event.data.payload.position) {\n      spotifyEvent.audioStatus = 'playback_resumed';\n      dataLayer.push(spotifyEvent);\n      spotifyLastURI = spotifyURI;\n      if (audioDuration) spotifyLastDuration = audioDuration;\n      spotifyWasPaused = false;\n    // 2.4. Complete\n    } else if (spotifyURI && event.data.type === 'playback_update' && audioDuration === audioCurrentTime && !spotifyAudioCompleted) {\n      spotifyEvent.audioStatus = 'complete';\n      spotifyEvent.audioPercent = 100;\n      dataLayer.push(spotifyEvent);\n      spotifyLastURI = spotifyURI;\n      if (audioDuration) spotifyLastDuration = audioDuration;\n      spotifyAudioCompleted = true;\n    }\n  }\n}, false);\n</script>"
                     },
                     {
                         "type": "BOOLEAN",
@@ -438,7 +455,7 @@ window.addEventListener('message', function(event) {
                         "value": "false"
                     }
                 ],
-                "fingerprint": "1747108656008",
+                "fingerprint": "1747194787383",
                 "firingTriggerId": [
                     "2147479553"
                 ],
@@ -642,6 +659,33 @@ window.addEventListener('message', function(event) {
                 "fingerprint": "1747102190814",
                 "parentFolderId": "36",
                 "formatValue": {}
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "variableId": "60",
+                "name": "DLV - audioUrl",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "audioUrl"
+                    }
+                ],
+                "fingerprint": "1747188009921",
+                "parentFolderId": "36",
+                "formatValue": {}
             }
         ],
         "folder": [
@@ -660,7 +704,7 @@ window.addEventListener('message', function(event) {
                 "fingerprint": "1746252451511"
             }
         ],
-        "fingerprint": "1747113351223",
+        "fingerprint": "1747195393673",
         "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6054360526/containers/218106977/versions/0?apiLink=version"
     }
 }
