@@ -24,6 +24,14 @@ th, td {
     border: 1px solid #6C6C6C;
 }
 
+#media-link a {
+    color: #80b11d;
+}
+
+#media-link a:hover {
+    color: #baff33;
+}
+
 #urlForm {
     margin-bottom: 20px;
 }
