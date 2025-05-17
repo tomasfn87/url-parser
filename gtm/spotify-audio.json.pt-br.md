@@ -225,14 +225,14 @@ window.addEventListener('message', function(event) {
 
 - Salve o `JSON` abaixo em um arquivo e **importe-o** no [*Google Tag Manager*](https://tagmanager.google.com):
   - [`Admin`](https://tagmanager.google.com/#/admin) > `Importar Contêiner`.
-- Adicione uma constante chamada `{{GA4 - Property ID}}` com seu **ID de Propriedade do [Google Analytics 4](https://analytics.google.com)**.
+- Adicione uma constante chamada `{{GA4 - Datastream Measurement ID}}` com seu **ID de Propriedade do [Google Analytics 4](https://analytics.google.com)**.
 
 ### Arquivo `JSON` de Contêiner Exportado do Google Tag Manager
 
 ```json
 {
     "exportFormatVersion": 2,
-    "exportTime": "2025-05-14 04:03:13",
+    "exportTime": "2025-05-18 15:18:26",
     "containerVersion": {
         "path": "accounts/6054360526/containers/218106977/versions/0",
         "accountId": "6054360526",
@@ -270,6 +270,566 @@ window.addEventListener('message', function(event) {
             ]
         },
         "tag": [
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "tagId": "4",
+                "name": "Google Tag",
+                "type": "googtag",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "tagId",
+                        "value": "{{GA4 - Datastream Measurement ID}}"
+                    }
+                ],
+                "fingerprint": "1745079335876",
+                "firingTriggerId": [
+                    "2147479573"
+                ],
+                "parentFolderId": "14",
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "tagId": "8",
+                "name": "GA4 - Mouse generate_lead",
+                "type": "gaawe",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "sendEcommerceData",
+                        "value": "false"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "enhancedUserId",
+                        "value": "false"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "eventSettingsTable",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "cta_label"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{Click Text}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "url_input"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{CJS - URL Input}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "url_input_domain"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{CJS - URL Input Domain}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "interaction_type"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "click"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "generate_lead"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementIdOverride",
+                        "value": "{{GA4 - Datastream Measurement ID}}"
+                    }
+                ],
+                "fingerprint": "1746889346708",
+                "firingTriggerId": [
+                    "7"
+                ],
+                "parentFolderId": "14",
+                "tagFiringOption": "UNLIMITED",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "tagId": "13",
+                "name": "GA4 - YouTube video",
+                "type": "gaawe",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "sendEcommerceData",
+                        "value": "false"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "enhancedUserId",
+                        "value": "false"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "eventSettingsTable",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "video_duration"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{Video Duration}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "video_percent"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{Video Percent}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "video_title"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{Video Title}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "video_url"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{Video URL}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "video_current_time"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{Video Current Time}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "video_provider"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{Video Provider}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "video_status"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{Video Status}}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "video_{{Video Status}}"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementIdOverride",
+                        "value": "{{GA4 - Datastream Measurement ID}}"
+                    }
+                ],
+                "fingerprint": "1746245324106",
+                "firingTriggerId": [
+                    "12"
+                ],
+                "parentFolderId": "14",
+                "tagFiringOption": "UNLIMITED",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "tagId": "22",
+                "name": "GA4 - link_click",
+                "type": "gaawe",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "sendEcommerceData",
+                        "value": "false"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "enhancedUserId",
+                        "value": "false"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "eventSettingsTable",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "click_url"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{Click URL}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "url_input"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{CJS - URL Input}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "url_input_domain"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{CJS - URL Input Domain}}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "link_click"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementIdOverride",
+                        "value": "{{GA4 - Datastream Measurement ID}}"
+                    }
+                ],
+                "fingerprint": "1746894434700",
+                "firingTriggerId": [
+                    "21"
+                ],
+                "parentFolderId": "14",
+                "tagFiringOption": "UNLIMITED",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "tagId": "23",
+                "name": "cHTML - Vimeo video",
+                "type": "html",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "html",
+                        "value": "<script src=\"https://player.vimeo.com/api/player.js\"></script>\n<script>\n\n(function() {\n\tvar videoProgress = [10, 20, 30, 40, 50, 60, 70, 80, 90, 99];\n\tfunction handlePlayer(player) {\n    \tvar triggeredSteps = {};\n    \tvar video_title = '';\n    \tvar video_url = '';\n    \tvar isStarted = false;\n    \tvar upperRange = 2;\n\n    \tplayer.getVideoTitle().then(function(title) {\n        \tvideo_title = title;\n    \t});\n\n    \tplayer.getVideoUrl().then(function(url) {\n        \tvideo_url = url;\n    \t});\n\n    \tplayer.on('play', function(data) {\n\n        \tif (!isStarted) {\n            \tif(data.duration < 30) {\n                \tupperRange = 6;\n            \t}\n\n            \twindow.dataLayer = window.dataLayer || [];\n            \tdataLayer.push({\n                \tevent: 'Vimeo Video',\n                \tvideo_status: 'start',\n                \tvideo_current_time: 0,\n                \tvideo_duration: data.duration,\n                \tvideo_percent: 0,\n                \tvideo_provider: 'Vimeo',\n                \tvideo_title: video_title,\n                \tvideo_url: video_url\n            \t})\n            \tisStarted = true;\n        \t}\n    \t});\n\n    \tplayer.on('ended', function(data) {\n        \twindow.dataLayer = window.dataLayer || [];\n        \tdataLayer.push({\n            \tevent: 'Vimeo Video',\n            \tvideo_status: 'complete',\n            \tvideo_current_time: data.seconds,\n            \tvideo_duration: data.duration,\n            \tvideo_percent: 100,\n            \tvideo_provider: 'Vimeo',\n            \tvideo_title: video_title,\n            \tvideo_url: video_url\n        \t});\n    \t});\n\n    \tplayer.on('timeupdate', function(data) {\n        \tvar actualPercent = data.percent * 100;\n\n        \tvideoProgress.forEach(function(targetPercent) {\n            \tif (\n                \t!triggeredSteps[targetPercent] &&\n                \tactualPercent >= targetPercent &&\n                \tactualPercent <= targetPercent + upperRange\n            \t) {\n                \twindow.dataLayer = window.dataLayer || [];\n                \tdataLayer.push({\n                    \tevent: 'Vimeo Video',\n                    \tvideo_status: 'progress',\n                    \tvideo_current_time: data.seconds,\n                    \tvideo_duration: data.duration,\n                    \tvideo_percent: targetPercent,\n                    \tvideo_provider: 'Vimeo',\n                    \tvideo_title: video_title,\n                    \tvideo_url: video_url\n                \t});\n                \ttriggeredSteps[targetPercent] = true;\n            \t}\n        \t});\n    \t});\n\t}\n\n\tfunction findVimeoPlayer(node) {\n    \tif (node.tagName === 'IFRAME' && node.src.includes('player.vimeo.com/video')) {\n        \tvar player = new Vimeo.Player(node);\n        \thandlePlayer(player);\n    \t} else {\n        \tvar iframes = node.querySelectorAll('iframe');\n        \tiframes.forEach(function(iframe) {\n            \tif (iframe.src.includes('player.vimeo.com/video')) {\n                \tvar player = new Vimeo.Player(iframe);\n                \thandlePlayer(player);\n            \t}\n        \t});\n    \t}\n\t}\n\n\tvar observer = new MutationObserver(function(mutationsList) {\n    \tmutationsList.forEach(function(mutation) {\n        \tif (mutation.type === 'childList') {\n            \tmutation.addedNodes.forEach(function(node) {\n                \tfindVimeoPlayer(node);\n            \t});\n        \t}\n    \t});\n\t});\n\n\tobserver.observe(document.body, { childList: true, subtree: true });\n\n\n\tvar existingPlayers = document.querySelectorAll('iframe[src^=\"https://player.vimeo.com/video\"]');\n\texistingPlayers.forEach(function(playerNode) {\n    \thandlePlayer(new Vimeo.Player(playerNode));\n\t});\n})();\n</script>"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "supportDocumentWrite",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1746373504271",
+                "firingTriggerId": [
+                    "2147479553"
+                ],
+                "parentFolderId": "33",
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "tagId": "32",
+                "name": "GA4 - Vimeo video",
+                "type": "gaawe",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "sendEcommerceData",
+                        "value": "false"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "enhancedUserId",
+                        "value": "false"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "eventSettingsTable",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "video_current_time"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DLV - video_current_time}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "video_duration"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DLV - video_duration}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "video_percent"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DLV - video_percent}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "video_provider"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DLV - video_provider}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "video_status"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DLV - video_status}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "video_title"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DLV - video_title}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "video_url"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DLV - video_url}}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "video_{{DLV - video_status}}"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementIdOverride",
+                        "value": "{{GA4 - Datastream Measurement ID}}"
+                    }
+                ],
+                "fingerprint": "1746796646322",
+                "firingTriggerId": [
+                    "31"
+                ],
+                "parentFolderId": "14",
+                "tagFiringOption": "UNLIMITED",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
             {
                 "accountId": "6054360526",
                 "containerId": "218106977",
@@ -421,7 +981,7 @@ window.addEventListener('message', function(event) {
                     {
                         "type": "TEMPLATE",
                         "key": "measurementIdOverride",
-                        "value": "{{GA4 - Property ID}}"
+                        "value": "{{GA4 - Datastream Measurement ID}}"
                     }
                 ],
                 "fingerprint": "1747188193405",
@@ -467,9 +1027,289 @@ window.addEventListener('message', function(event) {
                 "consentSettings": {
                     "consentStatus": "NOT_SET"
                 }
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "tagId": "52",
+                "name": "cHTML - Keyboard generate_lead",
+                "type": "html",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "html",
+                        "value": "<script>\nvar urlInput = document.getElementById('urlInput');\nurlInput.addEventListener('keydown', function(event) {\n  dataLayer = window.dataLayer || [];\n  var isUrlValid = !document.getElementById('parseButton').matches('button[disabled]');\n  if (event.key === 'Enter' && isUrlValid) dataLayer.push({\n      event: 'keyboardGenerateLead',\n      interactionType: 'keyboard',\n      ctaLabel: 'Parse'});\n});\n</script>"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "supportDocumentWrite",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1746891283325",
+                "firingTriggerId": [
+                    "2147479553"
+                ],
+                "parentFolderId": "15",
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "tagId": "53",
+                "name": "GA4 - Keyboard generate_lead",
+                "type": "gaawe",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "sendEcommerceData",
+                        "value": "false"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "enhancedUserId",
+                        "value": "false"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "eventSettingsTable",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "cta_label"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DLV - ctaLabel}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "url_input"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{CJS - URL Input}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "url_input_domain"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{CJS - URL Input Domain}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "interaction_type"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DLV - interactionType}}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "generate_lead"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementIdOverride",
+                        "value": "{{GA4 - Datastream Measurement ID}}"
+                    }
+                ],
+                "fingerprint": "1746889617434",
+                "firingTriggerId": [
+                    "54"
+                ],
+                "parentFolderId": "14",
+                "tagFiringOption": "UNLIMITED",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
             }
         ],
         "trigger": [
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "triggerId": "7",
+                "name": "[click] CTA - Parse/Decode Buttons",
+                "type": "CLICK",
+                "filter": [
+                    {
+                        "type": "MATCH_REGEX",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Click ID}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "(pars|decod)eButton"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{CJS - validateURL}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1746891051461",
+                "parentFolderId": "15"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "triggerId": "12",
+                "name": "[video] YouTube Video",
+                "type": "YOU_TUBE_VIDEO",
+                "fingerprint": "1745903158535",
+                "parentFolderId": "11",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "progressThresholdsPercent",
+                        "value": "10,20,30,40,50,60,70,80,90,99"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "captureComplete",
+                        "value": "true"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "captureStart",
+                        "value": "true"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "fixMissingApi",
+                        "value": "true"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "triggerStartOption",
+                        "value": "WINDOW_LOAD"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "radioButtonGroup1",
+                        "value": "PERCENTAGE"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "capturePause",
+                        "value": "true"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "captureProgress",
+                        "value": "true"
+                    }
+                ]
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "triggerId": "21",
+                "name": "[link click] All Links",
+                "type": "LINK_CLICK",
+                "waitForTags": {
+                    "type": "BOOLEAN",
+                    "value": "false"
+                },
+                "checkValidation": {
+                    "type": "BOOLEAN",
+                    "value": "false"
+                },
+                "waitForTagsTimeout": {
+                    "type": "TEMPLATE",
+                    "value": "2000"
+                },
+                "uniqueTriggerId": {
+                    "type": "TEMPLATE"
+                },
+                "fingerprint": "1745903123032",
+                "parentFolderId": "15"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "triggerId": "31",
+                "name": "[video] Vimeo Video",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "Vimeo Video"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1746252804951",
+                "parentFolderId": "33"
+            },
             {
                 "accountId": "6054360526",
                 "containerId": "218106977",
@@ -495,9 +1335,275 @@ window.addEventListener('message', function(event) {
                 ],
                 "fingerprint": "1746701993548",
                 "parentFolderId": "36"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "triggerId": "54",
+                "name": "DLV - keyboardGenerateLead",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "keyboardGenerateLead"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1746889460624",
+                "parentFolderId": "15"
             }
         ],
         "variable": [
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "variableId": "3",
+                "name": "GA4 - Datastream Measurement ID",
+                "type": "c",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "value",
+                        "value": "G-BCE843QBRV"
+                    }
+                ],
+                "fingerprint": "1747580098962",
+                "parentFolderId": "14",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "variableId": "9",
+                "name": "CJS - URL Input Domain",
+                "type": "jsm",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "javascript",
+                        "value": "function() {\n  var regexURL = /^(?:\\w+:\\/\\/)?([^\\/.:]+(?:\\.[^\\/.:?#]+)+)((?:\\/?(?:[^\\/?#]+)?)*)?(\\?[^?]+?)?(#[^#]+?)?$/;\n  var regexSpotifyUri = /spotify:(album|artist|episode|playlist|show|track):([^ \\/?&#=]+)/i;\n  var urlInput = {{CJS - URL Input}};\n  var urlInputDomain = '';\n  // To correctly handle Spotify URIs\n  if (regexSpotifyUri.test(urlInput))\n    urlInput = urlInput.replace(/^spotify/i, 'open.spotify.com').replace(/:/g, '/');\n  if (regexURL.test(urlInput)) {\n    var matches = regexURL.exec(urlInput);\n    urlInputDomain = matches[1];\n  };\n  return urlInputDomain;\n}"
+                    }
+                ],
+                "fingerprint": "1747060338228",
+                "parentFolderId": "15",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "variableId": "10",
+                "name": "CJS - URL Input",
+                "type": "jsm",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "javascript",
+                        "value": "function() {\n  return document.getElementById('urlInput').valueOf().value\n}"
+                    }
+                ],
+                "fingerprint": "1746889975354",
+                "parentFolderId": "15",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "variableId": "24",
+                "name": "DLV - video_status",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "video_status"
+                    }
+                ],
+                "fingerprint": "1746245506096",
+                "parentFolderId": "33",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "variableId": "25",
+                "name": "DLV - video_current_time",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "video_current_time"
+                    }
+                ],
+                "fingerprint": "1746245506096",
+                "parentFolderId": "33",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "variableId": "26",
+                "name": "DLV - video_duration",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "video_duration"
+                    }
+                ],
+                "fingerprint": "1746245506096",
+                "parentFolderId": "33",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "variableId": "27",
+                "name": "DLV - video_percent",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "video_percent"
+                    }
+                ],
+                "fingerprint": "1746245506097",
+                "parentFolderId": "33",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "variableId": "28",
+                "name": "DLV - video_provider",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "video_provider"
+                    }
+                ],
+                "fingerprint": "1746245506097",
+                "parentFolderId": "33",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "variableId": "29",
+                "name": "DLV - video_title",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "video_title"
+                    }
+                ],
+                "fingerprint": "1746245506097",
+                "parentFolderId": "33",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "variableId": "30",
+                "name": "DLV - video_url",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "video_url"
+                    }
+                ],
+                "fingerprint": "1746245506097",
+                "parentFolderId": "33",
+                "formatValue": {}
+            },
             {
                 "accountId": "6054360526",
                 "containerId": "218106977",
@@ -636,6 +1742,77 @@ window.addEventListener('message', function(event) {
             {
                 "accountId": "6054360526",
                 "containerId": "218106977",
+                "variableId": "55",
+                "name": "DLV - interactionType",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "interactionType"
+                    }
+                ],
+                "fingerprint": "1746889505817",
+                "parentFolderId": "15",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "variableId": "56",
+                "name": "DLV - ctaLabel",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "ctaLabel"
+                    }
+                ],
+                "fingerprint": "1746889527190",
+                "parentFolderId": "15",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "variableId": "57",
+                "name": "CJS - validateURL",
+                "type": "jsm",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "javascript",
+                        "value": "function() {\n  return !document.getElementById('parseButton').matches('button[disabled]');\n}"
+                    }
+                ],
+                "fingerprint": "1746914835399",
+                "parentFolderId": "15",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
                 "variableId": "59",
                 "name": "DLV - audioContentType",
                 "type": "v",
@@ -692,9 +1869,30 @@ window.addEventListener('message', function(event) {
             {
                 "accountId": "6054360526",
                 "containerId": "218106977",
+                "folderId": "11",
+                "name": "YouTube",
+                "fingerprint": "1745077953958"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
                 "folderId": "14",
                 "name": "GA4",
                 "fingerprint": "1745079323841"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "folderId": "15",
+                "name": "CTA",
+                "fingerprint": "1745080192866"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "folderId": "33",
+                "name": "Vimeo",
+                "fingerprint": "1746245503554"
             },
             {
                 "accountId": "6054360526",
@@ -704,7 +1902,105 @@ window.addEventListener('message', function(event) {
                 "fingerprint": "1746252451511"
             }
         ],
-        "fingerprint": "1747195393673",
+        "builtInVariable": [
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "type": "PAGE_URL",
+                "name": "Page URL"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "type": "PAGE_HOSTNAME",
+                "name": "Page Hostname"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "type": "PAGE_PATH",
+                "name": "Page Path"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "type": "REFERRER",
+                "name": "Referrer"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "type": "EVENT",
+                "name": "Event"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "type": "CLICK_ELEMENT",
+                "name": "Click Element"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "type": "CLICK_ID",
+                "name": "Click ID"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "type": "CLICK_URL",
+                "name": "Click URL"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "type": "CLICK_TEXT",
+                "name": "Click Text"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "type": "VIDEO_PROVIDER",
+                "name": "Video Provider"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "type": "VIDEO_URL",
+                "name": "Video URL"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "type": "VIDEO_TITLE",
+                "name": "Video Title"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "type": "VIDEO_DURATION",
+                "name": "Video Duration"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "type": "VIDEO_PERCENT",
+                "name": "Video Percent"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "type": "VIDEO_STATUS",
+                "name": "Video Status"
+            },
+            {
+                "accountId": "6054360526",
+                "containerId": "218106977",
+                "type": "VIDEO_CURRENT_TIME",
+                "name": "Video Current Time"
+            }
+        ],
+        "fingerprint": "1747581506918",
         "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6054360526/containers/218106977/versions/0?apiLink=version"
     }
 }
