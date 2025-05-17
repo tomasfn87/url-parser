@@ -9,6 +9,71 @@
         })(window,document,'script','dataLayer','GTM-MXNVD4PJ');
     </script>
     <script>
+        const regexp = {
+            UrlParts: /^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?[^?]+?)?(#[^#]+?)?$/,
+            Query: /([^?#&=]+)(?:=([^?#&=]+))?/,
+            Fragment: /([^#&=]+)(?:=([^#&=]+))?/,
+            YouTubeVideo: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?(?:(?:watch)?\?.*v=|embed\/)?([0-9A-Za-z_-]{11}).*/i,
+            YouTubePlaylist: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?.*?(?:play)?list=([0-9A-Za-z_-]+)/i,
+            YouTubeUser: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?.*@([^\/?#=]+).*/i,
+            VimeoVideo: /(https?:\/\/)?(\w+\.)?vimeo.com\/(\d+)/i,
+            SpotifyContent: /(?:https?:\/\/)?(?:\w+\.)?spotify.com\/.*(track|episode|playlist|album|artist|show)\/([^\/?#=]+)\S*/i,
+            SpotifyUri: /spotify:(album|artist|episode|playlist|show|track):([^ \/?&#=]+)/i
+        };
+
+        const parseKeyOptionalValue = (captureGroup, keyOptionalValue, re) => {
+            if (captureGroup)
+                while (re.test(captureGroup)) {
+                    const groups = re.exec(captureGroup);
+                    if (groups) {
+                        if (groups[2]) {
+                            keyOptionalValue.list.push(`${groups[1]}=${groups[2]||''}`);
+                            keyOptionalValue.obj[groups[1]] = groups[2];
+                        } else {
+                            keyOptionalValue.list.push(groups[1]);
+                            keyOptionalValue.obj[groups[1]] = '';
+                        }
+                        captureGroup = captureGroup.substring(groups[0].length+1);
+                    }
+                }
+        }
+
+        const parseUrl = (url) => {
+            url = url.replaceAll('\\', '');
+            const match = url.match(regexp.UrlParts);
+            if (!match) {
+                return undefined;
+            }
+            const domain = match[1] || '';
+            const path = match[2] || '/';
+            const queryString = match[3] || '';
+            const hashString = match[4] || '';
+            let parameters = { str: queryString, list: [], obj: {} }
+            let fragment = { str: hashString, list: [], obj: {} }
+            parseKeyOptionalValue(queryString, parameters, regexp.Query);
+            parseKeyOptionalValue(hashString, fragment, regexp.Fragment);
+            return {
+                parts: {
+                    domain: domain,
+                    path: path,
+                    parameters: parameters,
+                    fragment: fragment
+                },
+                fullUrl: function () {
+                    return domain + path + queryString + hashString;
+                }
+            };
+        };
+
+        const parsed_self_url = parseUrl(window.document.URL);
+
+        const correctMediaLink = (link) => {
+            if (/https:\/\/(127.0.0.1|localhost).*/i.test(link))
+                link = link.replace('https://', 'http://');
+            return link;
+        };
+    </script>
+    <script>
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -16,9 +81,6 @@
         var player;
         var youTubePlaylistId;
         var youTubeUserId;
-        function onYouTubeIframeAPIReady() {
-            // console.log('YouTube Iframe API is ready.');
-        }
     </script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -72,7 +134,8 @@
             <a href="https://www.spotify.com" title="Spotify content supported" alt="Spotify content supported">
                 <svg height="24px" width="24px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">  <defs> </defs> <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Color-" transform="translate(-200.000000, -460.000000)" fill="#00DA5A"> <path d="M238.16,481.36 C230.48,476.8 217.64,476.32 210.32,478.6 C209.12,478.96 207.92,478.24 207.56,477.16 C207.2,475.96 207.92,474.76 209,474.4 C217.52,471.88 231.56,472.36 240.44,477.64 C241.52,478.24 241.88,479.68 241.28,480.76 C240.68,481.6 239.24,481.96 238.16,481.36 M237.92,488.08 C237.32,488.92 236.24,489.28 235.4,488.68 C228.92,484.72 219.08,483.52 211.52,485.92 C210.56,486.16 209.48,485.68 209.24,484.72 C209,483.76 209.48,482.68 210.44,482.44 C219.2,479.8 230,481.12 237.44,485.68 C238.16,486.04 238.52,487.24 237.92,488.08 M235.04,494.68 C234.56,495.4 233.72,495.64 233,495.16 C227.36,491.68 220.28,490.96 211.88,492.88 C211.04,493.12 210.32,492.52 210.08,491.8 C209.84,490.96 210.44,490.24 211.16,490 C220.28,487.96 228.2,488.8 234.44,492.64 C235.28,493 235.4,493.96 235.04,494.68 M224,460 C210.8,460 200,470.8 200,484 C200,497.2 210.8,508 224,508 C237.2,508 248,497.2 248,484 C248,470.8 237.32,460 224,460" id="Spotify"> </path> </g> </g> </g></svg>
             </a>
-            Content supported
+            <span>Content supported</span>
+            <span id="media-link"></span>
             <span id="github-logo"><a href="https://github.com/tomasfn87/url-parser" target="_blank" title="This website's repository at github.com" alt="This website's repository at github.com"><svg id="github-logo" aria-hidden="true" height="24" viewBox="0 0 16 16" version="1.1" width="24" data-view-component="true" class="octicon octicon-mark-github"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg></a></span>
         </span>
     </div>
@@ -90,62 +153,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        const regexp = {
-            UrlParts: /^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.:?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?[^?]+?)?(#[^#]+?)?$/,
-            Query: /([^?#&=]+)(?:=([^?#&=]+))?/,
-            Fragment: /([^#&=]+)(?:=([^#&=]+))?/,
-            YouTubeVideo: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?(?:(?:watch)?\?.*v=|embed\/)?([0-9A-Za-z_-]{11}).*/i,
-            YouTubePlaylist: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?.*?list=([0-9A-Za-z_-]+)/i,
-            YouTubeUser: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?.*@([^\/?#=]+).*/i,
-            VimeoVideo: /(https?:\/\/)?(\w+\.)?vimeo.com\/(\d+)/i,
-            SpotifyContent: /(?:https?:\/\/)?(?:\w+\.)?spotify.com\/.*(track|episode|playlist|album|artist|show)\/([^\/?#=]+)\S*/i,
-            SpotifyUri: /spotify:(album|artist|episode|playlist|show|track):([^ \/?&#=]+)/i
-        };
-
-        const parseKeyOptionalValue = (captureGroup, keyOptionalValue, re) => {
-            if (captureGroup)
-                while (re.test(captureGroup)) {
-                    const groups = re.exec(captureGroup);
-                    if (groups) {
-                        if (groups[2]) {
-                            keyOptionalValue.list.push(`${groups[1]}=${groups[2]||''}`);
-                            keyOptionalValue.obj[groups[1]] = groups[2];
-                        } else {
-                            keyOptionalValue.list.push(groups[1]);
-                            keyOptionalValue.obj[groups[1]] = '';
-                        }
-                        captureGroup = captureGroup.substring(groups[0].length+1);
-                    }
-                }
-        }
-
-        const parseUrl = (url) => {
-            url = url.replaceAll('\\', '');
-            const match = url.match(regexp.UrlParts);
-            if (!match) {
-                return undefined;
-            }
-            const domain = match[1] || '';
-            const path = match[2] || '/';
-            const queryString = match[3] || '';
-            const hashString = match[4] || '';
-            let parameters = { str: queryString, list: [], obj: {} }
-            let fragment = { str: hashString, list: [], obj: {} }
-            parseKeyOptionalValue(queryString, parameters, regexp.Query);
-            parseKeyOptionalValue(hashString, fragment, regexp.Fragment);
-            return {
-                parts: {
-                    domain: domain,
-                    path: path,
-                    parameters: parameters,
-                    fragment: fragment
-                },
-                fullUrl: function () {
-                    return domain + path + queryString + hashString;
-                }
-            };
-        };
-
         document.addEventListener('DOMContentLoaded', function () {
             const parseButton = document.getElementById('parseButton');
             const urlInput = document.getElementById('urlInput');
@@ -168,8 +175,6 @@
                 }
             };
     
-            urlInput.addEventListener('input', validateUrlInput);
-    
             const handleParse = (decode) => {
                 let url = urlInput.value.replaceAll('\\', '');
                 if (url.match(regexp.SpotifyUri)) {
@@ -186,7 +191,7 @@
                 document.getElementById('output-container').querySelectorAll('#youtube-embed-container, .youtube-message-container').forEach(el => el.remove());
                 document.body.classList.remove('youtube-background');
     
-                if (!r) {
+                if (!r && urlInput.value) {
                     const row = parsedResultTableBody.insertRow();
                     const cell = row.insertCell();
                     cell.colSpan = 2;
@@ -298,6 +303,11 @@
     
                 addTableRow("Full URL", `<a href="${`https://${fullUrl.replace(/^\s*\w+:\/\//, '')}`}" class="url-link">${decode?decodeURIComponent(fullUrl):fullUrl}</a>`, isOdd);
     
+
+                let link = 'https://'
+                    + parsed_self_url.parts.domain.replace(/^\w+:\/\//, '')
+                    + parsed_self_url.parts.path
+
                 // YouTube Playlist
                 if (regexp.YouTubePlaylist.test(url)) {
                     document.body.classList.add('youtube-background');
@@ -319,6 +329,10 @@
                                 'onStateChange': onPlayerStateChangeYouTube
                             }
                         })
+                        link +=  '?youtubeplaylist=' + playlistId;
+                        link = correctMediaLink(link);
+                        document.getElementById('media-link').innerHTML =
+                            '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="' + link + '">Media Link</a>';
                     } else {
                         const messageContainer = document.createElement('div');
                         messageContainer.classList.add('youtube-message-container');
@@ -356,6 +370,10 @@
                                 'onStateChange': onPlayerStateChangeYouTube
                             }
                         });
+                        link +=  '?youtubevideo=' + videoId;
+                        link = correctMediaLink(link);
+                        document.getElementById('media-link').innerHTML =
+                            '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="' + link + '" target="_blank">Media Link</a>';
                     } else {
                         const messageContainer = document.createElement('div');
                         messageContainer.classList.add('youtube-message-container');
@@ -385,6 +403,10 @@
                                 'onStateChange': onPlayerStateChangeYouTube
                             }
                         })
+                        link +=  '?youtubeuser=' + userId;
+                        link = correctMediaLink(link);
+                        document.getElementById('media-link').innerHTML =
+                            '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="' + link + '">Media Link</a>';
                     } else {
                         const messageContainer = document.createElement('div');
                         messageContainer.classList.add('youtube-message-container');
@@ -396,6 +418,8 @@
                 // Vimeo Video
                 } else if (regexp.VimeoVideo.test(url)) {
                     document.body.classList.add('youtube-background');
+                    const match = url.match(regexp.VimeoVideo);
+                    const videoId = match && match[3];
                     var player = new Vimeo.Player(
                         document.getElementById('vimeo-embed-container'),
                         {
@@ -408,6 +432,10 @@
                             skipping_forward: true
                         }
                     );
+                    link +=  '?vimeovideo=' + videoId;
+                    link = correctMediaLink(link);
+                    document.getElementById('media-link').innerHTML =
+                        '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="' + link + '">Media Link</a>';
                 // Spotify Content
                 } else if (regexp.SpotifyContent.test(url)) {
                     document.body.classList.add('youtube-background');
@@ -423,19 +451,29 @@
                         const callback = (EmbedController) => {};
                         IFrameAPI.createController(element, options, callback);
                     };
-                    const spotifyPlayer = document.querySelector(
-                        'iframe[src^="https://open.spotify.com"]');
-                    spotifyPlayer.contentWindow.postMessage({
-                        type: 'listeningOn',
-                        domain: window.location.hostname,
-                        gtmId: 'MXNVD4PJ'
-                    }, 'https://open.spotify.com');
+                    setTimeout(function() {
+                        const spotifyPlayer = document.querySelector(
+                            'iframe[src^="https://open.spotify.com"]'
+                        );
+                        spotifyPlayer.contentWindow.postMessage({
+                            type: 'listeningOn',
+                            domain: window.location.hostname,
+                            gtmId: 'MXNVD4PJ'
+                        }, 'https://open.spotify.com');
+                    }, 500);
+                    
+                    link +=  '?spotifycontent=' + contentType + ':' + contentId;
+                    link = correctMediaLink(link);
+                    document.getElementById('media-link').innerHTML =
+                        '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="' + link + '">Media Link</a>';
                 } else {
                     youtubeEmbedContainer.innerHTML = '';
                     document.body.classList.remove('youtube-background');
                 }
             };
-    
+
+            urlInput.addEventListener('input', validateUrlInput);
+
             function onPlayerReadyYouTube(event) {
                 // YouTube Playlist
                 if (youTubePlaylistId) {
@@ -475,6 +513,38 @@
                     }
                 }
             });
+
+            // Handle Media Content from URL Parameters
+            setTimeout(function() {
+                // YouTube Playlist from URL Parameters
+                if (parsed_self_url.parts.parameters.obj.youtubeplaylist) {
+                    const youtubeplaylistUrl = 'https://www.youtube.com/?playlist='
+                        + parsed_self_url.parts.parameters.obj.youtubeplaylist;
+                    document.getElementById('urlInput').value = youtubeplaylistUrl;
+                // YouTube Video from URL Parameters
+                } else if (parsed_self_url.parts.parameters.obj.youtubevideo) {
+                    const youtubevideoUrl = 'https://www.youtube.com/?v='
+                        + parsed_self_url.parts.parameters.obj.youtubevideo;
+                    document.getElementById('urlInput').value = youtubevideoUrl;
+                // YouTube User from URL Parameters
+                } else if (parsed_self_url.parts.parameters.obj.youtubeuser) {
+                    const youtubeuserUrl = 'https://www.youtube.com/@'
+                        + parsed_self_url.parts.parameters.obj.youtubeuser.replace(/^@/g, '');
+                    document.getElementById('urlInput').value = youtubeuserUrl;
+                // Video Video from URL Parameters
+                } else if (parsed_self_url.parts.parameters.obj.vimeovideo) {
+                    const vimeovideoUrl = 'https://www.vimeo.com/'
+                        + parsed_self_url.parts.parameters.obj.vimeovideo;
+                    document.getElementById('urlInput').value = vimeovideoUrl;
+                // Spotify Content from URL Parameters
+                } else if (parsed_self_url.parts.parameters.obj.spotifycontent) {
+                    const spotifycontentUrl = 'https://open.spotify.com/'
+                        + parsed_self_url.parts.parameters.obj.spotifycontent.replace(':', '/');
+                    document.getElementById('urlInput').value = spotifycontentUrl;
+                }
+                validateUrlInput();
+                handleParse(false);
+            }, 500);
         });
         const projectLogo = " _   _ _____ _       _____                                       \n| | | | ___ \\ |     | ___ \\\n| | | | |_/ / |     | |_/ /_ _ _ __ ___  __  _ __\n| | | |    /| |     |  __/ _` | '__/ __|/ _ \\ '__|\n| |_| | |\\ \\| |____ | | | (_| | |  \\__ \\  __/ |\n \\___/\\_| \\_/_____/ \\_|  \\__,_|_|  |___/\\___|_|\n\n\thttps://github.com/tomasfn87/url-parser\n\n";
         console.log(projectLogo);
