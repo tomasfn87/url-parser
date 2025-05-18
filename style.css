@@ -256,34 +256,34 @@ th, td {
     margin: 0 auto;
 }
 
-.youtube-background {
+.media-background {
     background-color: #111;
     color: #eee;
 }
 
-.youtube-background h1,
-.youtube-background h2,
-.youtube-background label {
+.media-background h1,
+.media-background h2,
+.media-background label {
     color: #eee;
 }
 
-.youtube-background .form-control {
+.media-background .form-control {
     background-color: #222;
     color: #eee;
     border-color: #555;
 }
 
-.youtube-background .form-control:focus {
+.media-background .form-control:focus {
     background-color: #222;
     border-color: #baff33;
     box-shadow: 0 0 0 0.2rem rgba(186, 255, 51, 0.25);
 }
 
-.youtube-background .form-control::placeholder {
+.media-background .form-control::placeholder {
     color: #999;
 }
 
-.youtube-background .url-table {
+.media-background .url-table {
     background-color: #222;
     color: #eee;
 }

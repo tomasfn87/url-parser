@@ -16,6 +16,7 @@
             YouTubeVideo: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?(?:(?:watch)?\?.*v=|embed\/)?([0-9A-Za-z_-]{11}).*/i,
             YouTubePlaylist: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?.*?(?:play)?list=([0-9A-Za-z_-]+)/i,
             YouTubeUser: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?.*@([^\/?#=]+).*/i,
+            YouTubeLive: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?(?:live\/)?([0-9A-Za-z_-]{11}).*/i,
             VimeoVideo: /(https?:\/\/)?(\w+\.)?vimeo.com\/(\d+)/i,
             SpotifyContent: /(?:https?:\/\/)?(?:\w+\.)?spotify.com\/.*(track|episode|playlist|album|artist|show)\/([^\/?#=]+)\S*/i,
             SpotifyUri: /spotify:(album|artist|episode|playlist|show|track):([^ \/?&#=]+)/i
@@ -189,7 +190,7 @@
                 const r = parseUrl(url);
                 parsedResultTableBody.innerHTML = '';
                 document.getElementById('output-container').querySelectorAll('#youtube-embed-container, .youtube-message-container').forEach(el => el.remove());
-                document.body.classList.remove('youtube-background');
+                document.body.classList.remove('media-background');
     
                 if (!r && urlInput.value) {
                     const row = parsedResultTableBody.insertRow();
@@ -302,7 +303,6 @@
                 }
     
                 addTableRow("Full URL", `<a href="${`https://${fullUrl.replace(/^\s*\w+:\/\//, '')}`}" class="url-link">${decode?decodeURIComponent(fullUrl):fullUrl}</a>`, isOdd);
-    
 
                 let link = 'https://'
                     + parsed_self_url.parts.domain.replace(/^\w+:\/\//, '')
@@ -310,7 +310,7 @@
 
                 // YouTube Playlist
                 if (regexp.YouTubePlaylist.test(url)) {
-                    document.body.classList.add('youtube-background');
+                    document.body.classList.add('media-background');
                     const match = url.match(regexp.YouTubePlaylist);
                     const playlistId = match && match[4];
                     if (playlistId) {
@@ -341,9 +341,9 @@
                         messageContainer.textContent = "Não foi possível extrair o ID da playlist.";
                         document.getElementById('output-container').appendChild(messageContainer);
                     }
-                // YouTube Video
+               // YouTube Video
                 } else if (regexp.YouTubeVideo.test(url)) {
-                    document.body.classList.add('youtube-background');
+                    document.body.classList.add('media-background');
                     const match = url.match(regexp.YouTubeVideo);
                     const videoId = match && match[4];
                     if (videoId) {
@@ -382,9 +382,35 @@
                         messageContainer.textContent = "Não foi possível extrair o ID do vídeo.";
                         document.getElementById('output-container').appendChild(messageContainer);
                     }
+                // YouTube Live
+                } else if (regexp.YouTubeLive.test(url)) {
+                    document.body.classList.add('media-background');
+                    const match = url.match(regexp.YouTubeLive);
+                    const liveId = match && match[4];
+                    if (liveId) {
+                        youtubeEmbedContainer.innerHTML = '';
+                        player = new YT.Player('youtube-embed-container', {
+                            height: '270',
+                            width: '480',
+                            videoId: liveId,
+                            playerVars: {
+                                'playsinline': 1,
+                                'autoplay': 1,
+                                'mute': 1
+                            },
+                            events: {
+                                'onReady': onPlayerReadyYouTube,
+                                'onStateChange': onPlayerStateChangeYouTube
+                            }
+                        });
+                        link +=  '?youtubelive=' + liveId;
+                        link = correctMediaLink(link);
+                        document.getElementById('media-link').innerHTML =
+                            '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="' + link + '" target="_blank">Media Link</a>';
+                }
                 // YouTube User's Videos
                 } else if (regexp.YouTubeUser.test(url)) {
-                    document.body.classList.add('youtube-background');
+                    document.body.classList.add('media-background');
                     const match = url.match(regexp.YouTubeUser);
                     const userId = match && match[4];
                     if (userId) {
@@ -417,7 +443,7 @@
                     }
                 // Vimeo Video
                 } else if (regexp.VimeoVideo.test(url)) {
-                    document.body.classList.add('youtube-background');
+                    document.body.classList.add('media-background');
                     const match = url.match(regexp.VimeoVideo);
                     const videoId = match && match[3];
                     var player = new Vimeo.Player(
@@ -438,7 +464,7 @@
                         '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="' + link + '" target="_blank">Media Link</a>';
                 // Spotify Content
                 } else if (regexp.SpotifyContent.test(url)) {
-                    document.body.classList.add('youtube-background');
+                    document.body.classList.add('media-background');
                     const match = url.match(regexp.SpotifyContent);
                     const contentType = match && match[1];
                     const contentId = match && match[2];
@@ -468,7 +494,7 @@
                         '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="' + link + '" target="_blank">Media Link</a>';
                 } else {
                     youtubeEmbedContainer.innerHTML = '';
-                    document.body.classList.remove('youtube-background');
+                    document.body.classList.remove('media-background');
                 }
             };
 
@@ -526,6 +552,11 @@
                     const youtubevideoUrl = 'https://www.youtube.com/?v='
                         + parsed_self_url.parts.parameters.obj.youtubevideo;
                     document.getElementById('urlInput').value = youtubevideoUrl;
+                // YouTube Live from URL Parameters
+                } else if (parsed_self_url.parts.parameters.obj.youtubelive) {
+                    const youtubeliveUrl = 'https://www.youtube.com/live/'
+                        + parsed_self_url.parts.parameters.obj.youtubelive;
+                    document.getElementById('urlInput').value = youtubeliveUrl;
                 // YouTube User from URL Parameters
                 } else if (parsed_self_url.parts.parameters.obj.youtubeuser) {
                     const youtubeuserUrl = 'https://www.youtube.com/@'
