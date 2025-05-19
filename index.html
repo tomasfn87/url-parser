@@ -10,7 +10,7 @@
     </script>
     <script>
         const regexp = {
-            UrlParts: /^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?[^?]+?)?(#[^#]+?)?$/,
+            UrlParts: /^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?(?:[^?#]+?)?)?(#(?:[^#]+?)?)?$/,
             Query: /([^?#&=]+)(?:=([^?#&=]+))?/,
             Fragment: /([^#&=]+)(?:=([^#&=]+))?/,
             YouTubeVideo: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?(?:(?:watch)?\?.*v=|embed\/)?([0-9A-Za-z_-]{11}).*/i,
@@ -51,8 +51,8 @@
             const hashString = match[4] || '';
             let parameters = { str: queryString, list: [], obj: {} }
             let fragment = { str: hashString, list: [], obj: {} }
-            parseKeyOptionalValue(queryString, parameters, regexp.Query);
-            parseKeyOptionalValue(hashString, fragment, regexp.Fragment);
+            queryString.length > 1 && parseKeyOptionalValue(queryString, parameters, regexp.Query);
+            hashString.length > 1 && parseKeyOptionalValue(hashString, fragment, regexp.Fragment);
             return {
                 parts: {
                     domain: domain,
@@ -486,7 +486,7 @@
                             domain: window.location.hostname,
                             gtmId: 'MXNVD4PJ'
                         }, 'https://open.spotify.com');
-                    }, 500);
+                    }, 250);
                     
                     link +=  '?spotifycontent=' + contentType + ':' + contentId;
                     link = correctMediaLink(link);
@@ -543,39 +543,39 @@
             // Handle Media Content from URL Parameters
             setTimeout(function() {
                 // YouTube Playlist from URL Parameters
-                if (parsed_self_url.parts.parameters.obj.youtubeplaylist) {
+                if (parsed_self_url.parts && parsed_self_url.parts.parameters.obj.youtubeplaylist) {
                     const youtubeplaylistUrl = 'https://www.youtube.com/?playlist='
                         + parsed_self_url.parts.parameters.obj.youtubeplaylist;
                     document.getElementById('urlInput').value = youtubeplaylistUrl;
                 // YouTube Video from URL Parameters
-                } else if (parsed_self_url.parts.parameters.obj.youtubevideo) {
+                } else if (parsed_self_url.parts && parsed_self_url.parts.parameters.obj.youtubevideo) {
                     const youtubevideoUrl = 'https://www.youtube.com/?v='
                         + parsed_self_url.parts.parameters.obj.youtubevideo;
                     document.getElementById('urlInput').value = youtubevideoUrl;
                 // YouTube Live from URL Parameters
-                } else if (parsed_self_url.parts.parameters.obj.youtubelive) {
+                } else if (parsed_self_url.parts && parsed_self_url.parts.parameters.obj.youtubelive) {
                     const youtubeliveUrl = 'https://www.youtube.com/live/'
                         + parsed_self_url.parts.parameters.obj.youtubelive;
                     document.getElementById('urlInput').value = youtubeliveUrl;
                 // YouTube User from URL Parameters
-                } else if (parsed_self_url.parts.parameters.obj.youtubeuser) {
+                } else if (parsed_self_url.parts && parsed_self_url.parts.parameters.obj.youtubeuser) {
                     const youtubeuserUrl = 'https://www.youtube.com/@'
                         + parsed_self_url.parts.parameters.obj.youtubeuser.replace(/^@/g, '');
                     document.getElementById('urlInput').value = youtubeuserUrl;
                 // Video Video from URL Parameters
-                } else if (parsed_self_url.parts.parameters.obj.vimeovideo) {
+                } else if (parsed_self_url.parts && parsed_self_url.parts.parameters.obj.vimeovideo) {
                     const vimeovideoUrl = 'https://www.vimeo.com/'
                         + parsed_self_url.parts.parameters.obj.vimeovideo;
                     document.getElementById('urlInput').value = vimeovideoUrl;
                 // Spotify Content from URL Parameters
-                } else if (parsed_self_url.parts.parameters.obj.spotifycontent) {
+                } else if (parsed_self_url.parts && parsed_self_url.parts.parameters.obj.spotifycontent) {
                     const spotifycontentUrl = 'https://open.spotify.com/'
                         + parsed_self_url.parts.parameters.obj.spotifycontent.replace(':', '/');
                     document.getElementById('urlInput').value = spotifycontentUrl;
                 }
                 validateUrlInput();
                 handleParse(false);
-            }, 500);
+            }, 250);
         });
         const projectLogo = " _   _ _____ _       _____                                       \n| | | | ___ \\ |     | ___ \\\n| | | | |_/ / |     | |_/ /_ _ _ __ ___  __  _ __\n| | | |    /| |     |  __/ _` | '__/ __|/ _ \\ '__|\n| |_| | |\\ \\| |____ | | | (_| | |  \\__ \\  __/ |\n \\___/\\_| \\_/_____/ \\_|  \\__,_|_|  |___/\\___|_|\n\n\thttps://github.com/tomasfn87/url-parser\n\n";
         console.log(projectLogo);
