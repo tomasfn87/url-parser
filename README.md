@@ -51,7 +51,8 @@
 #### Spotify Audio Tag for Google Tag Manager
 
 - [Contribution](https://community.spotify.com/t5/Spotify-for-Developers/Spotify-iFrame-tracking-via-GTM-Any-code/m-p/6945950) to Google [Tag Manager](https://tagmanager.google.com) / [Analytics](https://analytics.google.com) tracking solution for Spotify content:
-  - [Documentation](https://github.com/tomasfn87/url-parser/blob/main/gtm/spotify-audio.json.md).
+  - [Documentation](https://github.com/tomasfn87/url-parser/blob/main/gtm/spotify-audio.json.md);
+  - Visit this project's [Web App](https://tomasfn87.github.io/url-parser?spotifycontent=artist:1nJvji2KIlWSseXRSlNYsC), open the console (`F12`) and type `dataLayer` to see the tag working (a Spotify content will already be loaded).
 
 ## Art
 
