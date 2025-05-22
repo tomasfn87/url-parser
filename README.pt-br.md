@@ -12,7 +12,7 @@
 
 ## Aplicação Web 
 
-- Link: [`URL Parser`](https://tomasfn87.github.io/url-parser/)
+- Link: [`URL Parser`](https://tomasfn87.github.io/url-parser?utm_source=github&utm_medium=readme-br)
 
 ### Descrição
 
@@ -52,7 +52,7 @@
 
 - [Contribuição](https://community.spotify.com/t5/Spotify-for-Developers/Spotify-iFrame-tracking-via-GTM-Any-code/m-p/6945950) com a solução de tracking para Google [Tag Manager](https://tagmanager.google.com) / [Analytics](https://analytics.google.com) para conteúdo do Spotify:
   - [Documentação](https://github.com/tomasfn87/url-parser/blob/main/gtm/spotify-audio.json.pt-br.md);
-  - Visite a [Aplicação Web](https://tomasfn87.github.io/url-parser?spotifycontent=artist:1nJvji2KIlWSseXRSlNYsC) deste projeto, abra o console (`F12`) e digite `dataLayer` para ver a tag funcionado (um conteúdo Spotify já será automaticamente carregado).
+  - Visite a [Aplicação Web](https://tomasfn87.github.io/url-parser?spotifycontent=artist:1nJvji2KIlWSseXRSlNYsC&utm_source=github&utm_medium=readme-br) deste projeto, abra o console (`F12`) e digite `dataLayer` para ver a tag funcionado (um conteúdo Spotify já será automaticamente carregado).
 
 ## Arte
 
