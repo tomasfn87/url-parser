@@ -17,11 +17,11 @@
 ### Descrição
 
 - [Divide](https://github.com/tomasfn87/url-parser/blob/main/index.html#L42) a URL em 4 partes:
-  - `Domínio`;
+  - `Origem`;
   - `Caminho`;
   - `Parâmetros`;
   - `Fragmento`.
-- **Domínio** tenta [obter](https://github.com/tomasfn87/url-parser/blob/main/index.html#L218) o ícone do site (`favicon`) usando uma API do Google;
+- **Origem** tenta [obter](https://github.com/tomasfn87/url-parser/blob/main/index.html#L218) o ícone do site (`favicon`) usando uma API do Google;
 - **Parâmetros** e **Fragmento** são [divididos](https://github.com/tomasfn87/url-parser/blob/main/index.html#L25) em `chave` e `valor` (opcional);
 - **Decodificar**: aperte o botão [`Decodificar`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L161) para resolver caracteres codificados e de fato ler o conteúdo da URL.
 

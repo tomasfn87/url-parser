@@ -2,8 +2,8 @@ import { ClassMethodTest, ClassMethodTester }
     from '../util/test-class-method.js';
 import Url from '../src/url-parser.js';
 
-const getDomainTest = new ClassMethodTest(Url, "getDomain", [], "Url.getDomain");
-getDomainTest.addTestCases([
+const getOriginTest = new ClassMethodTest(Url, "getOrigin", [], "Url.getOrigin");
+getOriginTest.addTestCases([
     {
         input: { url: "https://tagassistant.google.com/?hl=en&utm_source=gtm#/?source=TAG_MANAGER&id=GTM-MXNVD4PJ&gtm_auth=H0X5tN2DEEpfJ0eha8q7Ig&gtm_preview=env-5&cb=5607611040920180" },
         keys: [ "url" ],
@@ -173,7 +173,7 @@ getFullUrlTest.addTestCases([
 ]);
 
 const tester = new ClassMethodTester();
-tester.addTestSet(getDomainTest);
+tester.addTestSet(getOriginTest);
 tester.addTestSet(getPathTest);
 tester.addTestSet(getParametersTest);
 tester.addTestSet(getFragmentTest);

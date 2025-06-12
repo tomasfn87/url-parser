@@ -3,7 +3,7 @@ export default class Url {
         this.url = data.url;
         this.parsedUrl = {
             parts: {
-                domain: '',
+                origin: '',
                 path: '',
                 parameters: { str: '', list: [], obj: {} },
                 fragment: { str: '', list: [], obj: {} }
@@ -26,7 +26,7 @@ export default class Url {
     parseUrl() {
         if (this.RegExp().UrlParts.test(this.url)) {
             const groups = this.RegExp().UrlParts.exec(this.url);
-            this.parsedUrl.parts.domain = groups[1];
+            this.parsedUrl.parts.origin = groups[1];
             this.parsedUrl.parts.path = groups[2] || '/';
             this.parsedUrl.parts.parameters.str = groups[3] || '';
             this.parseKeyOptionalValue(
@@ -54,8 +54,8 @@ export default class Url {
             }
     }
 
-    getDomain() {
-        return this.parsedUrl.parts.domain
+    getOrigin() {
+        return this.parsedUrl.parts.origin
     }
 
     getPath() {
@@ -71,7 +71,7 @@ export default class Url {
     }
 
     getFullUrl() {
-        return this.getDomain() + this.getPath() + this.getParameters()
+        return this.getOrigin() + this.getPath() + this.getParameters()
         + this.getFragment()
     }
     

@@ -45,7 +45,7 @@
             if (!match) {
                 return undefined;
             }
-            const domain = match[1] || '';
+            const origin = match[1] || '';
             const path = match[2] || '/';
             const queryString = match[3] || '';
             const hashString = match[4] || '';
@@ -55,13 +55,13 @@
             hashString.length > 1 && parseKeyOptionalValue(hashString, fragment, regexp.Fragment);
             return {
                 parts: {
-                    domain: domain,
+                    origin: origin,
                     path: path,
                     parameters: parameters,
                     fragment: fragment
                 },
                 fullUrl: function () {
-                    return domain + path + queryString + hashString;
+                    return origin + path + queryString + hashString;
                 }
             };
         };
@@ -202,7 +202,7 @@
     
                 let isOdd = true;
     
-                const addTableRow = (label, value, isOdd, isSubtable = false, isDomainRow = false, domain = '') => {
+                const addTableRow = (label, value, isOdd, isSubtable = false, isOriginRow = false, origin = '') => {
                     const row = parsedResultTableBody.insertRow();
                     const bgColor = isOdd ? (isSubtable ? '#2a2a2a' : '#222') : (isSubtable ? '#333' : '#282828');
                     row.style.backgroundColor = bgColor;
@@ -214,8 +214,8 @@
                     labelCell.style.paddingRight = '15px';
                     valueCell.style.color = '#ccc';
                     valueCell.style.backgroundColor = isOdd ? (isSubtable ? '' : '#333') : (isSubtable ? '' : '#3a3a3a');
-                    if (isDomainRow && domain) {
-                        const faviconUrl = `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${`https://${domain.replace(/^\s*\w+:\/\//, '')}`}&size=18`;
+                    if (isOriginRow && origin) {
+                        const faviconUrl = `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${`https://${origin.replace(/^\s*\w+:\/\//, '')}`}&size=18`;
                         const faviconImg = document.createElement('img');
                         faviconImg.src = faviconUrl;
                         faviconImg.width = 18;
@@ -223,26 +223,26 @@
                         faviconImg.style.marginRight = '8px';
                         faviconImg.style.verticalAlign = 'middle';
     
-                        const domainLink = document.createElement('a');
-                        domainLink.href = `https://${domain.replace(/^\s*\w+:\/\//, '')}`;
-                        domainLink.className = 'url-link';
-                        domainLink.textContent = domain;
+                        const originLink = document.createElement('a');
+                        originLink.href = `https://${origin.replace(/^\s*\w+:\/\//, '')}`;
+                        originLink.className = 'url-link';
+                        originLink.textContent = origin;
                         
                         valueCell.innerHTML = '';
                         
                         faviconImg.onload = function() {
                             valueCell.appendChild(faviconImg);
-                            valueCell.appendChild(domainLink);
+                            valueCell.appendChild(originLink);
                         };
                         faviconImg.onerror = function() {
-                            valueCell.appendChild(domainLink);
+                            valueCell.appendChild(originLink);
                         };
                     }
                 };
-                let domain = r.parts.domain;
+                let origin = r.parts.origin;
                 let fullUrl = r.fullUrl();
                 let path = r.parts.path;
-                addTableRow("Domain", domain, isOdd, false, true, domain);
+                addTableRow("Origin", origin, isOdd, false, true, origin);
                 isOdd = !isOdd;
                 addTableRow("Path", path, isOdd);
                 isOdd = !isOdd;
@@ -305,7 +305,7 @@
                 addTableRow("Full URL", `<a href="${`https://${fullUrl.replace(/^\s*\w+:\/\//, '')}`}" class="url-link">${decode?decodeURIComponent(fullUrl):fullUrl}</a>`, isOdd);
 
                 let link = 'https://'
-                    + parsed_self_url.parts.domain.replace(/^\w+:\/\//, '')
+                    + parsed_self_url.parts.origin.replace(/^\w+:\/\//, '')
                     + parsed_self_url.parts.path
 
                 // YouTube Playlist
@@ -483,7 +483,7 @@
                         );
                         spotifyPlayer.contentWindow.postMessage({
                             type: 'listeningOn',
-                            domain: window.location.hostname,
+                            origin: window.location.hostname,
                             gtmId: 'MXNVD4PJ'
                         }, 'https://open.spotify.com');
                     }, 250);

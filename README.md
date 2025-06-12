@@ -17,11 +17,11 @@
 ### Description
 
 - [Parses](https://github.com/tomasfn87/url-parser/blob/main/index.html#L42) a URL in 4 parts:
-  - `Domain`;
+  - `Origin`;
   - `Path`;
   - `Parameters`;
   - `Fragment`.
-- **Domain** tries to [obtain](https://github.com/tomasfn87/url-parser/blob/main/index.html#L218) the site's icon (`favicon`) using a Google API;
+- **Origin** tries to [obtain](https://github.com/tomasfn87/url-parser/blob/main/index.html#L218) the site's icon (`favicon`) using a Google API;
 - **Parameters** and **Fragment** are [parsed](https://github.com/tomasfn87/url-parser/blob/main/index.html#L25) into `key` and (optional) `value`;
 - **Decode**: press the [`Decode`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L161) button to solve encoded characters and actually read the URL's content.
 

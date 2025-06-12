@@ -12,7 +12,7 @@ const main = () => {
     }
     let decode = false;
     const r = new Url({ url: input });
-    if (!r.parsedUrl.parts.domain) {
+    if (!r.parsedUrl.parts.origin) {
         console.log("Invalid URL.");
         return;
     }
@@ -46,9 +46,9 @@ const main = () => {
         return;
     }
     const {title, subtitle, content} = loadConfigFile("config.json");
-    color.log(title, "Domain");
+    color.log(title, "Origin");
     process.stdout.write(":\n- ");
-    color.log(content, `${r.getDomain()}\n`);
+    color.log(content, `${r.getOrigin()}\n`);
     if (r.parsedUrl.parts.path) {
         color.log(title, "Path");
         process.stdout.write(":\n- ");

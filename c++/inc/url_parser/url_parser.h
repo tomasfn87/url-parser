@@ -17,7 +17,7 @@ struct KeyOptionalValueData {
 };
 
 struct ParsedUrl {
-    std::string domain;
+    std::string origin;
     std::string path;
     KeyOptionalValueData parameter;
     KeyOptionalValueData fragment;
@@ -55,7 +55,7 @@ private:
     const std::string color_4 = "\x1b[34m";
     const std::string color_4_1 = "\x1b[94m";
     const std::string color_str(std::string str, std::string color);
-    const std::vector<char> domain_chars = {':', '/', '.'};
+    const std::vector<char> origin_chars = {':', '/', '.'};
     const std::vector<char> path_chars = {'/'};
     const std::vector<char> key_value_delimiters = {'='};
     const std::vector<char> key_optional_value_chars = {'?', '#', '&', '/'};

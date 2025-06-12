@@ -53,7 +53,7 @@ bool Url::is_valid() {
 void Url::parse_url() {
     std::smatch parts;
     if (std::regex_match(url, parts, url_parts)) {
-        parsed_url.domain = parts[1].str();
+        parsed_url.origin = parts[1].str();
         if (parts[2].str().size())
             parsed_url.path = parts[2].str();
         else
@@ -134,7 +134,7 @@ const std::string Url::color_chars(
 }
 
 const void Url::print_colored_url(bool decode) {
-    std::string d = parsed_url.domain;
+    std::string d = parsed_url.origin;
     std::string p = parsed_url.path;
     std::string q = parsed_url.parameter.base_string;
     std::string f = parsed_url.fragment.base_string;
@@ -145,7 +145,7 @@ const void Url::print_colored_url(bool decode) {
         f = decode_uri_component(f);
     }
     std::cout
-        << color_chars(domain_chars, d, "", color_1_1, "")
+        << color_chars(origin_chars, d, "", color_1_1, "")
         << color_chars(path_chars, p, "", color_2_1, "")
         << color_chars(
             key_optional_value_chars, q, "", color_3_1, color_dim)
@@ -207,7 +207,7 @@ const void Url::print_key_optional_value_list(
 }
 
 const void Url::print_parsed_url(bool decode) {
-    std::string d = parsed_url.domain;
+    std::string d = parsed_url.origin;
     std::string p = parsed_url.path;
     std::string q = parsed_url.parameter.base_string;
     std::string f = parsed_url.fragment.base_string;
@@ -218,8 +218,8 @@ const void Url::print_parsed_url(bool decode) {
         f = decode_uri_component(f);
     }
     std::cout << color_str("→", color_dim) << " "
-        << color_str("Domain", color_1) << color_str(":", color_dim)
-        << "    " << color_chars(domain_chars, d, color_1_1, "", "") << "\n"
+        << color_str("Origin", color_1) << color_str(":", color_dim)
+        << "    " << color_chars(origin_chars, d, color_1_1, "", "") << "\n"
         << color_str("→", color_dim) << " " << color_str("Path", color_2)
         << color_str(":", color_dim) << "      "
         << color_chars(path_chars, p, color_2_1, "", "") << "\n";
