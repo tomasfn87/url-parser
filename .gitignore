@@ -6,3 +6,6 @@ c++/build/
 
 # VsCode
 *.vscode
+
+# Rust
+rust/target
