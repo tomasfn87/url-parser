@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 regex = "1"
 lazy_static = "1.4"
+urlencoding = "2.1.3"
