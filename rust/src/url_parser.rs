@@ -1,5 +1,6 @@
 use lazy_static::lazy_static;
 use regex::Regex;
+use string_replace_all::string_replace_all;
 
 // Todo: parameters and fragment string decoding
 // use urlencoding::decode; 
@@ -97,7 +98,8 @@ impl Url {
                 r"^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?(?:[^?#]+?)?)?(#(?:[^#]+?)?)?$"
             ).unwrap();
         }
-        let captures = URL_PARTS.captures(url_string)
+        let clean_url_string = &string_replace_all(url_string, "\\", "");
+        let captures = URL_PARTS.captures(clean_url_string)
             .ok_or_else(|| {
                 format!("Failed to parse URL '{}'. It does not match the expected format.", url_string)
             })?;
