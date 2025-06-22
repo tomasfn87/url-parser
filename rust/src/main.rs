@@ -9,7 +9,9 @@ fn main() {
         return;
     }
     let user_input = &args[1];
-    let url = url_parser::Url::parse_url(user_input);
+    let parsed_url = url_parser::Url::parse_url(user_input)
+        .expect("Error parsing URL");
+    parsed_url.print_url();
     println!();
-    println!("{}", url.expect("Error").full_url());
+    println!("{}", parsed_url.full_url());
 }
