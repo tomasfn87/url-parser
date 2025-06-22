@@ -12,6 +12,5 @@ fn main() {
     let parsed_url = url_parser::Url::parse_url(user_input)
         .expect("Error parsing URL");
     parsed_url.print_url();
-    println!();
-    println!("{}", parsed_url.full_url());
+    println!("Full URL:\n\t{}", parsed_url.full_url());
 }
