@@ -115,13 +115,13 @@ impl Url {
             parsed_path = "/".to_string();
         }
         let parameters_data = captures.get(3)
-                                             .map_or("", |m| m.as_str())
-                                             .trim_start_matches('?')
-                                             .to_string();
+            .map_or("", |m| m.as_str())
+            .trim_start_matches('?')
+            .to_string();
         let fragment_data = captures.get(4)
-                                           .map_or("", |m| m.as_str())
-                                           .trim_start_matches('#')
-                                           .to_string();
+            .map_or("", |m| m.as_str())
+            .trim_start_matches('#')
+            .to_string();
         let parameters_data = KeyOptionalValueData::parse_key_optional_value(
             &parameters_data, "&=#?", "=", "&")?;
         let fragment_data = KeyOptionalValueData::parse_key_optional_value(
@@ -136,10 +136,29 @@ impl Url {
     }
 
     pub fn print_url(&self, decode_chars: bool) {
-        println!("- Origin:\n\t{}", Cyan.paint(&self.origin));
-        println!("- Path:\n\t{}", Cyan.paint(&self.path));
+        print!("- Origin:\n\t");
+        if decode_chars {
+            println!("{}", Cyan.paint(decode(&self.origin)
+                .expect("error").to_string()));
+        } else {
+            println!("{}", Cyan.paint(&self.origin));
+        }
+        print!("- Path:\n\t");
+        if decode_chars {
+            println!("{}", Cyan.paint(decode(&self.path)
+                .expect("error").to_string()));
+        } else {
+            println!("{}", Cyan.paint(&self.path));
+        }
         if !&self.parameters.data.is_empty() {
-            println!("- Parameters:\n\t{}", Cyan.paint(&self.parameters.data));
+            print!("- Parameters:\n\t");
+            print!("{}", Yellow.paint("?"));
+            if decode_chars {
+                println!("{}", Cyan.paint(decode(&self.parameters.data)
+                    .expect("error").to_string()));
+            } else {
+                println!("{}", Cyan.paint(&self.parameters.data));
+            }
             for param in &self.parameters.obj {
                 if let Some(ref value) = param.optional_value {
                     if decode_chars {
@@ -160,11 +179,18 @@ impl Url {
             }
         }
         if !&self.fragment.data.is_empty() {
-            println!("- Fragment:\n\t{}", Cyan.paint(&self.fragment.data));
+            print!("- Fragment:\n\t");
+            print!("{}", Yellow.paint("#"));
+            if decode_chars {
+                println!("{}", Cyan.paint(decode(&self.fragment.data)
+                    .expect("error").to_string()));
+            } else {
+                println!("{}", Cyan.paint(&self.fragment.data));
+            }
             for frag in &self.fragment.obj {
                 if let Some(ref value) = frag.optional_value {
                     if decode_chars {
-                        println!("    - {}: {}",
+                        println!("  - {}: {}",
                             decode(&frag.key).expect("error").to_string(),
                             Yellow.paint(decode(&value).expect("error").to_string()));
                     } else {
@@ -172,10 +198,10 @@ impl Url {
                     }
                 } else {
                     if decode_chars {
-                        println!("    - {}",
+                        println!("  - {}",
                             decode(&frag.key).expect("error").to_string());
                     } else {
-                        println!("    - {}", frag.key);
+                        println!("  - {}", frag.key);
                     }
                 }
             }
