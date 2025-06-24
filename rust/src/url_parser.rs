@@ -1,9 +1,8 @@
 use lazy_static::lazy_static;
 use regex::Regex;
 use string_replace_all::string_replace_all;
-
-// Todo: parameters and fragment string decoding
-// use urlencoding::decode; 
+use urlencoding::decode;
+use ansi_term::Colour::Cyan;
 
 struct KeyOptionalValue {
     key: String,
@@ -135,26 +134,48 @@ impl Url {
         })
     }
 
-    pub fn print_url(&self) {
-        println!("* Origin:\n\t{}", &self.origin);
-        println!("* Path:\n\t{}", &self.path);
+    pub fn print_url(&self, decode_chars: bool) {
+        println!("- Origin:\n\t{}", Cyan.paint(&self.origin));
+        println!("- Path:\n\t{}", Cyan.paint(&self.path));
         if !&self.parameters.data.is_empty() {
-            println!("* Parameters:\n\t{}", &self.parameters.data);
+            println!("- Parameters:\n\t{}", Cyan.paint(&self.parameters.data));
             for param in &self.parameters.obj {
                 if let Some(ref value) = param.optional_value {
-                    println!("    - {}: {}", param.key, value);
+                    if decode_chars {
+                        println!("  - {}: {}",
+                            decode(&param.key).expect("error").to_string(),
+                            Cyan.paint(decode(&value).expect("error").to_string()));
+                    } else {
+                        println!("  - {}: {}", param.key, Cyan.paint(value));
+                    }
                 } else {
-                    println!("    - {}", param.key);
+                    if decode_chars {
+                        println!("  - {}",
+                            decode(&param.key).expect("error").to_string());
+                    } else {
+                        println!("  - {}", Cyan.paint(param.key.clone()));
+                    }
                 }
             }
         }
         if !&self.fragment.data.is_empty() {
-            println!("* Fragment:\n\t{}", &self.fragment.data);
+            println!("- Fragment:\n\t{}", &self.fragment.data);
             for frag in &self.fragment.obj {
                 if let Some(ref value) = frag.optional_value {
-                    println!("    - {}: {}", frag.key, value);
+                    if decode_chars {
+                        println!("    - {}: {}",
+                            decode(&frag.key).expect("error").to_string(),
+                            Cyan.paint(decode(&value).expect("error").to_string()));
+                    } else {
+                        println!("    - {}: {}", frag.key, Cyan.paint(value));
+                    }
                 } else {
-                    println!("    - {}", frag.key);
+                    if decode_chars {
+                        println!("    - {}",
+                            decode(&frag.key).expect("error").to_string());
+                    } else {
+                        println!("    - {}", frag.key);
+                    }
                 }
             }
         }
