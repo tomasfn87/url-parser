@@ -3,6 +3,7 @@ use regex::Regex;
 use string_replace_all::string_replace_all;
 use urlencoding::decode;
 use ansi_term::Colour::Cyan;
+use ansi_term::Colour::Yellow;
 
 struct KeyOptionalValue {
     key: String,
@@ -144,30 +145,30 @@ impl Url {
                     if decode_chars {
                         println!("  - {}: {}",
                             decode(&param.key).expect("error").to_string(),
-                            Cyan.paint(decode(&value).expect("error").to_string()));
+                            Yellow.paint(decode(&value).expect("error").to_string()));
                     } else {
-                        println!("  - {}: {}", param.key, Cyan.paint(value));
+                        println!("  - {}: {}", param.key, Yellow.paint(value));
                     }
                 } else {
                     if decode_chars {
                         println!("  - {}",
                             decode(&param.key).expect("error").to_string());
                     } else {
-                        println!("  - {}", Cyan.paint(param.key.clone()));
+                        println!("  - {}", Yellow.paint(param.key.clone()));
                     }
                 }
             }
         }
         if !&self.fragment.data.is_empty() {
-            println!("- Fragment:\n\t{}", &self.fragment.data);
+            println!("- Fragment:\n\t{}", Cyan.paint(&self.fragment.data));
             for frag in &self.fragment.obj {
                 if let Some(ref value) = frag.optional_value {
                     if decode_chars {
                         println!("    - {}: {}",
                             decode(&frag.key).expect("error").to_string(),
-                            Cyan.paint(decode(&value).expect("error").to_string()));
+                            Yellow.paint(decode(&value).expect("error").to_string()));
                     } else {
-                        println!("    - {}: {}", frag.key, Cyan.paint(value));
+                        println!("  - {}: {}", frag.key, Yellow.paint(value));
                     }
                 } else {
                     if decode_chars {
