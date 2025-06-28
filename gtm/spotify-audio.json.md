@@ -55,7 +55,7 @@
      - `https://open.spotify.com` **/** `album` **/** `7Ff0Q5oeEoVKHtxJJoXyId`.
 
 ```javascript
-(function getSpotifyUrlfromUri(uri) {
+(function getSpotifyUrlFromUri(uri) {
     var reSpotifyUri = /spotify:([^:]+):([^:]+)/i;
     var result = { spotify_uri: uri, spotify_url: '' };
     if (reSpotifyUri.test(uri)) {
