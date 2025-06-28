@@ -104,7 +104,7 @@ const main = () => {
     }
     color.log(title, "Full URL");
     process.stdout.write(":\n- ");
-    color.log(content, `${decode?decodeURIComponent(r.getFullUrl()):r.getFullUrl()}\n`);
+    color.log(content, `${r.getFullUrl()}\n`);
 }
 
 const loadConfigFile = (file) => {
