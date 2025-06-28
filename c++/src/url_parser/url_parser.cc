@@ -133,17 +133,11 @@ const std::string Url::color_chars(
     return ss.str();
 }
 
-const void Url::print_colored_url(bool decode) {
+const void Url::print_colored_url() {
     std::string d = parsed_url.origin;
     std::string p = parsed_url.path;
     std::string q = parsed_url.parameter.base_string;
     std::string f = parsed_url.fragment.base_string;
-    if (decode) {
-        d = decode_uri_component(d);
-        p = decode_uri_component(p);
-        q = decode_uri_component(q);
-        f = decode_uri_component(f);
-    }
     std::cout
         << color_chars(origin_chars, d, "", color_1_1, "")
         << color_chars(path_chars, p, "", color_2_1, "")

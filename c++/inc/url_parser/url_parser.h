@@ -30,7 +30,7 @@ public:
     Url(std::string url);
     void set_url(std::string new_url);
     bool is_valid();
-    const void print_colored_url(bool decode);
+    const void print_colored_url();
     const void print_parsed_url(bool decode);
 private:
     std::string url;
