@@ -2,8 +2,7 @@ use lazy_static::lazy_static;
 use regex::Regex;
 use string_replace_all::string_replace_all;
 use urlencoding::decode;
-use ansi_term::Colour::Cyan;
-use ansi_term::Colour::Yellow;
+use ansi_term::Colour::{Cyan, Blue, Yellow};
 
 struct KeyOptionalValue {
     key: String,
@@ -136,14 +135,18 @@ impl Url {
     }
 
     pub fn print_url(&self, decode_chars: bool) {
-        print!("- Origin:\n\t");
+        print!("{}{}{}",
+                Blue.paint("-"), " Origin",
+                Blue.paint(":\n\t"));
         if decode_chars {
             println!("{}", Cyan.paint(decode(&self.origin)
                 .expect("error").to_string()));
         } else {
             println!("{}", Cyan.paint(&self.origin));
         }
-        print!("- Path:\n\t");
+        print!("{}{}{}",
+                Blue.paint("-"), " Path",
+                Blue.paint(":\n\t"));
         if decode_chars {
             println!("{}", Cyan.paint(decode(&self.path)
                 .expect("error").to_string()));
@@ -151,7 +154,9 @@ impl Url {
             println!("{}", Cyan.paint(&self.path));
         }
         if !&self.parameters.data.is_empty() {
-            print!("- Parameters:\n\t");
+            print!("{}{}{}",
+                Blue.paint("-"), " Parameters",
+                Blue.paint(":\n\t"));
             print!("{}", Yellow.paint("?"));
             if decode_chars {
                 println!("{}", Cyan.paint(decode(&self.parameters.data)
@@ -162,24 +167,34 @@ impl Url {
             for param in &self.parameters.obj {
                 if let Some(ref value) = param.optional_value {
                     if decode_chars {
-                        println!("  - {}: {}",
+                        print!("  {} {}{}",
+                            Blue.paint("-"),
                             decode(&param.key).expect("error").to_string(),
+                            Blue.paint(":"));
+                        println!(" {}",
                             Yellow.paint(decode(&value).expect("error").to_string()));
                     } else {
-                        println!("  - {}: {}", param.key, Yellow.paint(value));
+                        print!("  {} {}{}",
+                            Blue.paint("-"), param.key,
+                            Blue.paint(":"));
+                        println!(" {}", Yellow.paint(value));
                     }
                 } else {
                     if decode_chars {
-                        println!("  - {}",
+                        println!("  {} {}",
+                            Blue.paint("-"),
                             decode(&param.key).expect("error").to_string());
                     } else {
-                        println!("  - {}", Yellow.paint(param.key.clone()));
+                        println!("  {} {}",
+                            Blue.paint("-"), param.key);
                     }
                 }
             }
         }
         if !&self.fragment.data.is_empty() {
-            print!("- Fragment:\n\t");
+            print!("{}{}{}",
+                Blue.paint("-"), " Fragment",
+                Blue.paint(":\n\t"));
             print!("{}", Yellow.paint("#"));
             if decode_chars {
                 println!("{}", Cyan.paint(decode(&self.fragment.data)
@@ -190,18 +205,26 @@ impl Url {
             for frag in &self.fragment.obj {
                 if let Some(ref value) = frag.optional_value {
                     if decode_chars {
-                        println!("  - {}: {}",
+                        print!("  {} {}{}",
+                            Blue.paint("-"),
                             decode(&frag.key).expect("error").to_string(),
+                            Blue.paint(":"));
+                        println!(" {}",
                             Yellow.paint(decode(&value).expect("error").to_string()));
                     } else {
-                        println!("  - {}: {}", frag.key, Yellow.paint(value));
+                        print!("  {} {}{}",
+                            Blue.paint("-"), frag.key,
+                            Blue.paint(":"));
+                        println!(" {}", Yellow.paint(value));
                     }
                 } else {
                     if decode_chars {
-                        println!("  - {}",
+                        println!("  {} {}",
+                            Blue.paint("-"),
                             decode(&frag.key).expect("error").to_string());
                     } else {
-                        println!("  - {}", frag.key);
+                        println!("  {} {}",
+                            Blue.paint("-"), frag.key);
                     }
                 }
             }
