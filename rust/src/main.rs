@@ -1,6 +1,6 @@
 mod url_parser;
 
-use ansi_term::Colour::{Cyan, Blue};
+use ansi_term::Colour::{Cyan, White};
 use std::env;
 
 fn main() {
@@ -14,7 +14,7 @@ fn main() {
         .expect("Error parsing URL");
     parsed_url.print_url(args.len() > 2 && &args[2] == "--decode");
     print!("{}{}{}",
-                Blue.paint("-"), " Full URL",
-                Blue.paint(":\n\t"));
+        White.dimmed().paint("-"), " Full URL",
+        White.dimmed().paint(":\n\t"));
     println!("{}", Cyan.paint(parsed_url.full_url()));
 }
