@@ -145,7 +145,7 @@ impl Url {
             &parameters_data, "&=#?", "=", "&")?;
         let fragment_data = KeyOptionalValueData::parse_key_optional_value(
             &fragment_data, "&=?", "=", "&")?;
-        
+
         Ok(Url {
             origin: parsed_origin,
             path: parsed_path,
@@ -275,7 +275,7 @@ impl Url {
     pub fn print_full_url(&self) {
         print!("Full URL{}", White.dimmed().paint(":\n    "));
         print_colored_text(
-            self.full_url(), ":/?&", ".=", Cyan, Yellow, Purple);
+            self.full_url(), ":/?&#", ".=", Cyan, Yellow, Purple);
         println!();
     }
 }
