@@ -30,15 +30,32 @@ fn print_colored_text(
     chars_to_color_2: &str,
     default_color: Colour,
     color_1: Colour,
-    color_2: Colour
+    color_2: Colour,
 ) {
-    for c in input_text.chars() {
-        if chars_to_color_1.contains(c) {
-            print!("{}", color_1.paint(c.to_string()));
+    let mut current_text = String::new();
+    let mut current_color: Option<Colour> = None;
+    if input_text.is_empty() {
+        print!("");
+        return;
+    }
+    for (i, c) in input_text.chars().enumerate() {
+        let desired_color = if chars_to_color_1.contains(c) {
+            color_1
         } else if chars_to_color_2.contains(c) {
-            print!("{}", color_2.paint(c.to_string()));
+            color_2
         } else {
-            print!("{}", default_color.paint(c.to_string()));
+            default_color
+        };
+        if current_color.is_none() || current_color.unwrap() != desired_color {
+            if !current_text.is_empty() {
+                print!("{}", current_color.unwrap().paint(&current_text));
+                current_text.clear();
+            }
+            current_color = Some(desired_color);
+        }
+        current_text.push(c);
+        if i == input_text.len() - 1 && !current_text.is_empty() {
+            print!("{}", current_color.unwrap().paint(&current_text));
         }
     }
 }
