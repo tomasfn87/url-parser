@@ -38,7 +38,7 @@ fn print_colored_text(
         print!("");
         return;
     }
-    for (i, c) in input_text.chars().enumerate() {
+    for c in input_text.chars() {
         let desired_color = if chars_to_color_1.contains(c) {
             color_1
         } else if chars_to_color_2.contains(c) {
@@ -54,10 +54,8 @@ fn print_colored_text(
             current_color = Some(desired_color);
         }
         current_text.push(c);
-        if i == input_text.len() - 1 && !current_text.is_empty() {
-            print!("{}", current_color.unwrap().paint(&current_text));
-        }
     }
+    print!("{}", current_color.unwrap().paint(&current_text));
 }
 
 impl KeyOptionalValueData {
