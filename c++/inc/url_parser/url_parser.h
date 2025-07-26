@@ -12,7 +12,6 @@ struct KeyOptionalValue {
 
 struct KeyOptionalValueData {
     std::string base_string;
-    std::vector<std::string> list;
     std::vector<KeyOptionalValue> map;
 };
 
@@ -29,11 +28,10 @@ public:
     ~Url();
     Url(std::string url);
     void set_url(std::string new_url);
-    bool is_valid();
+    bool is_valid(std::string);
     const void print_colored_url();
     const void print_parsed_url(bool decode);
 private:
-    std::string url;
     ParsedUrl parsed_url;
     const std::regex url_parts = std::regex(
         R"(^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?(?:[^?#]+?)?)?(#(?:[^#]+?)?)?$)",
@@ -42,7 +40,8 @@ private:
     void parse_key_optional_value_list(
         KeyOptionalValueData& target, std::string forbidden_chars,
         std::string delimiter);
-    void parse_url();
+    ParsedUrl parse_url(std::string url);
+    std::string full_url();
     void update_url();
     const std::string color_reset = "\x1b[0m";
     const std::string color_dim = "\x1b[2m";
