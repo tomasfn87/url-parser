@@ -35,11 +35,11 @@ int main(int argc, char* argv[]) {
             return 1;
         }
         unique_ptr<Url> url(new Url());
-        url->set_url(input);
-        if (!url->is_valid()) {
+        if (!url->is_valid(input)) {
             cout << "Invalid URL.\n";
             return 1;
         }
+        url->set_url(input);
         url->print_colored_url();
         url->print_parsed_url(option == "--decode");
     }
