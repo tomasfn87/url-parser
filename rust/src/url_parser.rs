@@ -12,8 +12,6 @@ struct KeyOptionalValue {
 
 struct KeyOptionalValueData {
     data: String,
-    #[allow(dead_code)]
-    list: Vec<String>,
     obj: Vec<KeyOptionalValue>,
 }
 
@@ -68,7 +66,6 @@ impl KeyOptionalValueData {
         if kov_data.is_empty() {
             return Ok(KeyOptionalValueData {
                 data: kov_data.to_string(),
-                list: Vec::new(),
                 obj: Vec::new(),
             });
         }
@@ -94,7 +91,6 @@ impl KeyOptionalValueData {
         let key_value_regex = Regex::new(&key_value_regex_str)
             .map_err(|e| format!("Invalid regex for key-value parsing: {}", e))?;
 
-        let mut list_data = Vec::new();
         let mut obj_data = Vec::new();
 
         for segment_str in kov_data.split(pair_delimiter) {
@@ -103,7 +99,6 @@ impl KeyOptionalValueData {
             }
             if let Some(list_captures) = list_regex.captures(segment_str) {
                 if let Some(matched_segment) = list_captures.get(1) {
-                    list_data.push(matched_segment.as_str().to_string());
                     if let Some(kv_captures) = key_value_regex.captures(matched_segment.as_str()) {
                         let key = kv_captures.get(1).map_or("", |m| m.as_str()).to_string();
                         let optional_value = kv_captures.get(2).map(|m| m.as_str().to_string());
@@ -119,7 +114,6 @@ impl KeyOptionalValueData {
 
         Ok(KeyOptionalValueData {
             data: kov_data.to_string(),
-            list: list_data,
             obj: obj_data,
         })
     }
