@@ -2,7 +2,7 @@
 
 - Algorithm to isolate the main parts and the key-value sets of a URL.
 
-## C++
+## C++ / Rust
 
 - Colorizes the URL parts and highlights characters; CLI app.
 
