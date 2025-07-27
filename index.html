@@ -28,10 +28,8 @@
                     const groups = re.exec(captureGroup);
                     if (groups) {
                         if (groups[2]) {
-                            keyOptionalValue.list.push(`${groups[1]}=${groups[2]||''}`);
                             keyOptionalValue.obj[groups[1]] = groups[2];
                         } else {
-                            keyOptionalValue.list.push(groups[1]);
                             keyOptionalValue.obj[groups[1]] = '';
                         }
                         captureGroup = captureGroup.substring(groups[0].length+1);
@@ -47,23 +45,26 @@
             }
             const origin = match[1] || '';
             const path = match[2] || '/';
-            const queryString = match[3] || '';
-            const hashString = match[4] || '';
-            let parameters = { str: queryString, list: [], obj: {} }
-            let fragment = { str: hashString, list: [], obj: {} }
-            queryString.length > 1 && parseKeyOptionalValue(queryString, parameters, regexp.Query);
-            hashString.length > 1 && parseKeyOptionalValue(hashString, fragment, regexp.Fragment);
-            return {
+            let parsedUrl = { 
                 parts: {
                     origin: origin,
-                    path: path,
-                    parameters: parameters,
-                    fragment: fragment
-                },
-                fullUrl: function () {
-                    return origin + path + queryString + hashString;
+                    path: path
                 }
-            };
+            }
+            const queryString = match[3] || '';
+            if (queryString.length) {
+                let parameters = { str: queryString, obj: {} };
+                parseKeyOptionalValue(queryString, parameters, regexp.Query);
+                parsedUrl.parts.parameters = parameters;
+            }
+            const hashString = match[4] || '';
+            if (hashString.length) {
+                let fragment = { str: hashString, obj: {} };
+                parseKeyOptionalValue(hashString, fragment, regexp.Fragment);
+                parsedUrl.parts.fragment = fragment;
+            }
+            parsedUrl.fullUrl = () => origin + path + queryString + hashString;
+            return parsedUrl;
         };
 
         const parsed_self_url = parseUrl(window.document.URL);
@@ -247,7 +248,7 @@
                 addTableRow("Path", path, isOdd);
                 isOdd = !isOdd;
     
-                if (r.parts.parameters.list.length > 0) {
+                if (r.parts.parameters) {
                     addTableRow("Parameters", decode?decodeURIComponent(r.parts.parameters.str):r.parts.parameters.str, isOdd);
                     isOdd = !isOdd;
                     let paramsSubTable = '<table class="sub-table">';
@@ -274,7 +275,7 @@
                     isOdd = !isOdd;
                 }
     
-                if (r.parts.fragment.list.length > 0) {
+                if (r.parts.fragment) {
                     addTableRow("Fragment", decode?decodeURIComponent(r.parts.fragment.str):r.parts.fragment.str, isOdd);
                     isOdd = !isOdd;
                     let fragmentSubTable = '<table class="sub-table">';

@@ -1,8 +1,8 @@
 # url-parser
 
-Receives an URL and breaks it into `domain`, `path`, `parameters` and `fragment`.
+Receives an URL and breaks it into `origin`, `path`, `parameters` and `fragment`.
 
-Parameters and fragment are broken into `lists`  and `objects`.
+Parameters and fragment are broken into `objects`.
 
 ---
 

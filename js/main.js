@@ -21,26 +21,26 @@ const main = () => {
     }
     if (process.argv.slice(1).includes("--native")) {
         if (decode) {
+            r.parsedUrl.parts.origin =
+                decodeURIComponent(r.parsedUrl.parts.origin);
             r.parsedUrl.parts.path =
                 decodeURIComponent(r.parsedUrl.parts.path);
-            r.parsedUrl.parts.parameters.str =
-                decodeURIComponent(r.parsedUrl.parts.parameters.str);
-            r.parsedUrl.parts.parameters.list.forEach((e, i) => {
-                r.parsedUrl.parts.parameters.list[i] = decodeURIComponent(e);
-            });
-            Object.keys(r.parsedUrl.parts.parameters.obj).forEach(e => {
-                r.parsedUrl.parts.parameters.obj[e] =
-                    decodeURIComponent(r.parsedUrl.parts.parameters.obj[e]);
-            })
-            r.parsedUrl.parts.fragment.str =
-                decodeURIComponent(r.parsedUrl.parts.fragment.str);
-            r.parsedUrl.parts.fragment.list.forEach((e, i) => {
-                r.parsedUrl.parts.fragment.list[i] = decodeURIComponent(e);
-            });
-            Object.keys(r.parsedUrl.parts.fragment.obj).forEach(e => {
-                r.parsedUrl.parts.fragment.obj[e] =
-                    decodeURIComponent(r.parsedUrl.parts.fragment.obj[e]);
-            })
+            if (r.parsedUrl.parts.parameters?.str) {    
+                r.parsedUrl.parts.parameters.str =
+                    decodeURIComponent(r.parsedUrl.parts.parameters.str);
+                Object.keys(r.parsedUrl.parts.parameters.obj).forEach(e => {
+                    r.parsedUrl.parts.parameters.obj[e] =
+                        decodeURIComponent(r.parsedUrl.parts.parameters.obj[e]);
+                })
+            }
+            if (r.parsedUrl.parts.fragment?.str) {
+                r.parsedUrl.parts.fragment.str =
+                    decodeURIComponent(r.parsedUrl.parts.fragment.str);
+                Object.keys(r.parsedUrl.parts.fragment.obj).forEach(e => {
+                    r.parsedUrl.parts.fragment.obj[e] =
+                        decodeURIComponent(r.parsedUrl.parts.fragment.obj[e]);
+                })
+            }
         }
         console.log(r.parsedUrl.parts);
         return;
@@ -49,30 +49,30 @@ const main = () => {
     color.log(title, "Origin");
     process.stdout.write(":\n- ");
     color.log(content, `${r.getOrigin()}\n`);
-    if (r.parsedUrl.parts.path) {
-        color.log(title, "Path");
-        process.stdout.write(":\n- ");
-        color.log(content,
-            `${decode?decodeURIComponent(r.getPath()):r.getPath()}\n`);
-    }
+    color.log(title, "Path");
+    process.stdout.write(":\n- ");
+    color.log(content,
+        `${decode?decodeURIComponent(r.getPath()):r.getPath()}\n`);
     let maxLength = 0;
-    if (Object.keys(r.parsedUrl.parts.parameters.obj).length) {
-        Object.entries(r.parsedUrl.parts.parameters.obj).forEach(e => {
-            if (e[1] && e[0].length > maxLength)
-                maxLength = e[0].length;
-        });
+    if (r.parsedUrl.parts.parameters?.str) {
+        if (Object.keys(r.parsedUrl.parts.parameters.obj).length) {
+            Object.entries(r.parsedUrl.parts.parameters.obj).forEach(e => {
+                if (e[1] && e[0].length > maxLength)
+                    maxLength = e[0].length;
+            });
+        }
     }
-    if (Object.keys(r.parsedUrl.parts.fragment.obj).length) {
-        Object.entries(r.parsedUrl.parts.fragment.obj).forEach(e => {
-            if (e[1] && e[0].length > maxLength)
-                maxLength = e[0].length;
-        });
+    if (r.parsedUrl.parts.fragment?.str) {
+        if (Object.keys(r.parsedUrl.parts.fragment.obj).length) {
+            Object.entries(r.parsedUrl.parts.fragment.obj).forEach(e => {
+                if (e[1] && e[0].length > maxLength)
+                    maxLength = e[0].length;
+            });
+        }
     }
-    if (r.parsedUrl.parts.parameters.str) {
+    if (r.parsedUrl.parts.parameters?.str) {
         color.log(title, "Parameters");
         process.stdout.write(":\n");
-    }
-    if (Object.keys(r.parsedUrl.parts.parameters.obj).length) {
         Object.entries(r.parsedUrl.parts.parameters.obj).forEach(e => {
             process.stdout.write("- ");
             if (e[1]) {
@@ -85,22 +85,22 @@ const main = () => {
             console.log();
         });
     }
-    if (r.parsedUrl.parts.fragment.str) {
+    if (r.parsedUrl.parts.fragment?.str) {
         color.log(title, "Fragment");
         process.stdout.write(":\n");
-    }
-    if (Object.keys(r.parsedUrl.parts.fragment.obj).length) {
-        Object.entries(r.parsedUrl.parts.fragment.obj).forEach(e => {
-            process.stdout.write("- ");
-            if (e[1]) {
-                color.log(subtitle, `${e[0].padStart(maxLength)}`)
-                process.stdout.write(":");
-                color.log(content, ` ${decode?decodeURIComponent(e[1]):e[1]}`);
-            }
-            else
-                color.log(content, `${e[0]}`);
-            console.log();
-        });
+        if (Object.keys(r.parsedUrl.parts.fragment.obj).length) {
+            Object.entries(r.parsedUrl.parts.fragment.obj).forEach(e => {
+                process.stdout.write("- ");
+                if (e[1]) {
+                    color.log(subtitle, `${e[0].padStart(maxLength)}`)
+                    process.stdout.write(":");
+                    color.log(content, ` ${decode?decodeURIComponent(e[1]):e[1]}`);
+                }
+                else
+                    color.log(content, `${e[0]}`);
+                console.log();
+            });
+        }
     }
     color.log(title, "Full URL");
     process.stdout.write(":\n- ");
