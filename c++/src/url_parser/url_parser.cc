@@ -15,13 +15,13 @@ void Url::remove_all_chars(std::string& target, char remove) {
     target.erase(it, target.end());
 }
 
-void Url::parse_key_optional_value_list(
-    KeyOptionalValueData& target, std::string forbidden_chars,
-    std::string delimiter) {
+std::vector<KeyOptionalValue> Url::parse_key_optional_value_str(
+    std::string target, std::string forbidden_chars, std::string delimiter) {
     std::smatch matchs;
-    std::string::const_iterator search_start = target.base_string.cbegin();
+    std::string::const_iterator search_start = target.cbegin();
+    std::vector<KeyOptionalValue> kov_arr;
     while (std::regex_search(
-        search_start, target.base_string.cend(), matchs,
+        search_start, target.cend(), matchs,
         std::regex(R"(([^)" + forbidden_chars + delimiter + R"(]+(?:)"
             + delimiter + R"([^)" + forbidden_chars + delimiter
             + R"(]+)?))"))) {
@@ -38,11 +38,12 @@ void Url::parse_key_optional_value_list(
                 if (key_value_matchs.size() > 2) {
                     kov.value = key_value_matchs[2].str();
                 }
-                target.map.push_back(kov);
+                kov_arr.push_back(kov);
             }
         }
         search_start = matchs.suffix().first;
     }
+    return kov_arr;
 }
 
 bool Url::is_valid(std::string url) {
@@ -52,39 +53,55 @@ bool Url::is_valid(std::string url) {
 ParsedUrl Url::parse_url(std::string url) {
     std::smatch parts;
     ParsedUrl purl;
+    std::string parameter;
+    std::string fragment;
     if (std::regex_match(url, parts, url_parts)) {
         purl.origin = parts[1].str();
         if (parts[2].str().size())
             purl.path = parts[2].str();
         else
             purl.path = "/";
-        purl.parameter.base_string = parts[3].str();
-        purl.fragment.base_string = parts[4].str();
+        parameter = parts[3].str();
+        fragment = parts[4].str();
     }
-    parse_key_optional_value_list(purl.parameter, R"(?#&)", R"(=)");
-    parse_key_optional_value_list(purl.fragment, R"(#&)", R"(=)");
+    if (parameter.length())
+        purl.parameter =
+            parse_key_optional_value_str(parameter, R"(?#&)", R"(=)");
+    if (fragment.length())
+        purl.fragment =
+            parse_key_optional_value_str(fragment, R"(#&)", R"(=)");
     return purl;
+}
+
+std::string Url::stringify_key_optional_value_vec(
+    std::vector<KeyOptionalValue> kov_arr, char initial_char) {
+    if (kov_arr.size() < 1)
+        return "";
+    std::stringstream ss;
+    ss << initial_char;
+    for (size_t i = 0; i < kov_arr.size(); ++i) {
+        if (kov_arr[i].value.length() == 0) {
+            ss << kov_arr[i].key;
+        } else {
+            ss << kov_arr[i].key << "=" << kov_arr[i].value;
+        }
+        if (i < kov_arr.size()-1)
+            ss << "&";
+    }
+    return ss.str();
 }
 
 std::string Url::full_url() {
     std::stringstream ss;
     ss << parsed_url.origin << parsed_url.path
-        << parsed_url.parameter.base_string
-        << parsed_url.fragment.base_string;
+        << stringify_key_optional_value_vec(parsed_url.parameter, '?')
+        << stringify_key_optional_value_vec(parsed_url.fragment, '#');
     return ss.str();
 }
 
-void Url::update_url() {
-    remove_all_chars(parsed_url.origin, '\\');
-    remove_all_chars(parsed_url.path, '\\');
-    remove_all_chars(parsed_url.parameter.base_string, '\\');
-    remove_all_chars(parsed_url.fragment.base_string, '\\');
-    parsed_url = parse_url(this->full_url());
-}
-
 void Url::set_url(std::string new_url) {
+    remove_all_chars(new_url, '\\');
     parsed_url = parse_url(new_url);
-    update_url();
 }
 
 Url::Url(std::string url) {
@@ -148,8 +165,10 @@ const std::string Url::color_chars(
 const void Url::print_colored_url() {
     std::string o = parsed_url.origin;
     std::string p = parsed_url.path;
-    std::string q = parsed_url.parameter.base_string;
-    std::string f = parsed_url.fragment.base_string;
+    std::string q =
+        stringify_key_optional_value_vec(parsed_url.parameter, '?');
+    std::string f =
+        stringify_key_optional_value_vec(parsed_url.fragment, '#');
     std::cout
         << color_chars(origin_chars, o, "", color_1_1, "")
         << color_chars(path_chars, p, "", color_2_1, "")
@@ -215,8 +234,10 @@ const void Url::print_key_optional_value_list(
 const void Url::print_parsed_url(bool decode) {
     std::string o = parsed_url.origin;
     std::string p = parsed_url.path;
-    std::string q = parsed_url.parameter.base_string;
-    std::string f = parsed_url.fragment.base_string;
+    std::string q =
+        stringify_key_optional_value_vec(parsed_url.parameter, '?');
+    std::string f =
+        stringify_key_optional_value_vec(parsed_url.fragment, '#');
     if (decode) {
         o = decode_uri_component(o);
         p = decode_uri_component(p);
@@ -229,20 +250,20 @@ const void Url::print_parsed_url(bool decode) {
         << color_str("→", color_dim) << " " << color_str("Path", color_2)
         << color_str(":", color_dim) << "      "
         << color_chars(path_chars, p, color_2_1, "", "") << "\n";
-    if (parsed_url.parameter.base_string.size()) {
+    if (parsed_url.parameter.size()) {
         std::cout << color_str("→", color_dim) << " "
             << color_str("Parameter", color_3) << color_str(":", color_dim)
             << " " << color_chars(key_optional_value_chars, q, 
                 color_3_1, "", color_3) << "\n";
         print_key_optional_value_list(
-            parsed_url.parameter.map, decode, color_3_1, color_3);
+            parsed_url.parameter, decode, color_3_1, color_3);
     }
-    if (parsed_url.fragment.base_string.size()) {
+    if (parsed_url.fragment.size()) {
         std::cout << color_str("→", color_dim) << " "
             << color_str("Fragment", color_4) << color_str(":", color_dim)
             << "  " << color_chars(key_optional_value_chars, f,
                 color_4_1, "", color_4) << "\n";
         print_key_optional_value_list(
-            parsed_url.fragment.map, decode, color_4_1, color_4);
+            parsed_url.fragment, decode, color_4_1, color_4);
     }
 }
