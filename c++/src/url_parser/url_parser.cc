@@ -20,19 +20,19 @@ std::vector<KeyOptionalValue> Url::parse_key_optional_value_str(
     std::smatch matchs;
     std::string::const_iterator search_start = target.cbegin();
     std::vector<KeyOptionalValue> kov_arr;
+    std::regex re_kov_pairs = std::regex(R"(([^)" + forbidden_chars
+        + delimiter + R"(]+(?:)" + delimiter + R"([^)" + forbidden_chars
+        + delimiter + R"(]+)?))");
+    std::regex re_kov = std::regex(R"(([^)" + forbidden_chars + delimiter
+        + R"(]+)(?:)" + delimiter + R"(([^)" + forbidden_chars + delimiter
+        + R"(]+))?)");
     while (std::regex_search(
-        search_start, target.cend(), matchs,
-        std::regex(R"(([^)" + forbidden_chars + delimiter + R"(]+(?:)"
-            + delimiter + R"([^)" + forbidden_chars + delimiter
-            + R"(]+)?))"))) {
+        search_start, target.cend(), matchs, re_kov_pairs)) {
         if (matchs.size() && matchs[1].str().size()) {
             std::smatch key_value_matchs;
             std::string key_value = matchs[1].str();
             if (std::regex_search(
-                key_value.cbegin(), key_value.cend(), key_value_matchs,
-                std::regex(R"(([^)" + forbidden_chars + delimiter
-                    + R"(]+)(?:)" + delimiter + R"(([^)"
-                    + forbidden_chars + delimiter + R"(]+))?)"))) {
+                key_value.cbegin(), key_value.cend(), key_value_matchs, re_kov)) {
                 KeyOptionalValue kov;
                 kov.key = key_value_matchs[1].str();
                 if (key_value_matchs.size() > 2) {
@@ -75,12 +75,12 @@ ParsedUrl Url::parse_url(std::string url) {
 
 std::string Url::stringify_key_optional_value_vec(
     std::vector<KeyOptionalValue> kov_arr, char initial_char) {
-    if (kov_arr.size() < 1)
+    if (!kov_arr.size())
         return "";
     std::stringstream ss;
     ss << initial_char;
     for (size_t i = 0; i < kov_arr.size(); ++i) {
-        if (kov_arr[i].value.length() == 0) {
+        if (!kov_arr[i].value.length()) {
             ss << kov_arr[i].key;
         } else {
             ss << kov_arr[i].key << "=" << kov_arr[i].value;
@@ -105,7 +105,7 @@ void Url::set_url(std::string new_url) {
 }
 
 Url::Url(std::string url) {
-    this->set_url(url);
+    set_url(url);
 }
 
 const std::string Url::color_str(std::string str, std::string color) {
