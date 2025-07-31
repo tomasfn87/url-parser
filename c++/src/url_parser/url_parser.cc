@@ -46,8 +46,8 @@ std::vector<KeyOptionalValue> Url::parse_key_optional_value_str(
     return kov_arr;
 }
 
-bool Url::is_valid(std::string url) {
-    return std::regex_match(url, url_parts);
+bool Url::is_valid(std::string maybe_a_url) {
+    return std::regex_match(maybe_a_url, url_parts);
 }
 
 ParsedUrl Url::parse_url(std::string url) {

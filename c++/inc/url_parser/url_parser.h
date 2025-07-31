@@ -23,7 +23,7 @@ public:
     ~Url();
     Url(std::string url);
     void set_url(std::string new_url);
-    bool is_valid(std::string);
+    bool is_valid(std::string maybe_a_url);
     void print_colored_url();
     void print_parsed_url(bool decode);
 private:
