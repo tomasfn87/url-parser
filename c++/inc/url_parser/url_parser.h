@@ -24,8 +24,8 @@ public:
     Url(std::string url);
     void set_url(std::string new_url);
     bool is_valid(std::string);
-    const void print_colored_url();
-    const void print_parsed_url(bool decode);
+    void print_colored_url();
+    void print_parsed_url(bool decode);
 private:
     ParsedUrl parsed_url;
     const std::regex url_parts = std::regex(
@@ -55,13 +55,13 @@ private:
     const std::vector<char> key_value_delimiters = {'='};
     const std::vector<char> key_optional_value_chars =
         {'?', '#', '&', '/', ':', '.'};
-    const bool is_char_in_list(std::vector<char> list, char target);
+    bool is_char_in_list(std::vector<char> list, char target);
     const std::string color_chars(
         std::vector<char>, std::string target,
         std::string color_main, std::string color_aux,
         std::string color_delimiter);
     const std::string decode_uri_component(std::string uri);
-    const void print_key_optional_value_list(
+    void print_key_optional_value_list(
         std::vector<KeyOptionalValue> list, bool decode,
         std::string color_main, std::string color_aux);
 };

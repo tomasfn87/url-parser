@@ -116,7 +116,7 @@ const std::string Url::color_str(std::string str, std::string color) {
     return ss.str();
 }
 
-const bool Url::is_char_in_list(std::vector<char> list, char target) {
+bool Url::is_char_in_list(std::vector<char> list, char target) {
     for (size_t i = 0; i < list.size(); ++i)
         if (list[i] == target)
             return true;
@@ -138,7 +138,7 @@ const std::string Url::color_chars(
                     color_block = "";
                 }
                 previous_color = color_delimiter;
-            }   
+            }
         } else if (is_char_in_list(chars, target[i])) {
             if (previous_color != color_main) {
                 if (color_block.size()) {
@@ -162,7 +162,7 @@ const std::string Url::color_chars(
     return ss.str();
 }
 
-const void Url::print_colored_url() {
+void Url::print_colored_url() {
     std::string o = parsed_url.origin;
     std::string p = parsed_url.path;
     std::string q =
@@ -200,7 +200,7 @@ const std::string Url::decode_uri_component(std::string uri) {
     return decoded;
 }
 
-const void Url::print_key_optional_value_list(
+void Url::print_key_optional_value_list(
     std::vector<KeyOptionalValue> list, bool decode,
     std::string color_main, std::string color_aux) {
     for (size_t i = 0; i < list.size(); ++i) {
@@ -217,7 +217,7 @@ const void Url::print_key_optional_value_list(
         if (list[i].value.size()) {
             std::cout << color_str(":", color_dim) << " ";
             if (decode)
-                std::cout << color_chars(key_optional_value_chars, 
+                std::cout << color_chars(key_optional_value_chars,
                     decode_uri_component(list[i].value),
                         color_aux, color_main, color_dim);
             else
@@ -231,7 +231,7 @@ const void Url::print_key_optional_value_list(
     }
 }
 
-const void Url::print_parsed_url(bool decode) {
+void Url::print_parsed_url(bool decode) {
     std::string o = parsed_url.origin;
     std::string p = parsed_url.path;
     std::string q =
@@ -253,7 +253,7 @@ const void Url::print_parsed_url(bool decode) {
     if (parsed_url.parameter.size()) {
         std::cout << color_str("→", color_dim) << " "
             << color_str("Parameter", color_3) << color_str(":", color_dim)
-            << " " << color_chars(key_optional_value_chars, q, 
+            << " " << color_chars(key_optional_value_chars, q,
                 color_3_1, "", color_3) << "\n";
         print_key_optional_value_list(
             parsed_url.parameter, decode, color_3_1, color_3);
