@@ -25,21 +25,21 @@ const main = () => {
                 decodeURIComponent(r.parsedUrl.parts.origin);
             r.parsedUrl.parts.path =
                 decodeURIComponent(r.parsedUrl.parts.path);
-            if (r.parsedUrl.parts.parameters?.str) {    
-                r.parsedUrl.parts.parameters.str =
-                    decodeURIComponent(r.parsedUrl.parts.parameters.str);
-                Object.keys(r.parsedUrl.parts.parameters.obj).forEach(e => {
-                    r.parsedUrl.parts.parameters.obj[e] =
-                        decodeURIComponent(r.parsedUrl.parts.parameters.obj[e]);
+            if (Object.hasOwn(r.parsedUrl.parts, 'parameters')) {
+                let newParameters = {};
+                Object.entries(r.parsedUrl.parts.parameters).forEach(([k, v]) => {
+                    newParameters[decodeURIComponent(k)] = 
+                        decodeURIComponent(v);
                 })
+                r.parsedUrl.parts.parameters = newParameters;
             }
-            if (r.parsedUrl.parts.fragment?.str) {
-                r.parsedUrl.parts.fragment.str =
-                    decodeURIComponent(r.parsedUrl.parts.fragment.str);
-                Object.keys(r.parsedUrl.parts.fragment.obj).forEach(e => {
-                    r.parsedUrl.parts.fragment.obj[e] =
-                        decodeURIComponent(r.parsedUrl.parts.fragment.obj[e]);
+            if (Object.hasOwn(r.parsedUrl.parts, 'fragment')) {
+                let newFragment = {};
+                Object.entries(r.parsedUrl.parts.fragment).forEach(([k, v]) => {
+                    newFragment[decodeURIComponent(k)] = 
+                        decodeURIComponent(v);
                 })
+                r.parsedUrl.parts.fragment = newFragment;
             }
         }
         console.log(r.parsedUrl.parts);
@@ -54,26 +54,26 @@ const main = () => {
     color.log(content,
         `${decode?decodeURIComponent(r.getPath()):r.getPath()}\n`);
     let maxLength = 0;
-    if (r.parsedUrl.parts.parameters?.str) {
-        if (Object.keys(r.parsedUrl.parts.parameters.obj).length) {
-            Object.entries(r.parsedUrl.parts.parameters.obj).forEach(e => {
+    if (Object.hasOwn(r.parsedUrl.parts, 'parameters')) {
+        if (Object.keys(r.parsedUrl.parts.parameters).length) {
+            Object.entries(r.parsedUrl.parts.parameters).forEach(e => {
                 if (e[1] && e[0].length > maxLength)
                     maxLength = e[0].length;
             });
         }
     }
-    if (r.parsedUrl.parts.fragment?.str) {
-        if (Object.keys(r.parsedUrl.parts.fragment.obj).length) {
-            Object.entries(r.parsedUrl.parts.fragment.obj).forEach(e => {
+    if (Object.hasOwn(r.parsedUrl.parts, 'fragment')) {
+        if (Object.keys(r.parsedUrl.parts.fragment).length) {
+            Object.entries(r.parsedUrl.parts.fragment).forEach(e => {
                 if (e[1] && e[0].length > maxLength)
                     maxLength = e[0].length;
             });
         }
     }
-    if (r.parsedUrl.parts.parameters?.str) {
+    if (Object.hasOwn(r.parsedUrl.parts, 'parameters')) {
         color.log(title, "Parameters");
         process.stdout.write(":\n");
-        Object.entries(r.parsedUrl.parts.parameters.obj).forEach(e => {
+        Object.entries(r.parsedUrl.parts.parameters).forEach(e => {
             process.stdout.write("- ");
             if (e[1]) {
                 color.log(subtitle, `${e[0].padStart(maxLength)}`)
@@ -85,11 +85,11 @@ const main = () => {
             console.log();
         });
     }
-    if (r.parsedUrl.parts.fragment?.str) {
+    if (Object.hasOwn(r.parsedUrl.parts, 'fragment')) {
         color.log(title, "Fragment");
         process.stdout.write(":\n");
-        if (Object.keys(r.parsedUrl.parts.fragment.obj).length) {
-            Object.entries(r.parsedUrl.parts.fragment.obj).forEach(e => {
+        if (Object.keys(r.parsedUrl.parts.fragment).length) {
+            Object.entries(r.parsedUrl.parts.fragment).forEach(e => {
                 process.stdout.write("- ");
                 if (e[1]) {
                     color.log(subtitle, `${e[0].padStart(maxLength)}`)

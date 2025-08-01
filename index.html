@@ -22,19 +22,37 @@
             SpotifyUri: /spotify:(album|artist|episode|playlist|show|track):([^ \/?&#=]+)/i
         };
 
-        const parseKeyOptionalValue = (captureGroup, keyOptionalValue, re) => {
+        const parseKeyOptionalValue = (captureGroup, re) => {
+            let obj = {};
             if (captureGroup)
                 while (re.test(captureGroup)) {
                     const groups = re.exec(captureGroup);
                     if (groups) {
                         if (groups[2]) {
-                            keyOptionalValue.obj[groups[1]] = groups[2];
+                            obj[groups[1]] = groups[2];
                         } else {
-                            keyOptionalValue.obj[groups[1]] = '';
+                            obj[groups[1]] = '';
                         }
-                        captureGroup = captureGroup.substring(groups[0].length+1);
+                        captureGroup = captureGroup
+                            .substring(groups[0].length+1);
                     }
                 }
+            return obj;
+        }
+
+        const stringifyKeyOptionalValueObj = (obj) => {
+            if (!Object.keys(obj).length) {
+                return '';
+            }
+            return Object.entries(obj)
+                .map(([key, value]) => {
+                    if (value) {
+                        return `${key}=${value}`;
+                    } else {
+                        return key;
+                    }
+                })
+                .join('&');
         }
 
         const parseUrl = (url) => {
@@ -53,17 +71,22 @@
             }
             const queryString = match[3] || '';
             if (queryString.length) {
-                let parameters = { str: queryString, obj: {} };
-                parseKeyOptionalValue(queryString, parameters, regexp.Query);
-                parsedUrl.parts.parameters = parameters;
+                parsedUrl.parts.parameters =
+                    parseKeyOptionalValue(queryString, regexp.Query);
             }
             const hashString = match[4] || '';
             if (hashString.length) {
-                let fragment = { str: hashString, obj: {} };
-                parseKeyOptionalValue(hashString, fragment, regexp.Fragment);
-                parsedUrl.parts.fragment = fragment;
+                parsedUrl.parts.fragment =
+                    parseKeyOptionalValue(hashString, regexp.Fragment);
             }
-            parsedUrl.fullUrl = () => origin + path + queryString + hashString;
+            parsedUrl.fullUrl = () => {
+                let fullUrl = origin + path;
+                if (Object.hasOwn(parsedUrl.parts, 'parameters')) 
+                    fullUrl += stringifyKeyOptionalValueObj(parsedUrl.parts.parameters);
+                if (Object.hasOwn(parsedUrl.parts, 'fragment')) 
+                    fullUrl += stringifyKeyOptionalValueObj(parsedUrl.parts.fragment);
+                return fullUrl;
+            }
             return parsedUrl;
         };
 
@@ -249,13 +272,15 @@
                 isOdd = !isOdd;
     
                 if (r.parts.parameters) {
-                    addTableRow("Parameters", decode?decodeURIComponent(r.parts.parameters.str):r.parts.parameters.str, isOdd);
+                    addTableRow("Parameters", decode
+                                ? decodeURIComponent(stringifyKeyOptionalValueObj(r.parts.parameters))
+                                : stringifyKeyOptionalValueObj(r.parts.parameters), isOdd);
                     isOdd = !isOdd;
                     let paramsSubTable = '<table class="sub-table">';
                     let index = 0;
                     let maxKeyWidth = 0;
-                    for (const key in r.parts.parameters.obj) {
-                        const value = r.parts.parameters.obj[key] || '';
+                    for (const key in r.parts.parameters) {
+                        const value = r.parts.parameters[key] || '';
                         const decodedKey = decode ? decodeURIComponent(key) : key;
                         const decodedValue = decode ? decodeURIComponent(value) : value;
                         const keyHTML = `<span class="param-key-sub">${decodedKey}</span>`;
@@ -276,13 +301,15 @@
                 }
     
                 if (r.parts.fragment) {
-                    addTableRow("Fragment", decode?decodeURIComponent(r.parts.fragment.str):r.parts.fragment.str, isOdd);
+                    addTableRow("Fragment", decode
+                            ? decodeURIComponent(stringifyKeyOptionalValueObj(r.parts.fragment))
+                            : stringifyKeyOptionalValueObj(r.parts.fragment), isOdd);
                     isOdd = !isOdd;
                     let fragmentSubTable = '<table class="sub-table">';
                     let index = 0;
                     let maxKeyWidth = 0;
-                    for (const key in r.parts.fragment.obj) {
-                        const value = r.parts.fragment.obj[key] || '';
+                    for (const key in r.parts.fragment) {
+                        const value = r.parts.fragment[key] || '';
                         const decodedKey = decode ? decodeURIComponent(key) : key;
                         const decodedValue = decode ? decodeURIComponent(value) : value;
                         const keyHTML = `<span class="param-key-sub">${decodedKey}</span>`;
@@ -350,12 +377,12 @@
                     if (videoId) {
                         youtubeEmbedContainer.innerHTML = '';
                         let videoStart = '';
-                        if (r.parts.parameters.obj.hasOwnProperty('t')
-                            && /\d+/.test(r.parts.parameters.obj.t)) {
-                            videoStart = r.parts.parameters.obj.t;
-                        } else if (r.parts.parameters.obj.hasOwnProperty('start')
-                            && /\d+/.test(r.parts.parameters.obj.start))
-                            videoStart = r.parts.parameters.obj.start;
+                        if (r.parts.parameters.hasOwnProperty('t')
+                            && /\d+/.test(r.parts.parameters.t)) {
+                            videoStart = r.parts.parameters.t;
+                        } else if (r.parts.parameters.hasOwnProperty('start')
+                            && /\d+/.test(r.parts.parameters.start))
+                            videoStart = r.parts.parameters.start;
                         player = new YT.Player('youtube-embed-container', {
                             height: '270',
                             width: '480',
@@ -544,34 +571,34 @@
             // Handle Media Content from URL Parameters
             setTimeout(function() {
                 // YouTube Playlist from URL Parameters
-                if (parsed_self_url.parts && parsed_self_url.parts.parameters.obj.youtubeplaylist) {
+                if (parsed_self_url.parts && parsed_self_url.parts.parameters?.youtubeplaylist) {
                     const youtubeplaylistUrl = 'https://www.youtube.com/?playlist='
-                        + parsed_self_url.parts.parameters.obj.youtubeplaylist;
+                        + parsed_self_url.parts.parameters.youtubeplaylist;
                     document.getElementById('urlInput').value = youtubeplaylistUrl;
                 // YouTube Video from URL Parameters
-                } else if (parsed_self_url.parts && parsed_self_url.parts.parameters.obj.youtubevideo) {
+                } else if (parsed_self_url.parts && parsed_self_url.parts.parameters?.youtubevideo) {
                     const youtubevideoUrl = 'https://www.youtube.com/?v='
-                        + parsed_self_url.parts.parameters.obj.youtubevideo;
+                        + parsed_self_url.parts.parameters.youtubevideo;
                     document.getElementById('urlInput').value = youtubevideoUrl;
                 // YouTube Live from URL Parameters
-                } else if (parsed_self_url.parts && parsed_self_url.parts.parameters.obj.youtubelive) {
+                } else if (parsed_self_url.parts && parsed_self_url.parts.parameters?.youtubelive) {
                     const youtubeliveUrl = 'https://www.youtube.com/live/'
-                        + parsed_self_url.parts.parameters.obj.youtubelive;
+                        + parsed_self_url.parts.parameters.youtubelive;
                     document.getElementById('urlInput').value = youtubeliveUrl;
                 // YouTube User from URL Parameters
-                } else if (parsed_self_url.parts && parsed_self_url.parts.parameters.obj.youtubeuser) {
+                } else if (parsed_self_url.parts && parsed_self_url.parts.parameters?.youtubeuser) {
                     const youtubeuserUrl = 'https://www.youtube.com/@'
-                        + parsed_self_url.parts.parameters.obj.youtubeuser.replace(/^@/g, '');
+                        + parsed_self_url.parts.parameters.youtubeuser.replace(/^@/g, '');
                     document.getElementById('urlInput').value = youtubeuserUrl;
                 // Video Video from URL Parameters
-                } else if (parsed_self_url.parts && parsed_self_url.parts.parameters.obj.vimeovideo) {
+                } else if (parsed_self_url.parts && parsed_self_url.parts.parameters?.vimeovideo) {
                     const vimeovideoUrl = 'https://www.vimeo.com/'
-                        + parsed_self_url.parts.parameters.obj.vimeovideo;
+                        + parsed_self_url.parts.parameters.vimeovideo;
                     document.getElementById('urlInput').value = vimeovideoUrl;
                 // Spotify Content from URL Parameters
-                } else if (parsed_self_url.parts && parsed_self_url.parts.parameters.obj.spotifycontent) {
+                } else if (parsed_self_url.parts && parsed_self_url.parts.parameters?.spotifycontent) {
                     const spotifycontentUrl = 'https://open.spotify.com/'
-                        + parsed_self_url.parts.parameters.obj.spotifycontent.replace(':', '/');
+                        + parsed_self_url.parts.parameters.spotifycontent.replace(':', '/');
                     document.getElementById('urlInput').value = spotifycontentUrl;
                 }
                 validateUrlInput();

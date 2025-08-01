@@ -16,36 +16,36 @@
 
 ### Description
 
-- [Parses](https://github.com/tomasfn87/url-parser/blob/main/index.html#L42) a URL in 4 parts:
+- [Parses](https://github.com/tomasfn87/url-parser/blob/main/index.html#L58) a URL in 4 parts:
   - `Origin`;
   - `Path`;
   - `Parameters`;
   - `Fragment`.
-- **Origin** tries to [obtain](https://github.com/tomasfn87/url-parser/blob/main/index.html#L218) the site's icon (`favicon`) using a Google API;
+- **Origin** tries to [obtain](https://github.com/tomasfn87/url-parser/blob/main/index.html#L242) the site's icon (`favicon`) using a Google API;
 - **Parameters** and **Fragment** are [parsed](https://github.com/tomasfn87/url-parser/blob/main/index.html#L25) into `key` and (optional) `value`;
-- **Decode**: press the [`Decode`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L161) button to solve encoded characters and actually read the URL's content.
+- **Decode**: press the [`Decode`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L185) button to solve encoded characters and actually read the URL's content.
 
 ### Media Players supported
 
 #### [`YouTube`](https://www.youtube.com)
 
-- [`Videos`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L344);
-- [`Playlists`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L311;)
-- [`Lives`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L385);
-- [`User uploaded videos`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L411).
+- [`Videos`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L372);
+- [`Playlists`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L339;)
+- [`Lives`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L413);
+- [`User uploaded videos`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L439).
 
 #### [`Vimeo`](https://www.vimeo.com)
 
-- [Videos](https://github.com/tomasfn87/url-parser/blob/main/index.html#L444).
+- [Videos](https://github.com/tomasfn87/url-parser/blob/main/index.html#L472).
 
 #### [`Spotify`](https://www.spotify.com)
 
-- [Tracks](https://github.com/tomasfn87/url-parser/blob/main/index.html#L465);
-- [Episodes](https://github.com/tomasfn87/url-parser/blob/main/index.html#L465);
-- [Shows](https://github.com/tomasfn87/url-parser/blob/main/index.html#L465);
-- [Artists](https://github.com/tomasfn87/url-parser/blob/main/index.html#L465);
-- [Albums](https://github.com/tomasfn87/url-parser/blob/main/index.html#L465);
-- [Playlists](https://github.com/tomasfn87/url-parser/blob/main/index.html#L465);
+- [Tracks](https://github.com/tomasfn87/url-parser/blob/main/index.html#L493);
+- [Episodes](https://github.com/tomasfn87/url-parser/blob/main/index.html#L493);
+- [Shows](https://github.com/tomasfn87/url-parser/blob/main/index.html#L493);
+- [Artists](https://github.com/tomasfn87/url-parser/blob/main/index.html#L493);
+- [Albums](https://github.com/tomasfn87/url-parser/blob/main/index.html#L493);
+- [Playlists](https://github.com/tomasfn87/url-parser/blob/main/index.html#L493);
 - Spotify URIs are accepted and converted into URLs.
 
 #### Spotify Audio Tag for Google Tag Manager
