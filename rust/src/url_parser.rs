@@ -10,16 +10,11 @@ struct KeyOptionalValue {
     optional_value: Option<String>,
 }
 
-struct KeyOptionalValueData {
-    data: String,
-    obj: Vec<KeyOptionalValue>,
-}
-
 pub struct Url {
     origin: String,
     path: String,
-    parameters: KeyOptionalValueData,
-    fragment: KeyOptionalValueData,
+    parameters: Vec<KeyOptionalValue>,
+    fragment: Vec<KeyOptionalValue>,
 }
 
 fn print_colored_text(
@@ -56,67 +51,78 @@ fn print_colored_text(
     print!("{}", current_color.unwrap().paint(&current_text));
 }
 
-impl KeyOptionalValueData {
-    pub fn parse_key_optional_value(
-        kov_data: &str,
-        forbidden_chars: &str,
-        delimiter: &str,
-        pair_delimiter: &str,
-    ) -> Result<KeyOptionalValueData, String> {
-        if kov_data.is_empty() {
-            return Ok(KeyOptionalValueData {
-                data: kov_data.to_string(),
-                obj: Vec::new(),
-            });
-        }
-
-        let escaped_forbidden_chars = regex::escape(forbidden_chars);
-        let escaped_delimiter = regex::escape(delimiter);
-        let escaped_pair_delimiter = regex::escape(pair_delimiter);
-
-        let list_regex_str = format!(
-            r"^([^{0}{1}{2}]+(?:{1}[^{0}{1}{2}]+)?)$",
-            escaped_forbidden_chars,
-            escaped_delimiter,
-            escaped_pair_delimiter
-        );
-        let key_value_regex_str = format!(
-            r"^([^{0}{1}]+)(?:{1}([^{0}{1}]+))?$",
-            escaped_forbidden_chars,
-            escaped_delimiter
-        );
-
-        let list_regex = Regex::new(&list_regex_str)
-            .map_err(|e| format!("Invalid regex for list parsing: {}", e))?;
-        let key_value_regex = Regex::new(&key_value_regex_str)
-            .map_err(|e| format!("Invalid regex for key-value parsing: {}", e))?;
-
-        let mut obj_data = Vec::new();
-
-        for segment_str in kov_data.split(pair_delimiter) {
-            if segment_str.is_empty() {
-                continue;
-            }
-            if let Some(list_captures) = list_regex.captures(segment_str) {
-                if let Some(matched_segment) = list_captures.get(1) {
-                    if let Some(kv_captures) = key_value_regex.captures(matched_segment.as_str()) {
-                        let key = kv_captures.get(1).map_or("", |m| m.as_str()).to_string();
-                        let optional_value = kv_captures.get(2).map(|m| m.as_str().to_string());
-                        obj_data.push(KeyOptionalValue { key, optional_value });
-                    } else {
-                        obj_data.push(KeyOptionalValue { key: matched_segment.as_str().to_string(), optional_value: None });
-                    }
-                }
-            } else {
-                obj_data.push(KeyOptionalValue { key: segment_str.to_string(), optional_value: None });
-            }
-        }
-
-        Ok(KeyOptionalValueData {
-            data: kov_data.to_string(),
-            obj: obj_data,
-        })
+fn parse_key_optional_value_str(
+    kov_data: &str,
+    forbidden_chars: &str,
+    delimiter: &str,
+    pair_delimiter: &str,
+) -> Result<Vec<KeyOptionalValue>, String> {
+    if kov_data.is_empty() {
+        return Ok(Vec::<KeyOptionalValue>::new());
     }
+    let escaped_forbidden_chars = regex::escape(forbidden_chars);
+    let escaped_delimiter = regex::escape(delimiter);
+    let escaped_pair_delimiter = regex::escape(pair_delimiter);
+
+    let list_regex_str = format!(
+        r"^([^{0}{1}{2}]+(?:{1}[^{0}{1}{2}]+)?)$",
+        escaped_forbidden_chars,
+        escaped_delimiter,
+        escaped_pair_delimiter
+    );
+    let key_value_regex_str = format!(
+        r"^([^{0}{1}]+)(?:{1}([^{0}{1}]+))?$",
+        escaped_forbidden_chars,
+        escaped_delimiter
+    );
+    let list_regex = Regex::new(&list_regex_str)
+        .map_err(|e| format!("Invalid regex for list parsing: {}", e))?;
+    let key_value_regex = Regex::new(&key_value_regex_str)
+        .map_err(|e| format!("Invalid regex for key-value parsing: {}", e))?;
+    let mut vector_data = Vec::new();
+    for segment_str in kov_data.split(pair_delimiter) {
+        if segment_str.is_empty() {
+            continue;
+        }
+        if let Some(list_captures) = list_regex.captures(segment_str) {
+            if let Some(matched_segment) = list_captures.get(1) {
+                if let Some(kv_captures) = key_value_regex
+                    .captures(matched_segment.as_str()) {
+                    let key = kv_captures.get(1)
+                        .map_or("", |m| m.as_str()).to_string();
+                    let optional_value = kv_captures.get(2)
+                        .map(|m| m.as_str().to_string());
+                    vector_data.push(
+                        KeyOptionalValue { key, optional_value });
+                } else {
+                    vector_data.push(KeyOptionalValue {
+                        key: matched_segment.as_str().to_string(),
+                        optional_value: None
+                    });
+                }
+            }
+        }
+    }
+    Ok(vector_data)
+}
+
+fn stringify_key_optional_value_vec(
+    kov_vec: &Vec<KeyOptionalValue>,
+) -> Result<String, String> {
+    if kov_vec.is_empty() {
+        return Ok(String::new());
+    }
+    let kov_data: Vec<String> = kov_vec
+        .iter()
+        .map(|kov| {
+            if let Some(optional_value) = &kov.optional_value {
+                format!("{}={}", kov.key, optional_value)
+            } else {
+                kov.key.to_string()
+            }
+        })
+        .collect();
+    Ok(kov_data.join("&"))
 }
 
 impl Url {
@@ -137,8 +143,8 @@ impl Url {
             return Err(format!("Could not extract origin from URL '{}'.", url_string));
         };
         let mut parsed_path = captures.get(2)
-                                             .map_or("", |m| m.as_str())
-                                             .to_string();
+            .map_or("", |m| m.as_str())
+            .to_string();
         if parsed_path.is_empty() {
             parsed_path = "/".to_string();
         }
@@ -150,16 +156,15 @@ impl Url {
             .map_or("", |m| m.as_str())
             .trim_start_matches('#')
             .to_string();
-        let parameters_data = KeyOptionalValueData::parse_key_optional_value(
+        let parameters_vec = parse_key_optional_value_str(
             &parameters_data, "&=#?", "=", "&")?;
-        let fragment_data = KeyOptionalValueData::parse_key_optional_value(
+        let fragment_vec = parse_key_optional_value_str(
             &fragment_data, "&=?", "=", "&")?;
-
         Ok(Url {
             origin: parsed_origin,
             path: parsed_path,
-            parameters: parameters_data,
-            fragment: fragment_data,
+            parameters: parameters_vec,
+            fragment: fragment_vec,
         })
     }
 
@@ -184,82 +189,81 @@ impl Url {
             print_colored_text(self.path.clone(), "/", "", Green, Yellow, Yellow);
             println!();
         }
-        if !&self.parameters.data.is_empty() {
+        if !&self.parameters.is_empty() {
+            let parameters =
+                stringify_key_optional_value_vec(&self.parameters)
+                    .expect("error").to_string();
             print!("Parameters{}", White.dimmed().paint(":\n    "));
             print!("{}", Yellow.paint("?"));
             if decode_chars {
-                print_colored_text(
-                    decode(&self.parameters.data).expect("error").to_string(),
+                let decoded_parameters = 
+                    decode(&parameters).expect("error").to_string();
+                print_colored_text(decoded_parameters,
                     "?&", "=", Green, Yellow, Purple);
                 println!();
             } else {
                 print_colored_text(
-                    self.parameters.data.clone(), "?&", "=", Green, Yellow, Purple);
+                    parameters.clone(), "?&", "=", Green, Yellow, Purple);
                 println!();
             }
-            for param in &self.parameters.obj {
+            for param in &self.parameters {
                 if let Some(ref value) = param.optional_value {
                     if decode_chars {
-                        print!("{} {}{}",
+                        print!("  {} {}{}",
                             White.dimmed().paint("-"),
                             White.paint(decode(&param.key).expect("error").to_string()),
                             White.dimmed().paint(":"));
                         println!(" {}",
                             Yellow.paint(decode(&value).expect("error").to_string()));
                     } else {
-                        print!("{} {}{}",
+                        print!("  {} {}{}",
                             White.dimmed().paint("-"), White.paint(&param.key),
                             White.dimmed().paint(":"));
                         println!(" {}", Yellow.paint(value));
                     }
                 } else {
                     if decode_chars {
-                        println!("{} {}",
+                        println!("  {} {}",
                             White.dimmed().paint("-"),
                             Green.paint(decode(&param.key).expect("error").to_string()));
                     } else {
-                        println!("{} {}",
+                        println!("  {} {}",
                             White.dimmed().paint("-"), White.paint(&param.key));
                     }
                 }
             }
         }
-        if !&self.fragment.data.is_empty() {
+        if !&self.fragment.is_empty() {
+            let fragment =
+                stringify_key_optional_value_vec(&self.fragment)
+                    .expect("error").to_string();
             print!("Fragment{}", White.dimmed().paint(":\n    "));
             print!("{}", Yellow.paint("#"));
             if decode_chars {
-                print_colored_text(
-                    decode(&self.fragment.data).expect("error").to_string(),
+                let decoded_fragment = 
+                    decode(&fragment).expect("error").to_string();
+                print_colored_text(decoded_fragment,
                     "?&", "=", Green, Yellow, Purple);
                 println!();
             } else {
                 print_colored_text(
-                    self.fragment.data.clone(), "?&", "=", Green, Yellow, Purple);
+                    fragment.clone(), "?&", "=", Green, Yellow, Purple);
                 println!();
             }
-            for frag in &self.fragment.obj {
+            for frag in &self.fragment {
                 if let Some(ref value) = frag.optional_value {
                     if decode_chars {
-                        print!("{} {}{}",
+                        print!("  {} {}{}",
                             White.dimmed().paint("-"),
                             White.paint(decode(&frag.key).expect("error").to_string()),
                             White.dimmed().paint(":"));
                         println!(" {}",
                             Yellow.paint(decode(&value).expect("error").to_string()));
                     } else {
-                        print!("{} {}{}",
+                        print!("  {} {}{}",
                             White.dimmed().paint("-"), White.paint(&frag.key),
                             White.dimmed().paint(":"));
                         println!(" {}", Yellow.paint(value));
-                    }
-                } else {
-                    if decode_chars {
-                        println!("{} {}",
-                            White.dimmed().paint("-"),
-                            White.paint(decode(&frag.key).expect("error").to_string()));
-                    } else {
-                        println!("{} {}",
-                            White.dimmed().paint("-"), White.paint(&frag.key));
                     }
                 }
             }
@@ -267,18 +271,22 @@ impl Url {
     }
 
     pub fn full_url(&self) -> String {
-        let mut full_url_string = String::new();
-        full_url_string.push_str(&self.origin);
-        full_url_string.push_str(&self.path);
-        if !self.parameters.data.is_empty() {
-            full_url_string.push('?');
-            full_url_string.push_str(&self.parameters.data);
+        let mut full_url = String::new();
+        full_url.push_str(&self.origin);
+        full_url.push_str(&self.path);
+        if !self.parameters.is_empty() {
+            full_url.push_str("?");
+            full_url.push_str(
+                stringify_key_optional_value_vec(&self.parameters)
+                    .expect("error").as_str());
         }
-        if !self.fragment.data.is_empty() {
-            full_url_string.push('#');
-            full_url_string.push_str(&self.fragment.data);
+        if !self.fragment.is_empty() {
+            full_url.push_str("#");
+            full_url.push_str(
+                stringify_key_optional_value_vec(&self.fragment)
+                    .expect("error").as_str());
         }
-        full_url_string
+        full_url
     }
 
     pub fn print_full_url(&self) {
