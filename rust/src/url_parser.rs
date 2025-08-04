@@ -159,7 +159,7 @@ impl Url {
         let parameters_vec = parse_key_optional_value_str(
             &parameters_data, "&=#?", "=", "&")?;
         let fragment_vec = parse_key_optional_value_str(
-            &fragment_data, "&=?", "=", "&")?;
+            &fragment_data, "&=", "=", "&")?;
         Ok(Url {
             origin: parsed_origin,
             path: parsed_path,
