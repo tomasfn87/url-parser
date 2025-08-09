@@ -168,7 +168,7 @@ impl Url {
         })
     }
 
-    pub fn print_url(&self, decode_chars: bool) {
+    pub fn print_parsed_url(&self, decode_chars: bool) {
         print!("Origin{}", White.dimmed().paint(":\n    "));
         if decode_chars {
             print_colored_text(
@@ -196,7 +196,7 @@ impl Url {
             print!("Parameters{}", White.dimmed().paint(":\n    "));
             print!("{}", Yellow.paint("?"));
             if decode_chars {
-                let decoded_parameters = 
+                let decoded_parameters =
                     decode(&parameters).expect("error").to_string();
                 print_colored_text(decoded_parameters,
                     "?&", "=", Green, Yellow, Purple);
@@ -240,7 +240,7 @@ impl Url {
             print!("Fragment{}", White.dimmed().paint(":\n    "));
             print!("{}", Yellow.paint("#"));
             if decode_chars {
-                let decoded_fragment = 
+                let decoded_fragment =
                     decode(&fragment).expect("error").to_string();
                 print_colored_text(decoded_fragment,
                     "?&", "=", Green, Yellow, Purple);

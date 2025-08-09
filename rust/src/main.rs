@@ -11,7 +11,7 @@ fn main() {
     }
     let user_input = &args[1];
     if let Ok(parsed_url) = url_parser::Url::parse_url(user_input) {
-        parsed_url.print_url(args.len() > 2 && &args[2] == "--decode");
+        parsed_url.print_parsed_url(args.len() > 2 && &args[2] == "--decode");
         parsed_url.print_full_url();
     } else {
         println!("{}: {}", Red.paint("ERROR"), "invalid URL. Insert a valid URL and try again.");
