@@ -82,9 +82,9 @@
             parsedUrl.fullUrl = () => {
                 let fullUrl = origin + path;
                 if (Object.hasOwn(parsedUrl.parts, 'parameters')) 
-                    fullUrl += stringifyKeyOptionalValueObj(parsedUrl.parts.parameters);
+                    fullUrl += '?' + stringifyKeyOptionalValueObj(parsedUrl.parts.parameters);
                 if (Object.hasOwn(parsedUrl.parts, 'fragment')) 
-                    fullUrl += stringifyKeyOptionalValueObj(parsedUrl.parts.fragment);
+                    fullUrl += '#' + stringifyKeyOptionalValueObj(parsedUrl.parts.fragment);
                 return fullUrl;
             }
             return parsedUrl;
