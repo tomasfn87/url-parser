@@ -159,7 +159,7 @@ impl Url {
         let parameters_vec = parse_key_optional_value_str(
             &parameters_data, "&=#?", "=", "&")?;
         let fragment_vec = parse_key_optional_value_str(
-            &fragment_data, "&=", "=", "&")?;
+            &fragment_data, "&=#", "=", "&")?;
         Ok(Url {
             origin: parsed_origin,
             path: parsed_path,
@@ -243,11 +243,11 @@ impl Url {
                 let decoded_fragment =
                     decode(&fragment).expect("error").to_string();
                 print_colored_text(decoded_fragment,
-                    "?&", "=", Green, Yellow, Purple);
+                    "#&", "=", Green, Yellow, Purple);
                 println!();
             } else {
                 print_colored_text(
-                    fragment.clone(), "?&", "=", Green, Yellow, Purple);
+                    fragment.clone(), "#&", "=", Green, Yellow, Purple);
                 println!();
             }
             for frag in &self.fragment {
@@ -264,6 +264,15 @@ impl Url {
                             White.dimmed().paint("-"), White.paint(&frag.key),
                             White.dimmed().paint(":"));
                         println!(" {}", Yellow.paint(value));
+                    }
+                } else {
+                    if decode_chars {
+                        println!("  {} {}",
+                            White.dimmed().paint("-"),
+                            Green.paint(decode(&frag.key).expect("error").to_string()));
+                    } else {
+                        println!("  {} {}",
+                            White.dimmed().paint("-"), White.paint(&frag.key));
                     }
                 }
             }
