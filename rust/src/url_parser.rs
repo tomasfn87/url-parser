@@ -62,45 +62,34 @@ fn parse_key_optional_value_str(
     }
     let escaped_forbidden_chars = regex::escape(forbidden_chars);
     let escaped_delimiter = regex::escape(delimiter);
-    let escaped_pair_delimiter = regex::escape(pair_delimiter);
 
-    let list_regex_str = format!(
-        r"^([^{0}{1}{2}]+(?:{1}[^{0}{1}{2}]+)?)$",
-        escaped_forbidden_chars,
-        escaped_delimiter,
-        escaped_pair_delimiter
-    );
     let key_value_regex_str = format!(
-        r"^([^{0}{1}]+)(?:{1}([^{0}{1}]+))?$",
+        r"^([^{0}{1}]+)(?:{1}(.*))?$",
         escaped_forbidden_chars,
         escaped_delimiter
     );
-    let list_regex = Regex::new(&list_regex_str)
-        .map_err(|e| format!("Invalid regex for list parsing: {}", e))?;
     let key_value_regex = Regex::new(&key_value_regex_str)
         .map_err(|e| format!("Invalid regex for key-value parsing: {}", e))?;
     let mut vector_data = Vec::new();
+
     for segment_str in kov_data.split(pair_delimiter) {
         if segment_str.is_empty() {
             continue;
         }
-        if let Some(list_captures) = list_regex.captures(segment_str) {
-            if let Some(matched_segment) = list_captures.get(1) {
-                if let Some(kv_captures) = key_value_regex
-                    .captures(matched_segment.as_str()) {
-                    let key = kv_captures.get(1)
-                        .map_or("", |m| m.as_str()).to_string();
-                    let optional_value = kv_captures.get(2)
-                        .map(|m| m.as_str().to_string());
-                    vector_data.push(
-                        KeyOptionalValue { key, optional_value });
-                } else {
-                    vector_data.push(KeyOptionalValue {
-                        key: matched_segment.as_str().to_string(),
-                        optional_value: None
-                    });
-                }
-            }
+
+        if let Some(kv_captures) = key_value_regex.captures(segment_str) {
+            let key = kv_captures.get(1)
+                .map_or("", |m| m.as_str()).to_string();
+            let optional_value = kv_captures.get(2)
+                .map(|m| m.as_str().to_string());
+            vector_data.push(
+                KeyOptionalValue { key, optional_value });
+        } else {
+            // Trata o caso de uma chave sem valor que não corresponde ao regex
+            vector_data.push(KeyOptionalValue {
+                key: segment_str.to_string(),
+                optional_value: None,
+            });
         }
     }
     Ok(vector_data)
@@ -207,7 +196,8 @@ impl Url {
                 println!();
             }
             for param in &self.parameters {
-                if let Some(ref value) = param.optional_value {
+                let optional_value = param.optional_value.as_ref().filter(|v| !v.is_empty());
+                if let Some(value) = optional_value {
                     if decode_chars {
                         print!("  {} {}{}",
                             White.dimmed().paint("-"),
@@ -225,7 +215,7 @@ impl Url {
                     if decode_chars {
                         println!("  {} {}",
                             White.dimmed().paint("-"),
-                            Green.paint(decode(&param.key).expect("error").to_string()));
+                            White.paint(decode(&param.key).expect("error").to_string()));
                     } else {
                         println!("  {} {}",
                             White.dimmed().paint("-"), White.paint(&param.key));
@@ -251,7 +241,8 @@ impl Url {
                 println!();
             }
             for frag in &self.fragment {
-                if let Some(ref value) = frag.optional_value {
+                let optional_value = frag.optional_value.as_ref().filter(|v| !v.is_empty());
+                if let Some(value) = optional_value {
                     if decode_chars {
                         print!("  {} {}{}",
                             White.dimmed().paint("-"),
@@ -269,7 +260,7 @@ impl Url {
                     if decode_chars {
                         println!("  {} {}",
                             White.dimmed().paint("-"),
-                            Green.paint(decode(&frag.key).expect("error").to_string()));
+                            White.paint(decode(&frag.key).expect("error").to_string()));
                     } else {
                         println!("  {} {}",
                             White.dimmed().paint("-"), White.paint(&frag.key));
