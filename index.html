@@ -11,8 +11,8 @@
     <script>
         const regexp = {
             UrlParts: /^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?(?:[^?#]+?)?)?(#(?:[^#]+?)?)?$/,
-            Query: /([^?#&=]+)(?:=([^?#&=]+))?/,
-            Fragment: /([^#&=]+)(?:=([^#&=]+))?/,
+            Query: /([^?#&=]+)(?:=([^?#&=]+)?)?/,
+            Fragment: /([^#&=]+)(?:=([^#&=]+)?)?/,
             YouTubeVideo: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?(?:(?:watch)?\?.*v=|embed\/)?([0-9A-Za-z_-]{11}).*/i,
             YouTubePlaylist: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?.*?(?:play)?list=([0-9A-Za-z_-]+)/i,
             YouTubeUser: /(https?:\/\/)?((?:www|m)\.)?youtu(\.be|be\.com)\/?.*@([^\/?#=]+).*/i,
@@ -63,7 +63,7 @@
             }
             const origin = match[1] || '';
             const path = match[2] || '/';
-            let parsedUrl = { 
+            let parsedUrl = {
                 parts: {
                     origin: origin,
                     path: path
@@ -81,9 +81,9 @@
             }
             parsedUrl.fullUrl = () => {
                 let fullUrl = origin + path;
-                if (Object.hasOwn(parsedUrl.parts, 'parameters')) 
+                if (Object.hasOwn(parsedUrl.parts, 'parameters'))
                     fullUrl += '?' + stringifyKeyOptionalValueObj(parsedUrl.parts.parameters);
-                if (Object.hasOwn(parsedUrl.parts, 'fragment')) 
+                if (Object.hasOwn(parsedUrl.parts, 'fragment'))
                     fullUrl += '#' + stringifyKeyOptionalValueObj(parsedUrl.parts.fragment);
                 return fullUrl;
             }
@@ -135,7 +135,7 @@
             </div>
             <div id="button-container">
                 <button type="button" class="btn btn-primary" id="parseButton" disabled>Parse</button>
-                <p>&nbsp;</p> 
+                <p>&nbsp;</p>
                 <button type="button" class="btn btn-primary" id="decodeButton" disabled>Decode</button>
             </div>
         </form>
@@ -184,7 +184,7 @@
             const parsedResultTableBody = document.querySelector('#parsedResult tbody');
             const decodeButton = document.getElementById('decodeButton');
             const youtubeEmbedContainer = document.getElementById('youtube-embed-container');
-    
+
             const validateUrlInput = () => {
                 const url = urlInput.value.replaceAll('\\', '');
                 if (regexp.UrlParts.test(url) || regexp.SpotifyUri.test(url)) {
@@ -199,7 +199,7 @@
                     decodeButton.disabled = true;
                 }
             };
-    
+
             const handleParse = (decode) => {
                 let url = urlInput.value.replaceAll('\\', '');
                 if (url.match(regexp.SpotifyUri)) {
@@ -215,7 +215,7 @@
                 parsedResultTableBody.innerHTML = '';
                 document.getElementById('output-container').querySelectorAll('#youtube-embed-container, .youtube-message-container').forEach(el => el.remove());
                 document.body.classList.remove('media-background');
-    
+
                 if (!r && urlInput.value) {
                     const row = parsedResultTableBody.insertRow();
                     const cell = row.insertCell();
@@ -223,9 +223,9 @@
                     cell.textContent = "Invalid URL.";
                     return;
                 }
-    
+
                 let isOdd = true;
-    
+
                 const addTableRow = (label, value, isOdd, isSubtable = false, isOriginRow = false, origin = '') => {
                     const row = parsedResultTableBody.insertRow();
                     const bgColor = isOdd ? (isSubtable ? '#2a2a2a' : '#222') : (isSubtable ? '#333' : '#282828');
@@ -246,14 +246,14 @@
                         faviconImg.height = 18;
                         faviconImg.style.marginRight = '8px';
                         faviconImg.style.verticalAlign = 'middle';
-    
+
                         const originLink = document.createElement('a');
                         originLink.href = `https://${origin.replace(/^\s*\w+:\/\//, '')}`;
                         originLink.className = 'url-link';
                         originLink.textContent = origin;
-                        
+
                         valueCell.innerHTML = '';
-                        
+
                         faviconImg.onload = function() {
                             valueCell.appendChild(faviconImg);
                             valueCell.appendChild(originLink);
@@ -270,7 +270,7 @@
                 isOdd = !isOdd;
                 addTableRow("Path", path, isOdd);
                 isOdd = !isOdd;
-    
+
                 if (r.parts.parameters) {
                     addTableRow("Parameters", decode
                                 ? decodeURIComponent(stringifyKeyOptionalValueObj(r.parts.parameters))
@@ -299,7 +299,7 @@
                     addTableRow("Detailed Parameters", paramsSubTable, isOdd, true);
                     isOdd = !isOdd;
                 }
-    
+
                 if (r.parts.fragment) {
                     addTableRow("Fragment", decode
                             ? decodeURIComponent(stringifyKeyOptionalValueObj(r.parts.fragment))
@@ -321,7 +321,7 @@
                         document.body.appendChild(tempDiv);
                         maxKeyWidth = Math.max(maxKeyWidth, tempDiv.offsetWidth);
                         document.body.removeChild(tempDiv);
-    
+
                         fragmentSubTable += `<tr style="background-color: ${index % 2 === 0 ? '#2a2a2a' : '#333'}"><td class="param-key-cell" style="width: ${maxKeyWidth}px">${keyHTML}</td><td class="param-value-cell">${decodedValue}</td></tr>`;
                         index++;
                     }
@@ -329,7 +329,7 @@
                     addTableRow("Detailed Fragment", fragmentSubTable, isOdd, true);
                     isOdd = !isOdd;
                 }
-    
+
                 addTableRow("Full URL", `<a href="${`https://${fullUrl.replace(/^\s*\w+:\/\//, '')}`}" class="url-link">${decode?decodeURIComponent(fullUrl):fullUrl}</a>`, isOdd);
 
                 let link = 'https://'
@@ -515,7 +515,7 @@
                             gtmId: 'MXNVD4PJ'
                         }, 'https://open.spotify.com');
                     }, 250);
-                    
+
                     link +=  '?spotifycontent=' + contentType + ':' + contentId;
                     link = correctMediaLink(link);
                     document.getElementById('media-link').innerHTML =
@@ -551,14 +551,14 @@
                     youTubeUserId = '';
                 }
             }
-    
+
             function onPlayerStateChangeYouTube(event) {
                 // console.log('Player state changed:', event.data);
             }
-    
+
             parseButton.addEventListener('click', () => handleParse(false));
             decodeButton.addEventListener('click', () => handleParse(true));
-    
+
             urlInput.addEventListener('keypress', function(event) {
                 if (event.key === 'Enter') {
                     event.preventDefault();

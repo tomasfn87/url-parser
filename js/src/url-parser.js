@@ -13,11 +13,11 @@ export default class Url {
         }
     }
 
-    RegExp() { 
+    RegExp() {
         return {
             UrlParts: /^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?(?:[^?#]+?)?)?(#(?:[^#]+?)?)?$/,
-            Query: /([^?#&=]+)(?:=([^?#&=]+))?/,
-            Fragment: /([^#&=]+)(?:=([^#&=]+))?/
+            Query: /([^?#&=]+)(?:=([^?#&=]+)?)?/,
+            Fragment: /([^#&=]+)(?:=([^#&=]+)?)?/
         }
     }
 
@@ -97,7 +97,7 @@ export default class Url {
         return this.getOrigin() + this.getPath()
             + this.getParameters() + this.getFragment();
     }
-    
+
     getParsedUrl() {
         return this.parsedUrl;
     }
