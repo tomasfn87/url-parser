@@ -75,13 +75,12 @@ const main = () => {
         process.stdout.write(":\n");
         Object.entries(r.parsedUrl.parts.parameters).forEach(e => {
             process.stdout.write("- ");
-            if (e[1]) {
-                color.log(subtitle, `${e[0].padStart(maxLength)}`)
+            color.log(subtitle, `${e[0].padStart(maxLength)}`);
+            if (e[1] !== null) {
                 process.stdout.write(":");
-                color.log(content, ` ${decode?decodeURIComponent(e[1]):e[1]}`);
+                if (e[1] != ' ')
+                    color.log(content, ` ${decode?decodeURIComponent(e[1]):e[1]}`);
             }
-            else
-                color.log(content, `${e[0]}`);
             console.log();
         });
     }

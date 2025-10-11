@@ -16,8 +16,8 @@ export default class Url {
     RegExp() {
         return {
             UrlParts: /^((?:\w+:\/\/)?[^\/.:]+(?:\.[^\/.?#]+)+)((?:\/?(?:[^\/?#]+)?)*)?(\?(?:[^?#]+?)?)?(#(?:[^#]+?)?)?$/,
-            Query: /([^?#&=]+)(?:=([^?#&=]+)?)?/,
-            Fragment: /([^#&=]+)(?:=([^#&=]+)?)?/
+            Query: /([^?#&=]+)(?:=([^?#&=]*)?)?/,
+            Fragment: /([^#&=]+)(?:=([^#&=]*)?)?/
         }
     }
 
@@ -45,11 +45,14 @@ export default class Url {
             while (re.test(captureGroup)) {
                 const groups = re.exec(captureGroup);
                 if (groups) {
-                    if (groups[2]) {
-                        obj[groups[1]] = groups[2];
-                    } else {
-                        obj[groups[1]] = '';
-                    }
+                    const groups_str = groups[0].toString();
+                    if (groups_str.includes('=')) {
+                        if (!groups_str.endsWith('='))
+                            obj[groups[1]] = groups[2];
+                        else
+                            obj[groups[1]] = ' ';
+                    } else
+                        obj[groups[1]] = null;
                     captureGroup = captureGroup.substring(groups[0].length+1);
                 }
             }
@@ -62,11 +65,12 @@ export default class Url {
         }
         return Object.entries(obj)
             .map(([key, value]) => {
-                if (value) {
+                if (value != null && value != ' ')
                     return `${key}=${value}`;
-                } else {
+                else if (value == ' ')
+                    return `${key}=`;
+                else
                     return key;
-                }
             })
             .join('&');
     }
