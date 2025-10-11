@@ -22,10 +22,10 @@ std::vector<KeyOptionalValue> Url::parse_key_optional_value_str(
     std::vector<KeyOptionalValue> kov_arr;
     std::regex re_kov_pairs = std::regex(R"(([^)" + forbidden_chars
         + delimiter + R"(]+(?:)" + delimiter + R"([^)" + forbidden_chars
-        + delimiter + R"(]+)?))");
+        + delimiter + R"(]*)?))");
     std::regex re_kov = std::regex(R"(([^)" + forbidden_chars + delimiter
         + R"(]+)(?:)" + delimiter + R"(([^)" + forbidden_chars + delimiter
-        + R"(]+))?)");
+        + R"(]*))?)");
     while (std::regex_search(
         search_start, target.cend(), matchs, re_kov_pairs)) {
         if (matchs.size() && matchs[1].str().size()) {
@@ -35,9 +35,15 @@ std::vector<KeyOptionalValue> Url::parse_key_optional_value_str(
                 key_value.cbegin(), key_value.cend(), key_value_matchs, re_kov)) {
                 KeyOptionalValue kov;
                 kov.key = key_value_matchs[1].str();
-                if (key_value_matchs.size() > 2) {
-                    kov.value = key_value_matchs[2].str();
-                }
+                size_t delimiter_position = key_value.find(delimiter);
+                if (delimiter_position != std::string::npos) {
+                    if (delimiter_position != key_value.size() - 1)
+                        kov.value = key_value_matchs[2].str();
+                    else {
+                        kov.value = " ";
+                    }
+                } else
+                    kov.value = "";
                 kov_arr.push_back(kov);
             }
         }
@@ -45,6 +51,7 @@ std::vector<KeyOptionalValue> Url::parse_key_optional_value_str(
     }
     return kov_arr;
 }
+
 
 bool Url::is_valid(std::string maybe_a_url) {
     return std::regex_match(maybe_a_url, url_parts);
@@ -82,6 +89,8 @@ std::string Url::stringify_key_optional_value_vec(
     for (size_t i = 0; i < kov_arr.size(); ++i) {
         if (!kov_arr[i].value.length()) {
             ss << kov_arr[i].key;
+        } else if (kov_arr[i].value == " ") {
+            ss << kov_arr[i].key << "=";
         } else {
             ss << kov_arr[i].key << "=" << kov_arr[i].value;
         }
@@ -208,21 +217,22 @@ void Url::print_key_optional_value_list(
             std::cout << "  " << color_str("{", color_dim) << "\n    ";
         else
             std::cout << "    ";
-        if (list[i].value.size())
-            std::cout << color_chars(key_optional_value_chars,
-                list[i].key, color_main, color_aux, color_aux);
-        else
-            std::cout << color_chars(key_optional_value_chars,
+        std::cout << color_chars(key_optional_value_chars,
                 list[i].key, color_main, color_aux, color_aux);
         if (list[i].value.size()) {
-            std::cout << color_str(":", color_dim) << " ";
-            if (decode)
-                std::cout << color_chars(key_optional_value_chars,
-                    decode_uri_component(list[i].value),
-                        color_aux, color_main, color_dim);
-            else
-                std::cout << color_chars(key_optional_value_chars,
-                    list[i].value, color_aux, color_main, color_dim);
+            if (list[i].value == " ")
+                std::cout << color_str(":", color_dim) << " " << "";
+            else {
+                if (decode)
+                    std::cout << color_str(":", color_dim) << " "
+                        << color_chars(key_optional_value_chars,
+                            decode_uri_component(list[i].value),
+                            color_aux, color_main, color_dim);
+                else
+                    std::cout << color_str(":", color_dim) << " "
+                        << color_chars(key_optional_value_chars,
+                            list[i].value, color_aux, color_main, color_dim);
+            }
         }
         if (i == (list.size() - 1))
             std::cout << "\n  " << color_str("}", color_dim) << "\n";
