@@ -571,6 +571,13 @@
                 }
             });
 
+            urlInput.addEventListener('input', function () {
+                setTimeout(() => {
+                    urlInput.value = urlInput.value.replace(/\s/g, '');
+                    urlInput.value = urlInput.value.replace(/\\/g, '');
+                }, 1000);
+             });
+
             // Handle Media Content from URL Parameters
             setTimeout(function() {
                 // YouTube Playlist from URL Parameters
