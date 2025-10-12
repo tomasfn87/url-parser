@@ -196,7 +196,7 @@ impl Url {
                 println!();
             }
             for param in &self.parameters {
-                let optional_value = param.optional_value.as_ref().filter(|v| !v.is_empty());
+                let optional_value = param.optional_value.as_ref();
                 if let Some(value) = optional_value {
                     if decode_chars {
                         print!("  {} {}{}",
