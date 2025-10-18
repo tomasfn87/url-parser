@@ -59,7 +59,7 @@
         }
 
         const parseUrl = (url) => {
-            url = url.replaceAll('\\', '');
+            url = url.replaceAll('\\', '').replaceAll(' ', '');
             const match = url.match(regexp.UrlParts);
             if (!match) {
                 return undefined;
@@ -189,7 +189,7 @@
             const youtubeEmbedContainer = document.getElementById('youtube-embed-container');
 
             const validateUrlInput = () => {
-                const url = urlInput.value.replaceAll('\\', '');
+                const url = urlInput.value.replaceAll('\\', '').replaceAll(' ', '');
                 if (regexp.UrlParts.test(url) || regexp.SpotifyUri.test(url)) {
                     urlInput.classList.remove('invalid');
                     urlInput.classList.add('valid');
@@ -204,7 +204,7 @@
             };
 
             const handleParse = (decode) => {
-                let url = urlInput.value.replaceAll('\\', '');
+                let url = urlInput.value.replaceAll('\\', '').replaceAll(' ', '');
                 if (url.match(regexp.SpotifyUri)) {
                     url = (function(uri) {
                         var matches = regexp.SpotifyUri.exec(uri);
@@ -575,7 +575,7 @@
                 setTimeout(() => {
                     urlInput.value = urlInput.value.replace(/\s/g, '');
                     urlInput.value = urlInput.value.replace(/\\/g, '');
-                }, 1000);
+                }, 333);
              });
 
             // Handle Media Content from URL Parameters
