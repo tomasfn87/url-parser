@@ -144,8 +144,8 @@
       && (JSON.stringify(event.data.payload.isPaused)
       + JSON.stringify(event.data.payload.position)
       + JSON.stringify(event.data.payload.playingUri)) || '';
-    // Leave if current event is the same as last event, otherwise update
-    if (spotifyEventString === spotifyLastEventString)
+    // Leave if the current event is the same as last event or if the player is buffering
+    if (spotifyEventString === spotifyLastEventString || event.data.payload.isBuffering)
       return;
     else
       spotifyLastEventString = spotifyEventString;
