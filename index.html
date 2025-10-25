@@ -205,6 +205,8 @@
 
             const handleParse = (decode) => {
                 let url = urlInput.value.replaceAll('\\', '').replaceAll(' ', '');
+                if (!url.length)
+                    return;
                 if (url.match(regexp.SpotifyUri)) {
                     url = (function(uri) {
                         var matches = regexp.SpotifyUri.exec(uri);
