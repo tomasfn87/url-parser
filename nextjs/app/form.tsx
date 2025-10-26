@@ -1,12 +1,21 @@
 export default function Form() {
   return (
-    <form>
-        <input type="text" placeholder="Enter URL here" style={{ width: '80%' }} />
+    <form id="urlForm">
+      <div className="form-group">
+        <label htmlFor="urlInput">Enter URL:</label>
+        <input id="urlInput" className="form-control" type="text"
+          placeholder="https://example.com/path?param=value#fragment" />
         <br />
-        <span>
-          <button type="submit">Parse URL</button>
-          <button type="submit">Decode URL</button>
-        </span>
+        <div id="button-container">
+          <button type="button" id="parseButton" className="btn btn-primary" disabled>
+            Parse
+          </button>
+          &nbsp;
+          <button type="button" id="decodeButton" className="btn btn-primary" disabled>
+            Decode
+          </button>
+        </div>
+      </div>
     </form>
   );
 }
