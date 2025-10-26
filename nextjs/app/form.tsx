@@ -19,19 +19,12 @@ export default function Input({ setParsedUrl, setDecode, setMediaLink, setMediaI
         const url = urlInput.replaceAll('\\', '').replaceAll(' ', '');
         if (!url.length) {
             setIsValid(false);
-            setParsedUrl(null);
-            setMediaLink(false);
-            setMediaId({ contentType: '', contentId: '' });
             return;
         }
         const valid = regexp.UrlParts.test(url) || regexpMedia.SpotifyUri.re.test(url);
         setIsValid(valid);
-        if (!valid) {
-            setParsedUrl(null);
-            setMediaLink(false);
-            setMediaId({ contentType: '', contentId: '' });
-        }
-    }, [urlInput, setParsedUrl, setMediaLink, setMediaId]);
+
+    }, [urlInput]);
 
     const handleParse = (decode: boolean) => {
         if (!isValid)

@@ -38,9 +38,10 @@ export default function Medias({ parsedUrl, mediaLink, mediaId }: MediasProps) {
     if (mediaLink) {
         const mediaConfig = regexpMedia[contentType];
         if (mediaConfig) {
-            linkUrl = 'https://tomasfn87.github.io/url-parser/?';
-            linkUrl += mediaConfig.identifier;
-            linkUrl += `=${contentId}`;
+            linkUrl = [
+                'https://tomasfn87.github.io/url-parser/',
+                [ mediaConfig.identifier, contentId ].join('=')
+            ].join('?');
         }
     }
 
@@ -138,7 +139,6 @@ export default function Medias({ parsedUrl, mediaLink, mediaId }: MediasProps) {
 
             {showPlayers && (
                 <div id="player-container">
-                    <h2 className="text-2xl font-bold border-b pb-2">▶️ Player de {mediaTitle}</h2>
 
                     <div id="youtube-embed-container" style={{ display: isYouTube ? 'block' : 'none' }}>
                         {isYouTube && parsedUrl && (

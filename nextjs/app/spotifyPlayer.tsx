@@ -12,7 +12,7 @@ interface SpotifyPlayerProps {
 
 const SpotifyPlayer: React.FC<SpotifyPlayerProps> = ({ contentId, contentType }) => {
     
-    const iframeId = `spotify-iframe-{contentId}`;
+    const iframeId = `spotify-iframe`;
     
     const embedUrl = `https://open.spotify.com/embed/${contentId.replace(':', '/')}`;
 
@@ -54,7 +54,7 @@ const SpotifyPlayer: React.FC<SpotifyPlayerProps> = ({ contentId, contentType })
             <iframe
                 id={iframeId}
                 src={embedUrl}
-                width="300" 
+                width="100%" 
                 height="380"
                 allow="encrypted-media"
                 title={`Spotify ${contentType}`}
