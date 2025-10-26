@@ -9,3 +9,8 @@ c++/build/
 
 # Rust
 rust/target
+
+# NextJS
+nextjs/.next
+nextjs/out
+nextjs/node_modules
