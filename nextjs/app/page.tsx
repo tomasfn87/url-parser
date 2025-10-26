@@ -1,4 +1,5 @@
 import Form from './form';
+import ParsedUrl from './output';
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
           </a>&nbsp; URL Parser
         </h1>
         <Form />
+        <ParsedUrl />
       </div>
     </main>
   );
