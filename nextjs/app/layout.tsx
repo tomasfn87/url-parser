@@ -33,7 +33,7 @@ export default function RootLayout({
     return (
       <html lang="pt-BR">
         <head>
-          <Script id="gtm-snippet" strategy="afterInteractive">
+          <Script strategy="afterInteractive" id="gtm-snippet">
             {`
               (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
               new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -42,26 +42,28 @@ export default function RootLayout({
               })(window,document,'script','dataLayer','GTM-MXNVD4PJ');
             `}
           </ Script>
+          <Script
+            src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            strategy="afterInteractive" id="jquery-script" />
+          <Script
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"
+            strategy="afterInteractive" id="popper-script" />
+          <Script
+            src="https://www.youtube.com/iframe_api"
+            strategy="lazyOnload" id="youtube-api" />
+          <Script
+            src="https://player.vimeo.com/api/player.js"
+            strategy="lazyOnload" id="vimeo-api" />
+          <Script
+            src="https://open.spotify.com/embed/iframe-api/v1"
+            strategy="lazyOnload" id="spotify-api" async />
         </head>
         <body>
-            {children}
-            <Script 
-              src="https://www.youtube.com/iframe_api" 
-              strategy="lazyOnload" 
-              id="youtube-api" 
-            />
-            <Script 
-              src="https://player.vimeo.com/api/player.js" 
-              strategy="lazyOnload" 
-              id="vimeo-api" 
-            />
-            <Script 
-              src="https://open.spotify.com/embed/iframe-api/v1" 
-              strategy="lazyOnload" 
-              id="spotify-api" 
-              async 
-            />
-
+          <noscript>
+            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MXNVD4PJ"
+              height="0" width="0" style={{ display: "none", visibility: "hidden" }}></iframe>
+          </noscript>
+          {children}
         </body>
       </html>
   );
