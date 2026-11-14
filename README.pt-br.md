@@ -16,36 +16,36 @@
 
 ### Descrição
 
-- [Divide](https://github.com/tomasfn87/url-parser/blob/main/index.html#L61) a URL em 4 partes:
+- [Divide](https://github.com/tomasfn87/url-parser/blob/main/index.html#L62) a URL em 4 partes:
   - `Origem`;
   - `Caminho`;
   - `Parâmetros`;
   - `Fragmento`.
-- **Origem** tenta [obter](https://github.com/tomasfn87/url-parser/blob/main/index.html#L247) o ícone do site (`favicon`) usando uma API do Google;
-- **Parâmetros** e **Fragmento** são [divididos](https://github.com/tomasfn87/url-parser/blob/main/index.html#L25) em `chave` e `valor` (opcional);
-- **Decodificar**: aperte o botão [`Decodificar`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L188) para resolver caracteres codificados e de fato ler o conteúdo da URL.
+- **Origem** tenta [obter](https://github.com/tomasfn87/url-parser/blob/main/index.html#L327) o ícone do site (`favicon`) usando uma API do Google;
+- **Parâmetros** e **Fragmento** são [divididos](https://github.com/tomasfn87/url-parser/blob/main/index.html#L26) em `chave` e `valor` (opcional);
+- **Decodificar**: aperte o botão [`Decodificar`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L253) para resolver caracteres codificados e de fato ler o conteúdo da URL.
 
 ### Reprodutores de Mídia suportados
 
 #### [`YouTube`](https://www.youtube.com)
 
-- [`Vídeos`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L377);
-- [`Listas de reprodução`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L344);
-- [`Ao vivo`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L418);
-- [`Vídeos enviados pelo usuário`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L444).
+- [`Vídeos`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L472);
+- [`Listas de reprodução`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L439);
+- [`Ao vivo`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L513);
+- [`Vídeos enviados pelo usuário`](https://github.com/tomasfn87/url-parser/blob/main/index.html#L539).
 
 #### [`Vimeo`](https://www.vimeo.com)
 
-- [Vídeos](https://github.com/tomasfn87/url-parser/blob/main/index.html#L477).
+- [Vídeos](https://github.com/tomasfn87/url-parser/blob/main/index.html#L572).
 
 #### [`Spotify`](https://www.spotify.com)
 
-- [Faixas](https://github.com/tomasfn87/url-parser/blob/main/index.html#L498);
-- [Episódios](https://github.com/tomasfn87/url-parser/blob/main/index.html#L498);
-- [Shows](https://github.com/tomasfn87/url-parser/blob/main/index.html#L498);
-- [Artistas](https://github.com/tomasfn87/url-parser/blob/main/index.html#L498);
-- [Álbuns](https://github.com/tomasfn87/url-parser/blob/main/index.html#L498);
-- [Listas de reprodução](https://github.com/tomasfn87/url-parser/blob/main/index.html#L498);
+- [Faixas](https://github.com/tomasfn87/url-parser/blob/main/index.html#L593);
+- [Episódios](https://github.com/tomasfn87/url-parser/blob/main/index.html#L593);
+- [Shows](https://github.com/tomasfn87/url-parser/blob/main/index.html#L593);
+- [Artistas](https://github.com/tomasfn87/url-parser/blob/main/index.html#L593);
+- [Álbuns](https://github.com/tomasfn87/url-parser/blob/main/index.html#L593);
+- [Listas de reprodução](https://github.com/tomasfn87/url-parser/blob/main/index.html#L593);
 - URIs do Spotify são aceitas e convertidas em URLs.
 
 #### Tag Áudio do Spotify para Google Tag Manager
