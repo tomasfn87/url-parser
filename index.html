@@ -373,7 +373,7 @@
 
                 if (r.parts.parameters) {
                     addTableRow("Parameters", decode
-                        ? decodeURI(stringifyKeyOptionalValueObj(r.parts.parameters))
+                        ? decodeURIComponent(stringifyKeyOptionalValueObj(r.parts.parameters))
                         : stringifyKeyOptionalValueObj(r.parts.parameters), isOdd);
                     isOdd = !isOdd;
                     let paramsSubTable = '<table class="sub-table">';
